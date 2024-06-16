@@ -1,0 +1,4 @@
+﻿namespace %%NAME_SPACE%% {
+	internal class %%CLASS_NAME%%_Record {%%RECORD_FIELD%%
+	}
+}

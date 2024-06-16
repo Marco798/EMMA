@@ -1,0 +1,1 @@
+﻿		public %%DATA_TYPE%%? %%FIELD_NAME%% { get; set; }
