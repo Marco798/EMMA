@@ -1,8 +1,8 @@
-﻿using Generator.Classes;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
-namespace Generator {
-	internal class Program {
+namespace Generator
+{
+    internal class Program {
 		protected static readonly List<Tables_Record> tables_RecordList = [];
 		protected static readonly List<Columns_Record> columns_RecordList = [];
 
@@ -11,6 +11,8 @@ namespace Generator {
 
 		static void Main() {
 			GetTableData();
+
+			Directory.Delete(directory, true);
 
 			Record.Generate(directory);
 			NullRecord.Generate(directory);

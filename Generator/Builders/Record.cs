@@ -1,7 +1,6 @@
-﻿using Generator.Classes;
-
-namespace Generator {
-	internal class Record : Program {
+﻿namespace Generator
+{
+    internal class Record : Program {
 
 		public static void Generate(string directory) {
 			string folder = @"Record\";

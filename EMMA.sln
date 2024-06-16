@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMMA", "EMMA\EMMA.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SingleRun", "SingleRun\SingleRun.csproj", "{01C49E1C-A46E-4453-A5DF-79D3DB880CBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator", "Generatore\Generator.csproj", "{1A46B4C8-FAA0-4C0D-91C0-5E021361E50B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator", "Generator\Generator.csproj", "{1A46B4C8-FAA0-4C0D-91C0-5E021361E50B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
