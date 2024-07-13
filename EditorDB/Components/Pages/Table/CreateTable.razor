@@ -1,0 +1,123 @@
+﻿@page "/createTable"
+@using System.Data.SqlClient
+@rendermode InteractiveServer
+
+@inject Services.MainService mainService
+<head>
+	<link href="css/TableStyle.css" rel="stylesheet" />
+</head>
+
+<div>
+	<div class="DIV_Title">
+		<span class="SPN_Title">Create Table</span>
+	</div>
+	<table class="TBL_MainTable">
+		<tr>
+			<th></th>
+			<th>Table name</th>
+			<th>
+				<input id="newTableName" type="text" @bind="tables_Record.TABLE_NAME" />
+			</th>
+			<th>Field type</th>
+		</tr>
+		<tr>
+			<td>
+				<input type="checkbox" checked />
+			</td>
+			<td colspan="2">ID</td>
+			<td>
+				<select>
+					<option value="bigint">BigInt</option>
+					<option value="int" selected>Int</option>
+					<option value="smallint">SmallInt</option>
+				</select>
+			</td>
+		</tr>
+		@foreach (var field in fields.Select((value, index) => new { value, index })) {
+			<tr>
+				<td>
+					<input type="button" value="&#9650;">
+					<input type="button" value="+" @onclick="@(x => AddField(field.index))">
+					<input type="button" value="&#9660;">
+				</td>
+				<td colspan="2">
+					<input id="@("fieldName" + field.index)" type="text" value="@field.value" />
+				</td>
+				<td></td>
+			</tr>
+		}
+		<tr>
+			<td><input type="checkbox" checked /></td>
+			<td colspan="2">Ins. date</td>
+			<td>Date</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" checked /></td>
+			<td colspan="2">Ins. time</td>
+			<td>Time</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" checked /></td>
+			<td colspan="2">Ins. info</td>
+			<td>Varchar</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" checked /></td>
+			<td colspan="2">Upd. date</td>
+			<td>Date</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" checked /></td>
+			<td colspan="2">Upd. time</td>
+			<td>Time</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" checked /></td>
+			<td colspan="2">Upd. info</td>
+			<td>Varchar</td>
+		</tr>
+	</table>
+
+	<input type="button" value="Save" @onclick="Save_Click">
+</div>
+
+@code {
+	Dictionary<string, Tables_Record> tables_Dictionary = new();
+	Tables_Record tables_Record = new();
+	List<string> fields = new();
+
+	protected override void OnInitialized() {
+		base.OnInitialized();
+		tables_Dictionary = mainService.tables_RecordList.ToDictionary(x => x.TABLE_NAME, x => x);
+		fields.Add("");
+		fields.Add("");
+		fields.Add("");
+	}
+
+	private void AddField(int index) {
+		fields.Insert(index, "");
+	}
+
+	protected void Save_Click() {
+		SqlConnection connection = mainService.connection;
+		connection.Open();
+
+		SqlTransaction transaction = connection.BeginTransaction();
+		try {
+			using (SqlCommand command = connection.CreateCommand()) {
+				command.Transaction = transaction;
+
+				command.CommandText = "";
+				command.ExecuteNonQuery();
+			}
+
+			transaction.Commit();
+			connection.Close();
+		}
+		catch (Exception ex) {
+			transaction.Rollback();
+			connection.Close();
+			throw new Exception($"Errore while creating table {tables_Record.TABLE_NAME}: {ex.Message}");
+		}
+	}
+}

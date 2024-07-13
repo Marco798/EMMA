@@ -1,0 +1,102 @@
+﻿@page "/renameTable"
+@using System.Data.SqlClient
+@rendermode InteractiveServer
+
+@inject Services.MainService mainService
+<head>
+	<link href="css/TableStyle.css" rel="stylesheet" />
+</head>
+
+<div class="DIV_MainDiv">
+	<div class="DIV_Title">
+		<span class="SPN_Title">Rename Table</span>
+	</div>
+	<div class="DIV_TableDiv">
+		<table class="TBL_MainTable">
+			<tr>
+				<td class="TD_TableTitle TD_TableTitleOld">OLD</td>
+				<td class="TD_TableTitle TD_Description"></td>
+				<td class="TD_TableTitle TD_TableTitleNew">NEW</td>
+			</tr>
+			<tr>
+				<td class="TD_OldData">
+					<select title="Table" @onchange="SelectedTable_OnChange">
+						<option value="">---</option>
+						@foreach (Tables_Record table in mainService.tables_RecordList) {
+							<option value="@table.TABLE_NAME">@table.TABLE_NAME</option>
+						}
+					</select>
+				</td>
+				<td class="TD_Description">Table name</td>
+				<td class="TD_NewData">
+					<input type="text" id="newTableName" title="New table name" @bind="new_tables_Record.TABLE_NAME" />
+				</td>
+			</tr>
+			<tr>
+				<td class="TD_OldData">@old_tables_Record.DESCRIPTION</td>
+				<td class="TD_Description">Description</td>
+				<td class="TD_NewData">
+					<input id="newDescription" type="text" @bind="new_tables_Record.DESCRIPTION" />
+				</td>
+			</tr>
+			<tr>
+				<td class="TD_OldData">@old_tables_Record.SHORT_DESCRIPTION</td>
+				<td class="TD_Description">Short description</td>
+				<td class="TD_NewData">
+					<input id="newShortDescription" type="text" @bind="new_tables_Record.SHORT_DESCRIPTION" />
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="DIV_SaveDiv">
+		<input type="button" class="BTN_Save" value="Save" @onclick="Save_Click"></input>
+	</div>
+</div>
+
+@code {
+	Dictionary<string, Tables_Record> tables_Dictionary = new();
+	Tables_Record new_tables_Record = new();
+	Tables_Record old_tables_Record = new();
+
+	protected override void OnInitialized() {
+		base.OnInitialized();
+		tables_Dictionary = mainService.tables_RecordList.ToDictionary(x => x.TABLE_NAME, x => x);
+	}
+
+	protected void SelectedTable_OnChange(ChangeEventArgs e) {
+		string value = e.Value?.ToString() ?? string.Empty;
+
+		if (tables_Dictionary.ContainsKey(value))
+			tables_Dictionary.TryGetValue(value, out old_tables_Record!);
+		else
+			old_tables_Record = new();
+
+		new_tables_Record = old_tables_Record.Clone();
+	}
+
+	protected void Save_Click() {
+		SqlConnection connection = mainService.connection;
+		connection.Open();
+
+		SqlTransaction transaction = connection.BeginTransaction();
+		try {
+			using (SqlCommand command = connection.CreateCommand()) {
+				command.Transaction = transaction;
+
+				command.CommandText = $"EXEC SP_RENAME '{old_tables_Record.TABLE_NAME}', '{new_tables_Record.TABLE_NAME}'; " +
+				$"UPDATE SYST_TABLE SET TABLE_NAME = '{new_tables_Record.TABLE_NAME}', DESCRIPTION = '{new_tables_Record.DESCRIPTION}', SHORT_DESCRIPTION = '{new_tables_Record.SHORT_DESCRIPTION}' WHERE TABLE_NAME = '{old_tables_Record.TABLE_NAME}'; " +
+				$"UPDATE SYST_COLUMN SET TABLE_NAME = '{new_tables_Record.TABLE_NAME}' WHERE TABLE_NAME = '{old_tables_Record.TABLE_NAME}';";
+				command.ExecuteNonQuery();
+			}
+
+			transaction.Commit();
+			connection.Close();
+		}
+		catch (Exception ex) {
+			transaction.Rollback();
+			connection.Close();
+			throw new Exception($"Errore while renaming table {old_tables_Record.TABLE_NAME} into {new_tables_Record.TABLE_NAME}: {ex.Message}");
+		}
+	}
+}
