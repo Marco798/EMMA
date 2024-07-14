@@ -1,5 +1,6 @@
 namespace Generator {
 	internal class FLOW_INPUT_FILE_NullRecord {
+		public Long? ID { get; set; }
 		public string? NOME_FLUSSO { get; set; }
 		public string? TIPO_FLUSSO { get; set; }
 		public string? CONTENUTO { get; set; }

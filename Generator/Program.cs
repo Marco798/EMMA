@@ -1,8 +1,7 @@
 ﻿using System.Data.SqlClient;
 
-namespace Generator
-{
-    internal class Program {
+namespace Generator {
+	internal class Program {
 		protected static readonly List<Tables_Record> tables_RecordList = [];
 		protected static readonly List<Columns_Record> columns_RecordList = [];
 
@@ -71,8 +70,8 @@ namespace Generator
 						columns_Record.DATA_TYPE = reader.GetString(i++);
 						columns_Record.CHARACTER_MAXIMUM_LENGTH = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
 						columns_Record.CHARACTER_OCTET_LENGTH = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
-						columns_Record.NUMERIC_PRECISION = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
-						columns_Record.NUMERIC_PRECISION_RADIX = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
+						columns_Record.NUMERIC_PRECISION = reader.IsDBNull(i) ? null : reader.GetByte(i); i++;
+						columns_Record.NUMERIC_PRECISION_RADIX = reader.IsDBNull(i) ? null : reader.GetInt16(i); i++;
 						columns_Record.NUMERIC_SCALE = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
 						columns_Record.DATETIME_PRECISION = reader.IsDBNull(i) ? null : reader.GetInt16(i); i++;
 						columns_Record.CHARACTER_SET_CATALOG = reader.IsDBNull(i) ? null : reader.GetString(i); i++;

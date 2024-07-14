@@ -25,6 +25,7 @@
 					string dataType = string.Empty;
 					dataType = columns_Record.DATA_TYPE switch {
 						"varchar" or "varbinary" => "string",
+						"bigint" => "Long",
 						"date" => "DateTime",
 						"time" => "TimeSpan",
 						_ => throw new Exception(),
