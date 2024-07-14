@@ -1,0 +1,39 @@
+﻿@rendermode InteractiveServer
+
+@foreach (Field field in fields) {
+	<tr>
+		<td><input type="checkbox" @bind="field.Enabled" /></td>
+		<td>@field.FieldName</td>
+		<td>@field.FieldType</td>
+		<td></td>
+	</tr>
+}
+
+@code {
+	[Parameter]
+	public Field[] fields { get; set; }
+
+	InsUpd_Fields() {
+		fields = new Field[] {
+			new Field("INS_DATE", "Date"),
+			new Field("INS_TIME", "Time"),
+			new Field("INS_INFO", "Varchar"),
+			new Field("UPD_DATE", "Date"),
+			new Field("UPD_TIME", "Time"),
+			new Field("UPD_INFO", "Varchar")
+		};
+	}
+
+
+	public class Field {
+		public bool Enabled { get; set; }
+		public string FieldName { get; set; }
+		public string FieldType { get; set; }
+
+		public Field(string fieldName, string fieldType) {
+			Enabled = true;
+			FieldName = fieldName;
+			FieldType = fieldType;
+		}
+	}
+}

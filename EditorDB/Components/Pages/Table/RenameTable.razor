@@ -22,7 +22,7 @@
 				<td class="TD_OldData">
 					<select title="Table" @onchange="SelectedTable_OnChange">
 						<option value="">---</option>
-						@foreach (Tables_Record table in mainService.tables_RecordList) {
+						@foreach (Tables_Record table in mainService.Tables_RecordList) {
 							<option value="@table.TABLE_NAME">@table.TABLE_NAME</option>
 						}
 					</select>
@@ -61,7 +61,7 @@
 
 	protected override void OnInitialized() {
 		base.OnInitialized();
-		tables_Dictionary = mainService.tables_RecordList.ToDictionary(x => x.TABLE_NAME, x => x);
+		tables_Dictionary = mainService.Tables_RecordList.ToDictionary(x => x.TABLE_NAME, x => x);
 	}
 
 	protected void SelectedTable_OnChange(ChangeEventArgs e) {
@@ -98,5 +98,7 @@
 			connection.Close();
 			throw new Exception($"Errore while renaming table {old_tables_Record.TABLE_NAME} into {new_tables_Record.TABLE_NAME}: {ex.Message}");
 		}
+
+		mainService.Update();
 	}
 }

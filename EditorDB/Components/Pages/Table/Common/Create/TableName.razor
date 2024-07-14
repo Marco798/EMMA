@@ -1,0 +1,25 @@
+﻿@rendermode InteractiveServer
+
+<tr>
+	<th style="border-right: none; text-align:right">Table name</th>
+	<th>
+		<input id="newTableName" type="text" @onchange="OnValueChanged" />
+	</th>
+	<th>IsNullable</th>
+	<th>Field category</th>
+	<th>Field type</th>
+	<th>Length</th>
+</tr>
+
+@code {
+	[Parameter]
+	public string Value { get; set; }
+
+	[Parameter]
+	public EventCallback<string> ValueChanged { get; set; }
+
+	private async Task OnValueChanged(ChangeEventArgs e) {
+		Value = e.Value.ToString();
+		await ValueChanged.InvokeAsync(Value);
+	}
+}

@@ -13,7 +13,7 @@
 	</div>
 	<select @onchange="SelectedTable_OnChange">
 		<option value="">---</option>
-		@foreach (Tables_Record table in mainService.tables_RecordList) {
+		@foreach (Tables_Record table in mainService.Tables_RecordList) {
 			<option value="@table.TABLE_NAME">@table.TABLE_NAME</option>
 		}
 	</select>
@@ -27,7 +27,7 @@
 
 	protected override void OnInitialized() {
 		base.OnInitialized();
-		tables_Dictionary = mainService.tables_RecordList.ToDictionary(x => x.TABLE_NAME, x => x);
+		tables_Dictionary = mainService.Tables_RecordList.ToDictionary(x => x.TABLE_NAME, x => x);
 	}
 
 	protected void SelectedTable_OnChange(ChangeEventArgs e) {
@@ -48,7 +48,11 @@
 			using (SqlCommand command = connection.CreateCommand()) {
 				command.Transaction = transaction;
 
-				command.CommandText = $"DROP TABLE {tables_Record.TABLE_NAME}";
+				string query = $"DROP TABLE {tables_Record.TABLE_NAME};\n";
+				query += $"DELETE SYST_TABLE WHERE TABLE_NAME = '{tables_Record.TABLE_NAME}';\n";
+				query += $"DELETE SYST_COLUMN WHERE TABLE_NAME = '{tables_Record.TABLE_NAME}';";
+
+				command.CommandText = query;
 				command.ExecuteNonQuery();
 			}
 
@@ -60,6 +64,7 @@
 			connection.Close();
 			throw new Exception($"Errore while deleting table {tables_Record.TABLE_NAME}: {ex.Message}");
 		}
-	}
 
+		mainService.Update();
+	}
 }

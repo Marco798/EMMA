@@ -1,6 +1,36 @@
-﻿.TBL_MainTable input[type=button] {
-    width: 40px;
-    min-width: 0px;
-    margin: 0px;
-    padding: 0px;
+﻿.TBL_MainTable {
+    margin-top: 30px;
+}
+
+    .TBL_MainTable input[type=button] {
+        width: 40px;
+        min-width: 0px;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .TBL_MainTable th {
+        border-bottom: 1px solid;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .TBL_MainTable td {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+.TD_TableLabel {
+    text-align: right;
+    border-right: none;
+}
+
+.TD_TableField {
+    text-align: left;
+    border-right: none;
+    padding-right: 50px;
+}
+
+.INP_TableDescription {
+    width: 500px;
 }

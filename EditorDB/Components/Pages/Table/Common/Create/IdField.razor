@@ -1,0 +1,28 @@
+﻿@using EditorDB.Classes.BusinessValues
+<tr>
+	<td>
+		<input type="checkbox" checked />
+	</td>
+	<td>ID</td>
+	<td>Integer</td>
+	<td>
+		<select @onchange="OnIdTypeChanged">
+			@foreach (BV_DataType.Type value in BV_DataType.Integer.GetValues()) {
+				<option value="@value.Value">@value.Name</option>
+			}
+		</select>
+	</td>
+</tr>
+
+@code {
+	[Parameter]
+	public string IdType { get; set; }
+
+	[Parameter]
+	public EventCallback<string> IdTypeChanged { get; set; }
+
+	private async Task OnIdTypeChanged(ChangeEventArgs e) {
+		IdType = e.Value.ToString();
+		await IdTypeChanged.InvokeAsync(IdType);
+	}
+}

@@ -2,8 +2,8 @@
 
 namespace EditorDB.Services {
 	public class MainService {
-		public List<Tables_Record> tables_RecordList { get; set; }
-		public List<Columns_Record> columns_RecordList { get; set; }
+		public List<Tables_Record> Tables_RecordList { get; set; }
+		public List<Columns_Record> Columns_RecordList { get; set; }
 
 		static string connectionString = string.Empty;
 		public SqlConnection connection = new();
@@ -11,8 +11,15 @@ namespace EditorDB.Services {
 			connectionString = "Server=localhost\\SQLEXPRESS;Database=EMMA;Integrated Security=True;";
 			connection = new(connectionString);
 
-			tables_RecordList = new();
-			columns_RecordList = new();
+			Tables_RecordList = [];
+			Columns_RecordList = [];
+
+			Update();
+		}
+
+		public void Update() {
+			Tables_RecordList = [];
+			Columns_RecordList = [];
 
 			try {
 				connection.Open();
@@ -36,7 +43,7 @@ namespace EditorDB.Services {
 						tables_Record.DESCRIPTION = reader.GetString(i++);
 						tables_Record.SHORT_DESCRIPTION = reader.GetString(i++);
 
-						tables_RecordList.Add(tables_Record);
+						Tables_RecordList.Add(tables_Record);
 					}
 				}
 
@@ -81,7 +88,7 @@ namespace EditorDB.Services {
 						columns_Record.DESCRIPTION = reader.GetString(i++);
 						columns_Record.SHORT_DESCRIPTION = reader.GetString(i++);
 
-						columns_RecordList.Add(columns_Record);
+						Columns_RecordList.Add(columns_Record);
 					}
 				}
 
