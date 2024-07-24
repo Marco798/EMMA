@@ -1,5 +1,5 @@
-namespace Generator {
-	internal class SYST_COLUMN_NullRecord {
+namespace EMMA_BE.Generated {
+	public class SYST_COLUMN_NullRecord {
 		public string? TABLE_NAME { get; set; }
 		public string? COLUMN_NAME { get; set; }
 		public string? DESCRIPTION { get; set; }

@@ -1,0 +1,38 @@
+﻿using EMMA.Commons;
+using Microsoft.Extensions.Configuration;
+using System.Data.SqlClient;
+
+namespace %%NAME_SPACE%% {
+	public class %%TABLE_NAME%%_Query(IConfiguration configuration) : QueryBase(configuration) {
+		private const string NomeTabella = "%%TABLE_NAME_PC%%";
+		private const string NomeTabellaDB = "%%TABLE_NAME%%";
+	
+		public List<%%TABLE_NAME%%_Record> SelectAll() {
+			using SqlConnection connection = new(connectionString);
+
+			List<%%TABLE_NAME%%_Record> output = [];
+			try {
+				connection.Open();
+
+				string query = "SELECT * FROM %%TABLE_NAME%%";
+				using (SqlCommand command = new(query, connection)) {
+					SqlDataReader reader = command.ExecuteReader();
+					while (reader.Read()) {
+						%%TABLE_NAME%%_Record record = new();
+						int i = 0;
+						%%SELECT_ALL_FIELDS%%
+
+						output.Add(record);
+					}
+				}
+
+				connection.Close();
+			} catch(Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+
+			return output;
+		}
+	}
+}

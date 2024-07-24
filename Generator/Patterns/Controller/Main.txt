@@ -1,0 +1,27 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace %%NAME_SPACE%% {
+	[ApiController]
+	[Route("[controller]")]
+	public class %%TABLE_NAME%%Controller : ControllerBase {
+
+		protected readonly IConfiguration _configuration;
+		protected readonly %%TABLE_NAME%%_Query _query;
+
+		public %%TABLE_NAME%%Controller(IConfiguration configuration) {
+			_configuration = configuration;
+			_query = new %%TABLE_NAME%%_Query(_configuration);
+		}
+
+		[HttpGet("SelectAll")]
+		public IActionResult SelectAll() {
+			try {
+				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectAll();
+				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+	}
+}

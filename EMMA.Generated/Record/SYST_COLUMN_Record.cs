@@ -1,6 +1,7 @@
-namespace Generator {
-	internal class SYST_TABLE_Record {
+namespace EMMA_BE.Generated {
+	public class SYST_COLUMN_Record {
 		public string TABLE_NAME { get; set; }
+		public string COLUMN_NAME { get; set; }
 		public string DESCRIPTION { get; set; }
 		public string SHORT_DESCRIPTION { get; set; }
 	}

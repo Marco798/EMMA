@@ -15,8 +15,10 @@
 			foreach (Tables_Record tables_Record in tables_RecordList) {
 				string value_Record_Main = pattern_Record_Main;
 
-				value_Record_Main = value_Record_Main.Replace("%%NAME_SPACE%%", "Generator");
-				value_Record_Main = value_Record_Main.Replace("%%CLASS_NAME%%", tables_Record.TABLE_NAME);
+				string tableName = ToPascalCase(tables_Record.TABLE_NAME);
+
+				value_Record_Main = value_Record_Main.Replace("%%NAME_SPACE%%", "EMMA_BE.Generated");
+				value_Record_Main = value_Record_Main.Replace("%%TABLE_NAME%%", tables_Record.TABLE_NAME);
 
 				string recordField_List = string.Empty;
 				foreach (Columns_Record columns_Record in columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME)) {
@@ -25,7 +27,8 @@
 					string dataType = string.Empty;
 					dataType = columns_Record.DATA_TYPE switch {
 						"varchar" or "varbinary" => "string",
-						"bigint" => "Long",
+						"int" => "int",
+						"bigint" => "long",
 						"date" => "DateTime",
 						"time" => "TimeSpan",
 						_ => throw new Exception(),

@@ -11,10 +11,27 @@ namespace Generator {
 		static void Main() {
 			GetTableData();
 
-			Directory.Delete(directory, true);
+			if (Directory.Exists(directory)) {
+				Directory.Delete(directory, true);
+			}
 
+			Controller.Generate(directory);
 			Record.Generate(directory);
 			NullRecord.Generate(directory);
+			Query.Generate(directory);
+
+
+			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Query")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Query", true);
+			Directory.Move(@"..\..\..\Generated\Query", @"..\..\..\..\EMMA.Generated\Query");
+
+			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Record")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Record", true);
+			Directory.Move(@"..\..\..\Generated\Record", @"..\..\..\..\EMMA.Generated\Record");
+
+			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\NullRecord")) Directory.Delete(@"..\..\..\..\EMMA.Generated\NullRecord", true);
+			Directory.Move(@"..\..\..\Generated\NullRecord", @"..\..\..\..\EMMA.Generated\NullRecord");
+
+			if (Directory.Exists(@"..\..\..\..\EMMA_FE\Controllers")) Directory.Delete(@"..\..\..\..\EMMA_FE\Controllers", true);
+			Directory.Move(@"..\..\..\Generated\Controller", @"..\..\..\..\EMMA_FE\Controllers");
 		}
 
 		private static void GetTableData() {
@@ -98,6 +115,18 @@ namespace Generator {
 				connection.Close();
 				throw new Exception($"Error while retrieving tables and columns data: {e.Message}");
 			}
+		}
+
+		public static string ToPascalCase(string constantCase) {
+			string[] words = constantCase.Split('_');
+
+			string output = words[0] + "_";
+			foreach(string word in words.Skip(1)) {
+				output += word.ToUpper()[0];
+				output += word[1..].ToLower();
+			}
+
+			return output;
 		}
 	}
 }
