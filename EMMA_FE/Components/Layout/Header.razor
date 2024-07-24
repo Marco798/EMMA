@@ -1,0 +1,15 @@
+﻿@using EMMA_FE.Components.Pages
+@using System.Data.SqlClient
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<div class="DIV_Main">
+</div>
+
+@code {
+	private string apiResponse;
+
+	protected override async Task OnInitializedAsync() {
+		apiResponse = await Http.GetStringAsync("https://localhost:7062/TestController");
+	}
+}

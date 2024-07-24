@@ -1,6 +1,6 @@
-using EMMA.Components;
+using EMMA_FE.Components;
 
-namespace EMMA {
+namespace EMMA_FE {
 	public class Program {
 		public static void Main(string[] args) {
 			var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +8,10 @@ namespace EMMA {
 			// Add services to the container.
 			builder.Services.AddRazorComponents()
 				.AddInteractiveServerComponents();
+
+			builder.Services.AddHttpClient();
+
+			//builder.Services.AddSingleton<DbService>();
 
 			var app = builder.Build();
 
