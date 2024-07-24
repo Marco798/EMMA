@@ -55,9 +55,9 @@
 		@foreach (var field in fields.Skip(1).Where(x => x.Index < 1000).OrderBy(x => x.Index)) {
 			<tr>
 				<td>
-					<input type="button" value="&#9650;">
+					<input type="button" value="▲" @onclick="@(x => MoveUp(field.Index))">
 					<input type="button" value="+" @onclick="@(x => AddField(field.Index + 1))">
-					<input type="button" value="&#9660;">
+					<input type="button" value="▼" @onclick="@(x => MoveDown(field.Index))">
 				</td>
 				<td>
 					<input id="@("fieldName" + field.Index)" type="text" @bind="@field.Name" />
@@ -129,6 +129,30 @@
 		fields.Add(new(1003, "UPD_DATE", false, BV_DataType.Category.DateTime, BV_DataType.DateTime_.Date));
 		fields.Add(new(1004, "UPD_TIME", false, BV_DataType.Category.DateTime, BV_DataType.DateTime_.Time));
 		fields.Add(new(1005, "UPD_INFO", false, BV_DataType.Category.String, BV_DataType.String.Varchar, 40));
+	}
+
+	private void MoveUp(int index) {
+		if (index == 1) return;
+
+		FieldData field = fields[index];
+		FieldData previousField = fields[index - 1];
+
+		field.Index--;
+		previousField.Index++;
+
+		fields = fields.OrderBy(x => x.Index).ToList();
+	}
+
+	private void MoveDown(int index) {
+		if (index == fields.Select(x => x.Index).Where(x => x < 1000).Max()) return;
+
+		FieldData field = fields[index];
+		FieldData nextField = fields[index + 1];
+
+		field.Index++;
+		nextField.Index--;
+
+		fields = fields.OrderBy(x => x.Index).ToList();
 	}
 
 	private void AddField(int index) {
