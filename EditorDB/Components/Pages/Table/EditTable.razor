@@ -1,5 +1,9 @@
 ﻿@page "/editTable"
 @using System.Data.SqlClient
+@using EditorDB.Classes
+@using EditorDB.Classes.BusinessValues
+@using EditorDB.Components.Pages.Table.Common
+@using EditorDB.Components.Pages.Table.Common.Create
 @rendermode InteractiveServer
 
 @inject Services.MainService mainService
@@ -8,11 +12,292 @@
 </head>
 
 <div>
-	<div class="DIV_Title">
-		<span class="SPN_Title">Edit Table</span>
-	</div>
+	<FormTitle Title="Edit table"></FormTitle>
+	<table>
+		<tr>
+			<td class="TD_TableLabel">Table name</td>
+			<td class="TD_TableField">
+				<select title="Table" @onchange="SelectedTable_OnChange">
+					<option value="">---</option>
+					@foreach (Tables_Record table in mainService.Tables_RecordList) {
+						<option value="@table.TABLE_NAME">@table.TABLE_NAME</option>
+					}
+				</select>
+			</td>
+			<td class="TD_TableLabel">Description</td>
+			<td class="TD_OldData">@tables_Record.DESCRIPTION</td>
+			<td class="TD_TableLabel">Short description</td>
+			<td class="TD_OldData">@tables_Record.SHORT_DESCRIPTION</td>
+		</tr>
+	</table>
+	<table class="TBL_MainTable">
+		<tr>
+			<th></th>
+			<th>Field name</th>
+			<th>Nullable</th>
+			<th>Category</th>
+			<th>Type</th>
+			<th>Length</th>
+			<th>Integer digits</th>
+			<th>Decimal digits</th>
+		</tr>
+		<tr>
+			<td>
+				<input type="checkbox" checked />
+			</td>
+			<td>ID</td>
+			<td></td>
+			<td>Integer</td>
+			<td>
+				@if (fields_New.Count > 0) {
+					<select @bind="fields_New[0].Type">
+						@foreach (BV_DataType.Type value in BV_DataType.Integer.GetValues()) {
+							<option value="@value.Value">@value.Name</option>
+						}
+					</select>
+				}
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		@foreach (var field in fields_New.Values.Skip(1).Where(x => x.Index < 1000).OrderBy(x => x.Index)) {
+			<tr>
+				<td>
+					<input type="button" value="▲" @onclick="@(x => MoveUp(field.Index))">
+					<input type="button" value="+" @onclick="@(x => AddField(field.Index + 1))">
+					<input type="button" value="▼" @onclick="@(x => MoveDown(field.Index))">
+				</td>
+				<td>
+					<input id="@("fieldName" + field.Index)" type="text" @bind="@field.Name" />
+				</td>
+				<td><input type="checkbox" @bind="@field.Nullable" /></td>
+				<td>
+					<select @bind="@field.Category">
+						<option value=""></option>
+						@foreach (BV_DataType.Type value in BV_DataType.Category.GetValues()) {
+							<option value="@value.Value">@value.Name</option>
+						}
+					</select>
+				</td>
+				<td>
+					<select @bind="@field.Type">
+						<option value=""></option>
+						@foreach (BV_DataType.Type value in GetFieldTypeList(field)) {
+							<option value="@value.Value">@value.Name</option>
+						}
+					</select>
+				</td>
+				<td>
+					@if (field.Category == BV_DataType.Category.String && !string.IsNullOrWhiteSpace(field.Type)) {
+						<input type="text" @bind=@field.Length />
+					}
+				</td>
+				<td>
+					@if (field.Category == BV_DataType.Category.Decimal && !string.IsNullOrWhiteSpace(field.Type)) {
+						<input type="text" @bind=@field.IntegerDigits />
+					}
+				</td>
+				<td>
+					@if (field.Category == BV_DataType.Category.Decimal && !string.IsNullOrWhiteSpace(field.Type)) {
+						<input type="text" @bind=@field.DecimalDigits />
+					}
+				</td>
+			</tr>
+		}
+		@foreach (var field in fields_New.Values.Where(x => x.Index >= 1000).OrderBy(x => x.Index)) {
+			<tr>
+				<td><input type="checkbox" @bind="field.Enabled" /></td>
+				<td>@field.Name</td>
+				<td></td>
+				<td>@field.Category</td>
+				<td>@field.Type</td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		}
+	</table>
+
+	<input type="button" value="Save" @onclick="Save_Click">
 </div>
 
 @code {
+	Tables_Record tables_Record = new();
+	List<Columns_Record> columns_Record_List = [];
+	Dictionary<int, FieldData> fields_Old = new();
+	Dictionary<int, FieldData> fields_New = new();
 
+	Dictionary<string, Tables_Record> tables_Dictionary = new();
+
+	protected override void OnInitialized() {
+		base.OnInitialized();
+		tables_Dictionary = mainService.Tables_RecordList.ToDictionary(x => x.TABLE_NAME, x => x);
+	}
+
+	protected void SelectedTable_OnChange(ChangeEventArgs e) {
+		string value = e.Value?.ToString() ?? string.Empty;
+		fields_Old = [];
+
+		if (tables_Dictionary.ContainsKey(value)) {
+			tables_Dictionary.TryGetValue(value, out tables_Record!);
+			columns_Record_List = mainService.Columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME).OrderBy(x => x.ORDINAL_POSITION).ToList();
+			foreach (Columns_Record column in columns_Record_List.OrderBy(x => x.ORDINAL_POSITION)) {
+				string category = string.Empty;
+				if (BV_DataType.String.GetValues().Select(x => x.Value).Contains(column.DATA_TYPE)) category = BV_DataType.Category.String;
+				else if (BV_DataType.Integer.GetValues().Select(x => x.Value).Contains(column.DATA_TYPE)) category = BV_DataType.Category.Integer;
+				else if (BV_DataType.Decimal_.GetValues().Select(x => x.Value).Contains(column.DATA_TYPE)) category = BV_DataType.Category.Decimal;
+				else if (BV_DataType.Binary_.GetValues().Select(x => x.Value).Contains(column.DATA_TYPE)) category = BV_DataType.Category.Binary;
+				else if (BV_DataType.Boolean_.GetValues().Select(x => x.Value).Contains(column.DATA_TYPE)) category = BV_DataType.Category.Boolean;
+				else if (BV_DataType.DateTime_.GetValues().Select(x => x.Value).Contains(column.DATA_TYPE)) category = BV_DataType.Category.DateTime;
+
+				fields_Old.Add(fields_Old.Count > 0 ? (fields_Old.Max(x => x.Key) + 1) : 0, new FieldData(column.ORDINAL_POSITION, column.COLUMN_NAME, column.IS_NULLABLE == "YES" ? true : false, category, column.DATA_TYPE));
+			}
+		}
+		else
+			tables_Record = new();
+
+		fields_New = [];
+		foreach(KeyValuePair<int, FieldData> field in fields_Old) {
+			fields_New.Add(field.Key, field.Value.Clone());
+		}
+	}
+
+	private void MoveUp(int index) {
+		if (index == 1) return;
+
+		FieldData field = fields_New[index];
+		FieldData previousField = fields_New[index - 1];
+
+		field.Index--;
+		previousField.Index++;
+	}
+
+	private void MoveDown(int index) {
+		if (index == fields_New.Select(x => x.Value.Index).Where(x => x < 1000).Max()) return;
+
+		FieldData field = fields_New[index];
+		FieldData nextField = fields_New[index + 1];
+
+		field.Index++;
+		nextField.Index--;
+	}
+
+	private void AddField(int index) {
+		foreach (FieldData field in fields_New.Values.Where(x => x.Index >= index && x.Index < 1000)) {
+			field.Index++;
+		}
+
+		fields_New.Add(index, new FieldData(index));
+	}
+
+	private List<BV_DataType.Type> GetFieldTypeList(FieldData field) {
+		@switch (field.Category) {
+			case BV_DataType.Category.String:
+				return BV_DataType.String.GetValues();
+			case BV_DataType.Category.Integer:
+				return BV_DataType.Integer.GetValues();
+			case BV_DataType.Category.Decimal:
+				return BV_DataType.Decimal_.GetValues();
+			case BV_DataType.Category.Binary:
+				return BV_DataType.Binary_.GetValues();
+			case BV_DataType.Category.Boolean:
+				return BV_DataType.Boolean_.GetValues();
+			case BV_DataType.Category.DateTime:
+				return BV_DataType.DateTime_.GetValues();
+			default:
+				return new();
+		}
+	}
+
+	protected void Save_Click() {
+		SqlConnection connection = mainService.connection;
+		connection.Open();
+
+		SqlTransaction transaction = connection.BeginTransaction();
+		try {
+			using (SqlCommand command = connection.CreateCommand()) {
+				command.Transaction = transaction;
+
+				tables_Record.TABLE_NAME = tables_Record.TABLE_NAME.ToUpper();
+
+				string query = $"CREATE TABLE _tmp_{tables_Record.TABLE_NAME} (\n";
+				foreach (FieldData field in fields_New.Values.OrderBy(x => x.Index))
+				{
+					if (field.Index == 0)
+					{
+						query += $"	ID {field.Type} IDENTITY(1,1) NOT NULL,\n";
+						continue;
+					}
+
+					field.Name = field.Name.ToUpper();
+					switch (field.Category)
+					{
+						case BV_DataType.Category.String:
+							query += $"	{field.Name} {field.Type}({(field.Length.HasValue ? field.Length : "MAX")}) {(field.Nullable ? "" : "NOT")} NULL,\n";
+							break;
+						case BV_DataType.Category.Integer:
+							query += $"	{field.Name} {field.Type} {(field.Nullable ? "" : "NOT ")}NULL,\n";
+							break;
+						case BV_DataType.Category.Decimal:
+							query += $"	{field.Name} {field.Type}({field.IntegerDigits + field.DecimalDigits}, {field.DecimalDigits}) {(field.Nullable ? "" : "NOT")} NULL,\n";
+							break;
+						case BV_DataType.Category.Binary:
+							query += $"	{field.Name} {field.Type}({(field.Length.HasValue ? field.Length : "MAX")}) {(field.Nullable ? "" : "NOT")} NULL,\n";
+							break;
+						case BV_DataType.Category.Boolean:
+							query += $"	{field.Name} {field.Type} {(field.Nullable ? "" : "NOT")} NULL,\n";
+							break;
+						case BV_DataType.Category.DateTime:
+							query += $"	{field.Name} {field.Type} {(field.Nullable ? "" : "NOT")} NULL,\n";
+							break;
+					}
+				}
+
+				query += "\n	PRIMARY KEY CLUSTERED (\n";
+				query += "		ID ASC\n";
+				query += "	)\n";
+				query += ")\n\n";
+
+				query += $"DELETE SYST_TABLE WHERE TABLE_NAME = '{tables_Record.TABLE_NAME}'\n";
+				query += $"DELETE SYST_COLUMN WHERE TABLE_NAME = '{tables_Record.TABLE_NAME}'\n\n";
+
+				query += $"INSERT INTO SYST_TABLE VALUES ('{tables_Record.TABLE_NAME}', '{tables_Record.DESCRIPTION}', '{tables_Record.SHORT_DESCRIPTION}');\n";
+
+				string newData = $"\nINSERT INTO _tmp_{tables_Record.TABLE_NAME} (";
+				string oldData = "SELECT ";
+				foreach (KeyValuePair<int, FieldData> field in fields_New.OrderBy(x => x.Value.Index)) {
+					query += $"INSERT INTO SYST_COLUMN VALUES ('{tables_Record.TABLE_NAME}', '{field.Value.Name}', '', '');\n";
+
+					if (fields_Old.ContainsKey(field.Key)) {
+						newData += $"{field.Value.Name}, ";
+						oldData += $"{fields_Old[field.Key].Name}, ";
+					}
+				}
+				newData = newData[..^2] + ")\n";
+				oldData = oldData[..^2] + "\n";
+
+				query += newData;
+				query += oldData;
+				query += $"FROM {tables_Record.TABLE_NAME}\n\n";
+
+
+				query += $"EXEC sp_rename '{tables_Record.TABLE_NAME}', '_old_{tables_Record.TABLE_NAME}'\n";
+				query += $"EXEC sp_rename '_tmp_{tables_Record.TABLE_NAME}', '{tables_Record.TABLE_NAME}'\n";
+
+				command.CommandText = query;
+				command.ExecuteNonQuery();
+			}
+
+			transaction.Commit();
+			connection.Close();
+		}
+		catch (Exception ex) {
+			transaction.Rollback();
+			connection.Close();
+			throw new Exception($"Errore while creating table {tables_Record.TABLE_NAME}: {ex.Message}");
+		}
+
+		mainService.Update();
+	}
 }
