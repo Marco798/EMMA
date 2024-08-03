@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Components\Generated\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

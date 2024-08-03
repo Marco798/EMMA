@@ -1,0 +1,2 @@
+﻿@page "/%%TABLE_NAME%%"
+@rendermode InteractiveServer

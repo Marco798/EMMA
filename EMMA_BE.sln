@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMMA_BE", "EMMA_BE\EMMA_BE.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMMA.Generated", "EMMA.Generated\EMMA.Generated.csproj", "{2FF9F4B4-A065-44ED-8B5B-CEC239B88E40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMMA.Commons", "EMMA.Commons\EMMA.Commons.csproj", "{76500DA2-5281-4114-96BA-DB6CC28B84CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMMA.Commons", "EMMA.Commons\EMMA.Commons.csproj", "{76500DA2-5281-4114-96BA-DB6CC28B84CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EditorDB", "EditorDB\EditorDB.csproj", "{860E084B-B519-4620-A60D-F42492DBAC17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{76500DA2-5281-4114-96BA-DB6CC28B84CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76500DA2-5281-4114-96BA-DB6CC28B84CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76500DA2-5281-4114-96BA-DB6CC28B84CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{860E084B-B519-4620-A60D-F42492DBAC17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{860E084B-B519-4620-A60D-F42492DBAC17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{860E084B-B519-4620-A60D-F42492DBAC17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{860E084B-B519-4620-A60D-F42492DBAC17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

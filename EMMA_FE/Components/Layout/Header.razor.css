@@ -1,1 +1,22 @@
-﻿
+﻿.DIV_Main {
+    padding: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+}
+
+.DIV_MenuVoice {
+    position: relative;
+    margin-left: 5px;
+}
+
+.BTN_MenuMainVoice {
+    height: 30px;
+}
+
+.BTN_MenuSubVoice {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 99;
+}

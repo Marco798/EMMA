@@ -1,15 +1,44 @@
-﻿@using EMMA_FE.Components.Pages
+﻿@using EMMA_BE.Generated
+@using EMMA_FE.Components.Pages
 @using System.Data.SqlClient
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <div class="DIV_Main">
+	@foreach (SYST_MENU_Record record in _SYST_MENU_Record_List.Where(x => string.IsNullOrWhiteSpace(x.PARENT))) {
+		<div @onmouseover="() => ShowChildren(record.NAME)" @onmouseleave="HideChildren" class="DIV_MenuVoice">
+			<input type="button" value="@record.NAME" class="BTN_MenuMainVoice" />
+			@if (selectedVoice == record.NAME) {
+				@foreach (SYST_MENU_Record child in _SYST_MENU_Record_List.Where(x => x.PARENT == record.NAME)) {
+					<input type="button" value="@child.NAME" class="BTN_MenuSubVoice" @onclick="() => Redirect(child.NAME)" />
+				}
+			}
+		</div>
+	}
 </div>
 
+
 @code {
-	private string apiResponse;
+	private List<SYST_MENU_Record> _SYST_MENU_Record_List = [];
+	private string selectedVoice = string.Empty;
 
 	protected override async Task OnInitializedAsync() {
-		apiResponse = await Http.GetStringAsync("https://localhost:7062/TestController");
+		var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_SYST_MENU_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_MENU_Record>>() ?? [];
+		}
+	}
+
+	private void Redirect(string page) {
+		NavigationManager.NavigateTo($"/{page}");
+	}
+
+	private void ShowChildren(string parent) {
+		selectedVoice = parent;
+	}
+
+	private void HideChildren() {
+		selectedVoice = string.Empty;
 	}
 }

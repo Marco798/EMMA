@@ -19,6 +19,7 @@ namespace Generator {
 			Record.Generate(directory);
 			NullRecord.Generate(directory);
 			Query.Generate(directory);
+			Component.Generate(directory);
 
 
 			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Query")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Query", true);
@@ -30,8 +31,11 @@ namespace Generator {
 			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\NullRecord")) Directory.Delete(@"..\..\..\..\EMMA.Generated\NullRecord", true);
 			Directory.Move(@"..\..\..\Generated\NullRecord", @"..\..\..\..\EMMA.Generated\NullRecord");
 
-			if (Directory.Exists(@"..\..\..\..\EMMA_FE\Controllers")) Directory.Delete(@"..\..\..\..\EMMA_FE\Controllers", true);
-			Directory.Move(@"..\..\..\Generated\Controller", @"..\..\..\..\EMMA_FE\Controllers");
+			if (Directory.Exists(@"..\..\..\..\EMMA_BE\Generated\Controllers")) Directory.Delete(@"..\..\..\..\EMMA_BE\Generated\Controllers", true);
+			Directory.Move(@"..\..\..\Generated\Controller", @"..\..\..\..\EMMA_BE\Generated\Controllers");
+
+			if (Directory.Exists(@"..\..\..\..\EMMA_FE\Components\Generated")) Directory.Delete(@"..\..\..\..\EMMA_FE\Components\Generated", true);
+			Directory.Move(@"..\..\..\Generated\Component", @"..\..\..\..\EMMA_FE\Components\Generated");
 		}
 
 		private static void GetTableData() {
