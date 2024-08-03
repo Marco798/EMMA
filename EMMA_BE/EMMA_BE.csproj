@@ -5,4 +5,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Generated\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EMMA.Generated\EMMA.Generated.csproj" />
+  </ItemGroup>
 </Project>
