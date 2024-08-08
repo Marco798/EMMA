@@ -1,8 +1,8 @@
 ﻿.DIV_Main {
-    padding: 0;
+    padding: 5px 10px 5px 5px;
     display: flex;
     list-style: none;
-    align-items: center;
+    background-color: rgba(0, 255, 255, 0.5);
 }
 
 .DIV_MenuVoice {

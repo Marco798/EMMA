@@ -1,2 +1,59 @@
 @page "/FLOW_INPUT_FILE"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
 @rendermode InteractiveServer
+
+@if (_FLOW_INPUT_FILE_EditRecord == null) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in FLOW_INPUT_FILE_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (FLOW_INPUT_FILE_Record record in _FLOW_INPUT_FILE_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { _FLOW_INPUT_FILE_EditRecord = record;})" /></td>
+					<td>@record.ID</td>
+					<td>@record.NOME_FLUSSO</td>
+					<td>@record.TIPO_FLUSSO</td>
+					<td>@record.CONTENUTO</td>
+					<td>@record.INS_DATE</td>
+					<td>@record.INS_TIME</td>
+					<td>@record.INS_INFO</td>
+					<td>@record.UPD_DATE</td>
+					<td>@record.UPD_TIME</td>
+					<td>@record.UPD_INFO</td>
+				</tr>
+			}
+		</table>
+	</div>
+}
+
+@if (_FLOW_INPUT_FILE_EditRecord != null) {
+	<div>
+		<table>
+			<tr><TextBox IsTable=true Value="@_FLOW_INPUT_FILE_EditRecord.NOME_FLUSSO" Description="NOME_FLUSSO" /></tr>
+			<tr><TextBox IsTable=true Value="@_FLOW_INPUT_FILE_EditRecord.TIPO_FLUSSO" Description="TIPO_FLUSSO" /></tr>
+			<tr><td style="border: none; text-align: right; display: block;">CONTENUTO</td></tr>
+		</table>
+		<input type="button" value="Back" @onclick="(x => { _FLOW_INPUT_FILE_EditRecord = null;})" />
+	</div>
+}
+
+@code {
+	private List<FLOW_INPUT_FILE_Record> _FLOW_INPUT_FILE_Record_List = [];
+	private FLOW_INPUT_FILE_Record? _FLOW_INPUT_FILE_EditRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/FLOW_INPUT_FILE/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_FLOW_INPUT_FILE_Record_List = await response.Content.ReadFromJsonAsync<List<FLOW_INPUT_FILE_Record>>() ?? [];
+		}
+	}
+
+}

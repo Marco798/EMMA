@@ -1,2 +1,61 @@
 @page "/SYST_MENU"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
 @rendermode InteractiveServer
+
+@if (_SYST_MENU_EditRecord == null) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in SYST_MENU_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (SYST_MENU_Record record in _SYST_MENU_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { _SYST_MENU_EditRecord = record;})" /></td>
+					<td>@record.ID</td>
+					<td>@record.NAME</td>
+					<td>@record.PARENT</td>
+					<td>@record.DESCRIPTION</td>
+					<td>@record.SHORT_DESCRIPTION</td>
+					<td>@record.INS_DATE</td>
+					<td>@record.INS_TIME</td>
+					<td>@record.INS_INFO</td>
+					<td>@record.UPD_DATE</td>
+					<td>@record.UPD_TIME</td>
+					<td>@record.UPD_INFO</td>
+				</tr>
+			}
+		</table>
+	</div>
+}
+
+@if (_SYST_MENU_EditRecord != null) {
+	<div>
+		<table>
+			<tr><TextBox IsTable=true Value="@_SYST_MENU_EditRecord.NAME" Description="NAME" Length="255" Width="255" /></tr>
+			<tr><TextBox IsTable=true Value="@_SYST_MENU_EditRecord.PARENT" Description="PARENT" Length="255" Width="255" /></tr>
+			<tr><TextBox IsTable=true Value="@_SYST_MENU_EditRecord.DESCRIPTION" Description="DESCRIPTION" Length="255" Width="255" /></tr>
+			<tr><TextBox IsTable=true Value="@_SYST_MENU_EditRecord.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="255" Width="255" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="(x => { _SYST_MENU_EditRecord = null;})" />
+	</div>
+}
+
+@code {
+	private List<SYST_MENU_Record> _SYST_MENU_Record_List = [];
+	private SYST_MENU_Record? _SYST_MENU_EditRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_SYST_MENU_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_MENU_Record>>() ?? [];
+		}
+	}
+
+}

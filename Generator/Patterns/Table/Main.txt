@@ -1,0 +1,9 @@
+﻿namespace %%NAME_SPACE%% {
+	public static class %%TABLE_NAME%%_Table {
+
+		public static List<string> GetFieldList() {
+			return [%%FIELD_LIST%%
+			];
+		}
+	}
+}

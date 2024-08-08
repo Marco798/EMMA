@@ -1,2 +1,52 @@
 @page "/SYST_TABLE"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
 @rendermode InteractiveServer
+
+@if (_SYST_TABLE_EditRecord == null) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in SYST_TABLE_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (SYST_TABLE_Record record in _SYST_TABLE_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { _SYST_TABLE_EditRecord = record;})" /></td>
+					<td>@record.TABLE_NAME</td>
+					<td>@record.DESCRIPTION</td>
+					<td>@record.SHORT_DESCRIPTION</td>
+				</tr>
+			}
+		</table>
+	</div>
+}
+
+@if (_SYST_TABLE_EditRecord != null) {
+	<div>
+		<table>
+			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.TABLE_NAME" Description="TABLE_NAME" Length="255" Width="255" /></tr>
+			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.DESCRIPTION" Description="DESCRIPTION" Length="255" Width="255" /></tr>
+			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="255" Width="255" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="(x => { _SYST_TABLE_EditRecord = null;})" />
+	</div>
+}
+
+@code {
+	private List<SYST_TABLE_Record> _SYST_TABLE_Record_List = [];
+	private SYST_TABLE_Record? _SYST_TABLE_EditRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/SYST_TABLE/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_SYST_TABLE_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_TABLE_Record>>() ?? [];
+		}
+	}
+
+}

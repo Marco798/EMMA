@@ -26,7 +26,8 @@
 
 					string dataType = string.Empty;
 					dataType = columns_Record.DATA_TYPE switch {
-						"varchar" or "varbinary" => "string",
+						"varchar" => "string",
+						"varbinary" => "byte[]",
 						"int" => "int",
 						"bigint" => "long",
 						"date" => "DateTime",

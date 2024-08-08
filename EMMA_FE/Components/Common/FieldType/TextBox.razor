@@ -1,0 +1,39 @@
+﻿
+@if (IsTable) {
+	<td>
+		@if (!string.IsNullOrWhiteSpace(Description)) {
+			<label for="input" style="text-align: right; display: block;">@Description</label>
+		}
+	</td>
+	<td>
+		<input type="text" id="input" value="@Value" maxlength="@Length" style="@InputStyle" />
+	</td>
+}
+else {
+	<div>
+		@if (!string.IsNullOrWhiteSpace(Description)) {
+			<label for="input" style="text-align: right; display: block;">@Description</label>
+		}
+		<input type="text" id="input" value="@Value" maxlength="@Length" style="@InputStyle" />
+	</div>
+}
+
+@code {
+	[Parameter]
+	public string? Value { get; set; }
+	[Parameter]
+	public string? Description { get; set; }
+	[Parameter]
+	public int? Length { get; set; }
+	[Parameter]
+	public int? Width { get; set; }
+	[Parameter]
+	public bool IsTable { get; set; }
+
+
+	private string InputStyle = string.Empty;
+
+	protected override void OnInitialized() {
+		InputStyle = $"width: calc({(Width ?? 200)}ch + 10px);";
+	}
+}

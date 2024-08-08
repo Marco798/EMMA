@@ -16,6 +16,7 @@ namespace Generator {
 			}
 
 			Controller.Generate(directory);
+			Table.Generate(directory);
 			Record.Generate(directory);
 			NullRecord.Generate(directory);
 			Query.Generate(directory);
@@ -24,6 +25,9 @@ namespace Generator {
 
 			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Query")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Query", true);
 			Directory.Move(@"..\..\..\Generated\Query", @"..\..\..\..\EMMA.Generated\Query");
+
+			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Table")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Table", true);
+			Directory.Move(@"..\..\..\Generated\Table", @"..\..\..\..\EMMA.Generated\Table");
 
 			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Record")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Record", true);
 			Directory.Move(@"..\..\..\Generated\Record", @"..\..\..\..\EMMA.Generated\Record");

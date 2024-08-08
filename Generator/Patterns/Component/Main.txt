@@ -1,2 +1,46 @@
 ﻿@page "/%%TABLE_NAME%%"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
 @rendermode InteractiveServer
+
+@if (_%%TABLE_NAME%%_EditRecord == null) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in %%TABLE_NAME%%_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (%%TABLE_NAME%%_Record record in _%%TABLE_NAME%%_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { _%%TABLE_NAME%%_EditRecord = record;})" /></td>%%FIELD_LIST%%
+				</tr>
+			}
+		</table>
+	</div>
+}
+
+@if (_%%TABLE_NAME%%_EditRecord != null) {
+	<div>
+		<table>%%EDIT_FORM%%
+		</table>
+		<input type="button" value="Back" @onclick="(x => { _%%TABLE_NAME%%_EditRecord = null;})" />
+	</div>
+}
+
+@code {
+	private List<%%TABLE_NAME%%_Record> _%%TABLE_NAME%%_Record_List = [];
+	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_EditRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/%%TABLE_NAME%%/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_%%TABLE_NAME%%_Record_List = await response.Content.ReadFromJsonAsync<List<%%TABLE_NAME%%_Record>>() ?? [];
+		}
+	}
+
+}
