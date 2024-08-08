@@ -282,7 +282,7 @@
 				query += $"FROM {tables_Record.TABLE_NAME}\n\n";
 
 
-				query += $"EXEC sp_rename '{tables_Record.TABLE_NAME}', '_old_{tables_Record.TABLE_NAME}'\n";
+				query += $"DROP TABLE _old_{tables_Record.TABLE_NAME}\n";
 				query += $"EXEC sp_rename '_tmp_{tables_Record.TABLE_NAME}', '{tables_Record.TABLE_NAME}'\n";
 
 				command.CommandText = query;
