@@ -24,13 +24,15 @@ namespace EMMA_BE.Generated {
 						record.ID = reader.GetInt64(i++);
 						record.NOME_FLUSSO = reader.GetString(i++);
 						record.TIPO_FLUSSO = reader.GetString(i++);
-						record.CONTENUTO = reader.GetString(i++);
-						record.DATA_INS = reader.GetDateTime(i++);
-						record.ORA_INS = reader.GetTimeSpan(i++);
-						record.INFO_INS = reader.GetString(i++);
-						record.DATA_AGG = reader.GetDateTime(i++);
-						record.ORA_AGG = reader.GetTimeSpan(i++);
-						record.INFO_AGG = reader.GetString(i++);
+
+						record.CONTENUTO = new byte[reader.GetBytes(i, 0, null, 0, 0)];
+						reader.GetBytes(i++, 0, record.CONTENUTO, 0, record.CONTENUTO.Length);
+						record.INS_DATE = reader.GetDateTime(i++);
+						record.INS_TIME = reader.GetTimeSpan(i++);
+						record.INS_INFO = reader.GetString(i++);
+						record.UPD_DATE = reader.GetDateTime(i++);
+						record.UPD_TIME = reader.GetTimeSpan(i++);
+						record.UPD_INFO = reader.GetString(i++);
 
 						output.Add(record);
 					}

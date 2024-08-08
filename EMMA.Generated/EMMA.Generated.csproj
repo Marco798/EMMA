@@ -14,4 +14,8 @@
     <ProjectReference Include="..\EMMA.Commons\EMMA.Commons.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Table\" />
+  </ItemGroup>
+
 </Project>
