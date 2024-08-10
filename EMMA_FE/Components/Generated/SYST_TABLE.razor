@@ -17,7 +17,7 @@
 			</tr>
 			@foreach (SYST_TABLE_Record record in _SYST_TABLE_Record_List) {
 				<tr>
-					<td><input type="button" value="E" @onclick="(x => { _SYST_TABLE_EditRecord = record;})" /></td>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
 					<td>@record.ID</td>
 					<td>@record.TABLE_NAME</td>
 					<td>@record.DESCRIPTION</td>
@@ -35,13 +35,16 @@
 			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.DESCRIPTION" Description="DESCRIPTION" /></tr>
 			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" /></tr>
 		</table>
-		<input type="button" value="Back" @onclick="(x => { _SYST_TABLE_EditRecord = null;})" />
-		<input type="button" value="Update" @onclick="UpdateByKey" />
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
 	</div>
 }
 
 @code {
 	private List<SYST_TABLE_Record> _SYST_TABLE_Record_List = [];
+
+	private SYST_TABLE_Record? _SYST_TABLE_EditRecord_Orig = null;
 	private SYST_TABLE_Record? _SYST_TABLE_EditRecord = null;
 
 	protected override async Task OnInitializedAsync() {
@@ -51,7 +54,21 @@
 		}
 	}
 
-	protected async void UpdateByKey() {
+	private void Edit(SYST_TABLE_Record record) {
+		_SYST_TABLE_EditRecord_Orig = record;
+		_SYST_TABLE_EditRecord = record;
+	}
+
+	private void BackFromEdit() {
+		_SYST_TABLE_EditRecord_Orig = null;
+		_SYST_TABLE_EditRecord = null;
+	}
+
+	private void ResetUpdate() {
+		_SYST_TABLE_EditRecord = _SYST_TABLE_EditRecord_Orig;
+	}
+
+	protected async void Update() {
 		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_TABLE/UpdateByKey", _SYST_TABLE_EditRecord);
 		if (response.IsSuccessStatusCode) {
 

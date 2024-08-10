@@ -21,6 +21,7 @@
 				value_Record_Main = value_Record_Main.Replace("%%TABLE_NAME%%", tables_Record.TABLE_NAME);
 
 				string recordField_List = string.Empty;
+				string cloneField_List = string.Empty;
 				foreach (Columns_Record columns_Record in columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME)) {
 					string value_Record_Field = pattern_Record_Field;
 
@@ -45,11 +46,13 @@
 					value_Record_Field = value_Record_Field.Replace("%%DATA_TYPE%%", dataType);
 					value_Record_Field = value_Record_Field.Replace("%%IS_NULLABLE%%", isNullable);
 					value_Record_Field = value_Record_Field.Replace("%%FIELD_NAME%%", columns_Record.COLUMN_NAME);
-
 					recordField_List += "\r\n" + value_Record_Field;
+
+					cloneField_List += $"\t\t\t\t{columns_Record.COLUMN_NAME} = {columns_Record.COLUMN_NAME},\r\n";
 				}
 
 				value_Record_Main = value_Record_Main.Replace("%%RECORD_FIELD%%", recordField_List);
+				value_Record_Main = value_Record_Main.Replace("%%CLONE_FIELD%%", cloneField_List[..^3]);
 
 				File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}_Record.cs", value_Record_Main);
 			}

@@ -17,7 +17,7 @@
 			</tr>
 			@foreach (FLOW_INPUT_FILE_Record record in _FLOW_INPUT_FILE_Record_List) {
 				<tr>
-					<td><input type="button" value="E" @onclick="(x => { _FLOW_INPUT_FILE_EditRecord = record;})" /></td>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
 					<td>@record.ID</td>
 					<td>@record.NOME_FLUSSO</td>
 					<td>@record.TIPO_FLUSSO</td>
@@ -41,13 +41,16 @@
 			<tr><TextBox IsTable=true Value="@_FLOW_INPUT_FILE_EditRecord.TIPO_FLUSSO" Description="TIPO_FLUSSO" /></tr>
 			<tr><td style="border: none; text-align: right; display: block;">CONTENUTO</td></tr>
 		</table>
-		<input type="button" value="Back" @onclick="(x => { _FLOW_INPUT_FILE_EditRecord = null;})" />
-		<input type="button" value="Update" @onclick="UpdateByKey" />
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
 	</div>
 }
 
 @code {
 	private List<FLOW_INPUT_FILE_Record> _FLOW_INPUT_FILE_Record_List = [];
+
+	private FLOW_INPUT_FILE_Record? _FLOW_INPUT_FILE_EditRecord_Orig = null;
 	private FLOW_INPUT_FILE_Record? _FLOW_INPUT_FILE_EditRecord = null;
 
 	protected override async Task OnInitializedAsync() {
@@ -57,7 +60,21 @@
 		}
 	}
 
-	protected async void UpdateByKey() {
+	private void Edit(FLOW_INPUT_FILE_Record record) {
+		_FLOW_INPUT_FILE_EditRecord_Orig = record;
+		_FLOW_INPUT_FILE_EditRecord = record;
+	}
+
+	private void BackFromEdit() {
+		_FLOW_INPUT_FILE_EditRecord_Orig = null;
+		_FLOW_INPUT_FILE_EditRecord = null;
+	}
+
+	private void ResetUpdate() {
+		_FLOW_INPUT_FILE_EditRecord = _FLOW_INPUT_FILE_EditRecord_Orig;
+	}
+
+	protected async void Update() {
 		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/FLOW_INPUT_FILE/UpdateByKey", _FLOW_INPUT_FILE_EditRecord);
 		if (response.IsSuccessStatusCode) {
 

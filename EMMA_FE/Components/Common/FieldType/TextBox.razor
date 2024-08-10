@@ -6,7 +6,7 @@
 		}
 	</td>
 	<td>
-		<input type="text" id="input" value="@Value" maxlength="@Length" style="@InputStyle" />
+		<input type="text" id="input" @bind="Value" maxlength="@Length" style="@InputStyle" @oninput="OnInputChanged" />
 	</td>
 }
 else {
@@ -14,7 +14,7 @@ else {
 		@if (!string.IsNullOrWhiteSpace(Description)) {
 			<label for="input" style="text-align: right; display: block;">@Description</label>
 		}
-		<input type="text" id="input" value="@Value" maxlength="@Length" style="@InputStyle" />
+		<input type="text" id="input" @bind="Value" maxlength="@Length" style="@InputStyle" @oninput="OnInputChanged" />
 	</div>
 }
 
@@ -30,10 +30,18 @@ else {
 	[Parameter]
 	public bool IsTable { get; set; }
 
+	[Parameter]
+	public EventCallback<string> ValueChanged { get; set; }
+
 
 	private string InputStyle = string.Empty;
 
 	protected override void OnInitialized() {
 		InputStyle = $"width: calc({(Width ?? 200)}ch + 10px);";
+	}
+
+	private async Task OnInputChanged(ChangeEventArgs e) {
+		Value = e.Value!.ToString();
+		await ValueChanged.InvokeAsync(Value);
 	}
 }

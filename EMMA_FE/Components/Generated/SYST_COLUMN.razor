@@ -17,7 +17,7 @@
 			</tr>
 			@foreach (SYST_COLUMN_Record record in _SYST_COLUMN_Record_List) {
 				<tr>
-					<td><input type="button" value="E" @onclick="(x => { _SYST_COLUMN_EditRecord = record;})" /></td>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
 					<td>@record.ID</td>
 					<td>@record.TABLE_NAME</td>
 					<td>@record.COLUMN_NAME</td>
@@ -37,13 +37,16 @@
 			<tr><TextBox IsTable=true Value="@_SYST_COLUMN_EditRecord.DESCRIPTION" Description="DESCRIPTION" Length="255" Width="255" /></tr>
 			<tr><TextBox IsTable=true Value="@_SYST_COLUMN_EditRecord.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="255" Width="255" /></tr>
 		</table>
-		<input type="button" value="Back" @onclick="(x => { _SYST_COLUMN_EditRecord = null;})" />
-		<input type="button" value="Update" @onclick="UpdateByKey" />
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
 	</div>
 }
 
 @code {
 	private List<SYST_COLUMN_Record> _SYST_COLUMN_Record_List = [];
+
+	private SYST_COLUMN_Record? _SYST_COLUMN_EditRecord_Orig = null;
 	private SYST_COLUMN_Record? _SYST_COLUMN_EditRecord = null;
 
 	protected override async Task OnInitializedAsync() {
@@ -53,7 +56,21 @@
 		}
 	}
 
-	protected async void UpdateByKey() {
+	private void Edit(SYST_COLUMN_Record record) {
+		_SYST_COLUMN_EditRecord_Orig = record;
+		_SYST_COLUMN_EditRecord = record;
+	}
+
+	private void BackFromEdit() {
+		_SYST_COLUMN_EditRecord_Orig = null;
+		_SYST_COLUMN_EditRecord = null;
+	}
+
+	private void ResetUpdate() {
+		_SYST_COLUMN_EditRecord = _SYST_COLUMN_EditRecord_Orig;
+	}
+
+	protected async void Update() {
 		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_COLUMN/UpdateByKey", _SYST_COLUMN_EditRecord);
 		if (response.IsSuccessStatusCode) {
 
