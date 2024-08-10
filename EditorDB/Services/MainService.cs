@@ -39,7 +39,7 @@ namespace EditorDB.Services {
 						tables_Record.TABLE_NAME = reader.GetString(i++);
 						tables_Record.TABLE_TYPE = reader.GetString(i++);
 
-						i++;
+						i += 2;
 						tables_Record.DESCRIPTION = reader.GetString(i++);
 						tables_Record.SHORT_DESCRIPTION = reader.GetString(i++);
 
