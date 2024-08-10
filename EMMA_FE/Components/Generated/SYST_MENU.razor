@@ -44,6 +44,7 @@
 			<tr><TextBox IsTable=true Value="@_SYST_MENU_EditRecord.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="255" Width="255" /></tr>
 		</table>
 		<input type="button" value="Back" @onclick="(x => { _SYST_MENU_EditRecord = null;})" />
+		<input type="button" value="Update" @onclick="UpdateByKey" />
 	</div>
 }
 
@@ -55,6 +56,13 @@
 		var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
 		if (response.IsSuccessStatusCode) {
 			_SYST_MENU_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_MENU_Record>>() ?? [];
+		}
+	}
+
+	protected async void UpdateByKey() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_MENU/UpdateByKey", _SYST_MENU_EditRecord);
+		if (response.IsSuccessStatusCode) {
+
 		}
 	}
 

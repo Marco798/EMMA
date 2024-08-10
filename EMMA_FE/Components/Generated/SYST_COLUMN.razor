@@ -18,6 +18,7 @@
 			@foreach (SYST_COLUMN_Record record in _SYST_COLUMN_Record_List) {
 				<tr>
 					<td><input type="button" value="E" @onclick="(x => { _SYST_COLUMN_EditRecord = record;})" /></td>
+					<td>@record.ID</td>
 					<td>@record.TABLE_NAME</td>
 					<td>@record.COLUMN_NAME</td>
 					<td>@record.DESCRIPTION</td>
@@ -37,6 +38,7 @@
 			<tr><TextBox IsTable=true Value="@_SYST_COLUMN_EditRecord.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="255" Width="255" /></tr>
 		</table>
 		<input type="button" value="Back" @onclick="(x => { _SYST_COLUMN_EditRecord = null;})" />
+		<input type="button" value="Update" @onclick="UpdateByKey" />
 	</div>
 }
 
@@ -48,6 +50,13 @@
 		var response = await Http.GetAsync(@"https://localhost:7062/SYST_COLUMN/SelectAll");
 		if (response.IsSuccessStatusCode) {
 			_SYST_COLUMN_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_COLUMN_Record>>() ?? [];
+		}
+	}
+
+	protected async void UpdateByKey() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_COLUMN/UpdateByKey", _SYST_COLUMN_EditRecord);
+		if (response.IsSuccessStatusCode) {
+
 		}
 	}
 

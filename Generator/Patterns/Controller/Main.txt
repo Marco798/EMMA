@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace %%NAME_SPACE%% {
 	[ApiController]
@@ -18,6 +20,18 @@ namespace %%NAME_SPACE%% {
 			try {
 				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectAll();
 				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost("UpdateByKey")]
+		public IActionResult UpdateByKey(%%TABLE_NAME%%_Record record) {
+			try {
+				_query.UpdateByKey(record.ID, new %%TABLE_NAME%%_NullRecord(record));
+
+				return Ok();
 			}
 			catch (Exception ex) {
 				return BadRequest(ex.Message);

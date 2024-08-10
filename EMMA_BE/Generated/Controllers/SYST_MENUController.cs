@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace EMMA_BE.Generated {
 	[ApiController]
@@ -18,6 +20,18 @@ namespace EMMA_BE.Generated {
 			try {
 				List<SYST_MENU_Record> _Record_List = _query.SelectAll();
 				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost("UpdateByKey")]
+		public IActionResult UpdateByKey(SYST_MENU_Record record) {
+			try {
+				_query.UpdateByKey(record.ID, new SYST_MENU_NullRecord(record));
+
+				return Ok();
 			}
 			catch (Exception ex) {
 				return BadRequest(ex.Message);

@@ -1,6 +1,7 @@
 ﻿using EMMA.Commons;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace %%NAME_SPACE%% {
 	public class %%TABLE_NAME%%_Query(IConfiguration configuration) : QueryBase(configuration) {
@@ -27,12 +28,38 @@ namespace %%NAME_SPACE%% {
 				}
 
 				connection.Close();
-			} catch(Exception ex) {
+			}
+			catch (Exception ex) {
 				connection.Close();
 				throw new Exception(ex.Message);
 			}
 
 			return output;
+		}
+
+		public void UpdateByKey(%%ID_TYPE%% id, %%TABLE_NAME%%_NullRecord record) {
+			using SqlConnection connection = new(connectionString);
+
+			try {
+				StringBuilder query = new($"UPDATE %%TABLE_NAME%% SET ");
+				List<SqlParameter> parameters = [];
+				%%UPDATE_BY_KEY_FIELDS%%
+				query.Length -= 2;
+
+				query.Append(" WHERE ID = @ID");
+				parameters.Add(new SqlParameter("@ID", id));
+
+				SqlCommand command = new(query.ToString(), connection);
+				command.Parameters.AddRange([.. parameters]);
+
+				connection.Open();
+				command.ExecuteNonQuery();
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
 		}
 	}
 }

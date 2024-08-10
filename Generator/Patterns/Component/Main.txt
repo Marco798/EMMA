@@ -29,6 +29,7 @@
 		<table>%%EDIT_FORM%%
 		</table>
 		<input type="button" value="Back" @onclick="(x => { _%%TABLE_NAME%%_EditRecord = null;})" />
+		<input type="button" value="Update" @onclick="UpdateByKey" />
 	</div>
 }
 
@@ -40,6 +41,13 @@
 		var response = await Http.GetAsync(@"https://localhost:7062/%%TABLE_NAME%%/SelectAll");
 		if (response.IsSuccessStatusCode) {
 			_%%TABLE_NAME%%_Record_List = await response.Content.ReadFromJsonAsync<List<%%TABLE_NAME%%_Record>>() ?? [];
+		}
+	}
+
+	protected async void UpdateByKey() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/%%TABLE_NAME%%/UpdateByKey", _%%TABLE_NAME%%_EditRecord);
+		if (response.IsSuccessStatusCode) {
+
 		}
 	}
 

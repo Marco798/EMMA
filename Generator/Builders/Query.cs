@@ -1,8 +1,7 @@
 ﻿using System.Reflection.PortableExecutable;
 
-namespace Generator
-{
-    internal class Query : Program {
+namespace Generator {
+	internal class Query : Program {
 
 		public static void Generate(string directory) {
 			string folder = @"Query\";
@@ -22,12 +21,21 @@ namespace Generator
 				value_Record_Main = value_Record_Main.Replace("%%TABLE_NAME%%", tables_Record.TABLE_NAME);
 				value_Record_Main = value_Record_Main.Replace("%%TABLE_NAME_PC%%", tableName);
 
-				string recordField_List = string.Empty;
-				foreach (Columns_Record columns_Record in columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME)) {
-					string value_Record_Field = string.Empty;
+				string idType = columns_RecordList.First(x => x.TABLE_NAME == tables_Record.TABLE_NAME && x.COLUMN_NAME == "ID").DATA_TYPE switch {
+					"int" => "int",
+					"bigint" => "long",
+					_ => throw new Exception(),
+				};
+				value_Record_Main = value_Record_Main.Replace("%%ID_TYPE%%", idType);
 
+				string recordField_List = string.Empty;
+				string updateByKeyField_List = string.Empty;
+
+				foreach (Columns_Record columns_Record in columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME)) {
+					#region recordField_List
+					string value_Record_Field = string.Empty;
 					if (columns_Record.DATA_TYPE == "varbinary") {
-						value_Record_Field += "\r\n						record.%%FIELD_NAME%% = new byte[reader.GetBytes(i, 0, null, 0, 0)];";
+						value_Record_Field += "						record.%%FIELD_NAME%% = new byte[reader.GetBytes(i, 0, null, 0, 0)];";
 						value_Record_Field += "\r\n						reader.GetBytes(i++, 0, record.%%FIELD_NAME%%, 0, record.%%FIELD_NAME%%.Length);";
 					}
 					else {
@@ -57,11 +65,46 @@ namespace Generator
 					}
 
 					value_Record_Field = value_Record_Field.Replace("%%FIELD_NAME%%", columns_Record.COLUMN_NAME);
-
 					recordField_List += "\r\n" + value_Record_Field;
+					#endregion
+
+					#region updateByKeyField_List
+
+					switch (columns_Record.COLUMN_NAME) {
+						case "ID":
+						case "INS_DATE":
+						case "INS_TIME":
+						case "INS_INFO":
+							break;
+						case "UPD_DATE":
+							updateByKeyField_List += $"\r\n				query.Append(\"UPD_DATE = @UPD_DATE, \");";
+							updateByKeyField_List += $"\r\n				parameters.Add(new SqlParameter(\"@UPD_DATE\", DateTime.Now.Date));\r\n";
+							break;
+						case "UPD_TIME":
+							updateByKeyField_List += $"\r\n				query.Append(\"UPD_TIME = @UPD_TIME, \");";
+							updateByKeyField_List += $"\r\n				parameters.Add(new SqlParameter(\"@UPD_TIME\", DateTime.Now.TimeOfDay));\r\n";
+							break;
+						case "UPD_INFO":
+							updateByKeyField_List += $"\r\n				query.Append(\"UPD_INFO = @UPD_INFO, \");";
+							updateByKeyField_List += $"\r\n				parameters.Add(new SqlParameter(\"@UPD_INFO\", DateTime.Now.ToString(\"yyyy-MM-dd;HH:mm:ss\")));\r\n";
+							break;
+						default:
+							string updateByKey_Field = string.Empty;
+
+							updateByKey_Field += "				if (record.IsSet_%%FIELD_NAME%%) {\r\n";
+							updateByKey_Field += "					query.Append(\"%%FIELD_NAME%% = @%%FIELD_NAME%%, \");\r\n";
+							updateByKey_Field += "					parameters.Add(new SqlParameter(\"@%%FIELD_NAME%%\", record.%%FIELD_NAME%%));\r\n";
+							updateByKey_Field += "				}\r\n";
+
+							updateByKey_Field = updateByKey_Field.Replace("%%FIELD_NAME%%", columns_Record.COLUMN_NAME);
+							updateByKeyField_List += "\r\n" + updateByKey_Field;
+							break;
+					}
+					#endregion
 				}
 
 				value_Record_Main = value_Record_Main.Replace("%%SELECT_ALL_FIELDS%%", recordField_List);
+				value_Record_Main = value_Record_Main.Replace("%%UPDATE_BY_KEY_FIELDS%%", updateByKeyField_List);
 
 				File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}_Query.cs", value_Record_Main);
 			}

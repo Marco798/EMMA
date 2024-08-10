@@ -18,6 +18,7 @@
 			@foreach (SYST_TABLE_Record record in _SYST_TABLE_Record_List) {
 				<tr>
 					<td><input type="button" value="E" @onclick="(x => { _SYST_TABLE_EditRecord = record;})" /></td>
+					<td>@record.ID</td>
 					<td>@record.TABLE_NAME</td>
 					<td>@record.DESCRIPTION</td>
 					<td>@record.SHORT_DESCRIPTION</td>
@@ -30,11 +31,12 @@
 @if (_SYST_TABLE_EditRecord != null) {
 	<div>
 		<table>
-			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.TABLE_NAME" Description="TABLE_NAME" Length="255" Width="255" /></tr>
-			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.DESCRIPTION" Description="DESCRIPTION" Length="255" Width="255" /></tr>
-			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="255" Width="255" /></tr>
+			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.TABLE_NAME" Description="TABLE_NAME" /></tr>
+			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.DESCRIPTION" Description="DESCRIPTION" /></tr>
+			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" /></tr>
 		</table>
 		<input type="button" value="Back" @onclick="(x => { _SYST_TABLE_EditRecord = null;})" />
+		<input type="button" value="Update" @onclick="UpdateByKey" />
 	</div>
 }
 
@@ -46,6 +48,13 @@
 		var response = await Http.GetAsync(@"https://localhost:7062/SYST_TABLE/SelectAll");
 		if (response.IsSuccessStatusCode) {
 			_SYST_TABLE_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_TABLE_Record>>() ?? [];
+		}
+	}
+
+	protected async void UpdateByKey() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_TABLE/UpdateByKey", _SYST_TABLE_EditRecord);
+		if (response.IsSuccessStatusCode) {
+
 		}
 	}
 

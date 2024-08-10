@@ -1,6 +1,7 @@
 using EMMA.Commons;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace EMMA_BE.Generated {
 	public class SYST_MENU_Query(IConfiguration configuration) : QueryBase(configuration) {
@@ -38,12 +39,67 @@ namespace EMMA_BE.Generated {
 				}
 
 				connection.Close();
-			} catch(Exception ex) {
+			}
+			catch (Exception ex) {
 				connection.Close();
 				throw new Exception(ex.Message);
 			}
 
 			return output;
+		}
+
+		public void UpdateByKey(int id, SYST_MENU_NullRecord record) {
+			using SqlConnection connection = new(connectionString);
+
+			try {
+				StringBuilder query = new($"UPDATE SYST_MENU SET ");
+				List<SqlParameter> parameters = [];
+				
+				if (record.IsSet_NAME) {
+					query.Append("NAME = @NAME, ");
+					parameters.Add(new SqlParameter("@NAME", record.NAME));
+				}
+
+				if (record.IsSet_PARENT) {
+					query.Append("PARENT = @PARENT, ");
+					parameters.Add(new SqlParameter("@PARENT", record.PARENT));
+				}
+
+				if (record.IsSet_DESCRIPTION) {
+					query.Append("DESCRIPTION = @DESCRIPTION, ");
+					parameters.Add(new SqlParameter("@DESCRIPTION", record.DESCRIPTION));
+				}
+
+				if (record.IsSet_SHORT_DESCRIPTION) {
+					query.Append("SHORT_DESCRIPTION = @SHORT_DESCRIPTION, ");
+					parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
+				}
+
+				query.Append("UPD_DATE = @UPD_DATE, ");
+				parameters.Add(new SqlParameter("@UPD_DATE", DateTime.Now.Date));
+
+				query.Append("UPD_TIME = @UPD_TIME, ");
+				parameters.Add(new SqlParameter("@UPD_TIME", DateTime.Now.TimeOfDay));
+
+				query.Append("UPD_INFO = @UPD_INFO, ");
+				parameters.Add(new SqlParameter("@UPD_INFO", DateTime.Now.ToString("yyyy-MM-dd;HH:mm:ss")));
+
+				query.Length -= 2;
+
+				query.Append(" WHERE ID = @ID");
+				parameters.Add(new SqlParameter("@ID", id));
+
+				SqlCommand command = new(query.ToString(), connection);
+				command.Parameters.AddRange([.. parameters]);
+
+				connection.Open();
+				command.ExecuteNonQuery();
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
 		}
 	}
 }
