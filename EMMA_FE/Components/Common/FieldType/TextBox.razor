@@ -2,25 +2,27 @@
 @if (IsTable) {
 	<td>
 		@if (!string.IsNullOrWhiteSpace(Description)) {
-			<label for="input" style="text-align: right; display: block;">@Description</label>
+			<label for="@Id" style="text-align: right; display: block;">@Description</label>
 		}
 	</td>
 	<td>
-		<input type="text" id="input" @bind="Value" maxlength="@Length" style="@InputStyle" @oninput="OnInputChanged" />
+		<input type="text" id="@Id" @bind="Value" maxlength="@Length" style="@InputStyle" @oninput="OnInputChanged" />
 	</td>
 }
 else {
 	<div>
 		@if (!string.IsNullOrWhiteSpace(Description)) {
-			<label for="input" style="text-align: right; display: block;">@Description</label>
+			<label for="@Id" style="text-align: right; display: block;">@Description</label>
 		}
-		<input type="text" id="input" @bind="Value" maxlength="@Length" style="@InputStyle" @oninput="OnInputChanged" />
+		<input type="text" id="@Id" @bind="Value" maxlength="@Length" style="@InputStyle" @oninput="OnInputChanged" />
 	</div>
 }
 
 @code {
 	[Parameter]
 	public string? Value { get; set; }
+	[Parameter]
+	public string? Id { get; set; }
 	[Parameter]
 	public string? Description { get; set; }
 	[Parameter]

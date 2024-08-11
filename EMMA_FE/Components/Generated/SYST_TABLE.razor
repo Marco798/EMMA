@@ -6,7 +6,7 @@
 @inject HttpClient Http
 @rendermode InteractiveServer
 
-@if (_SYST_TABLE_EditRecord == null) {
+@if (!showNew && !showEdit) {
 	<div>
 		<table>
 			<tr>
@@ -25,15 +25,29 @@
 				</tr>
 			}
 		</table>
+		<input type="button" value="Insert" @onclick="New" />
 	</div>
 }
 
-@if (_SYST_TABLE_EditRecord != null) {
+@if (showNew) {
 	<div>
 		<table>
-			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.TABLE_NAME" Description="TABLE_NAME" /></tr>
-			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.DESCRIPTION" Description="DESCRIPTION" /></tr>
-			<tr><TextBox IsTable=true Value="@_SYST_TABLE_EditRecord.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" /></tr>
+			<tr><TextBox Id="New_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_InsertRecord!.TABLE_NAME" Description="TABLE_NAME" /></tr>
+			<tr><TextBox Id="New_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_InsertRecord!.DESCRIPTION" Description="DESCRIPTION" /></tr>
+			<tr><TextBox Id="New_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_InsertRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromNew" />
+		<input type="button" value="Clean" @onclick="CleanNew" />
+		<input type="button" value="Insert" @onclick="Insert" />
+	</div>
+}
+
+@if (showEdit) {
+	<div>
+		<table>
+			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_EditRecord!.TABLE_NAME" Description="TABLE_NAME" /></tr>
+			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_EditRecord!.DESCRIPTION" Description="DESCRIPTION" /></tr>
+			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_EditRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" /></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromEdit" />
 		<input type="button" value="Reset" @onclick="ResetUpdate" />
@@ -43,6 +57,10 @@
 
 @code {
 	private List<SYST_TABLE_Record> _SYST_TABLE_Record_List = [];
+	bool showEdit = false;
+	bool showNew = false;
+
+	private SYST_TABLE_Record? _SYST_TABLE_InsertRecord = null;
 
 	private SYST_TABLE_Record? _SYST_TABLE_EditRecord_Orig = null;
 	private SYST_TABLE_Record? _SYST_TABLE_EditRecord = null;
@@ -54,24 +72,47 @@
 		}
 	}
 
+	private void New() {
+		showNew = true;
+		_SYST_TABLE_InsertRecord = new();
+	}
+
+	private void BackFromNew() {
+		showNew = false;
+		_SYST_TABLE_InsertRecord = null;
+	}
+
+	private void CleanNew() {
+		_SYST_TABLE_InsertRecord = new();
+	}
+
+	protected async void Insert() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_TABLE/Insert", _SYST_TABLE_InsertRecord);
+		if (response.IsSuccessStatusCode) {
+			showNew = false;
+		}
+	}
+
 	private void Edit(SYST_TABLE_Record record) {
-		_SYST_TABLE_EditRecord_Orig = record;
-		_SYST_TABLE_EditRecord = record;
+		showEdit = true;
+		_SYST_TABLE_EditRecord_Orig = record.Clone();
+		_SYST_TABLE_EditRecord = record.Clone();
 	}
 
 	private void BackFromEdit() {
+		showEdit = false;
 		_SYST_TABLE_EditRecord_Orig = null;
 		_SYST_TABLE_EditRecord = null;
 	}
 
 	private void ResetUpdate() {
-		_SYST_TABLE_EditRecord = _SYST_TABLE_EditRecord_Orig;
+		_SYST_TABLE_EditRecord = _SYST_TABLE_EditRecord_Orig!.Clone();
 	}
 
 	protected async void Update() {
 		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_TABLE/UpdateByKey", _SYST_TABLE_EditRecord);
 		if (response.IsSuccessStatusCode) {
-
+			showEdit = false;
 		}
 	}
 

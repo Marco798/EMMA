@@ -6,7 +6,7 @@
 @inject HttpClient Http
 @rendermode InteractiveServer
 
-@if (_%%TABLE_NAME%%_EditRecord == null) {
+@if (!showNew && !showEdit) {
 	<div>
 		<table>
 			<tr>
@@ -21,10 +21,21 @@
 				</tr>
 			}
 		</table>
+		<input type="button" value="Insert" @onclick="New" />
 	</div>
 }
 
-@if (_%%TABLE_NAME%%_EditRecord != null) {
+@if (showNew) {
+	<div>
+		<table>%%NEW_FORM%%
+		</table>
+		<input type="button" value="Back" @onclick="BackFromNew" />
+		<input type="button" value="Clean" @onclick="CleanNew" />
+		<input type="button" value="Insert" @onclick="Insert" />
+	</div>
+}
+
+@if (showEdit) {
 	<div>
 		<table>%%EDIT_FORM%%
 		</table>
@@ -36,6 +47,10 @@
 
 @code {
 	private List<%%TABLE_NAME%%_Record> _%%TABLE_NAME%%_Record_List = [];
+	bool showEdit = false;
+	bool showNew = false;
+
+	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_InsertRecord = null;
 
 	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_EditRecord_Orig = null;
 	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_EditRecord = null;
@@ -47,24 +62,47 @@
 		}
 	}
 
+	private void New() {
+		showNew = true;
+		_%%TABLE_NAME%%_InsertRecord = new();
+	}
+
+	private void BackFromNew() {
+		showNew = false;
+		_%%TABLE_NAME%%_InsertRecord = null;
+	}
+
+	private void CleanNew() {
+		_%%TABLE_NAME%%_InsertRecord = new();
+	}
+
+	protected async void Insert() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/%%TABLE_NAME%%/Insert", _%%TABLE_NAME%%_InsertRecord);
+		if (response.IsSuccessStatusCode) {
+			showNew = false;
+		}
+	}
+
 	private void Edit(%%TABLE_NAME%%_Record record) {
-		_%%TABLE_NAME%%_EditRecord_Orig = record;
-		_%%TABLE_NAME%%_EditRecord = record;
+		showEdit = true;
+		_%%TABLE_NAME%%_EditRecord_Orig = record.Clone();
+		_%%TABLE_NAME%%_EditRecord = record.Clone();
 	}
 
 	private void BackFromEdit() {
+		showEdit = false;
 		_%%TABLE_NAME%%_EditRecord_Orig = null;
 		_%%TABLE_NAME%%_EditRecord = null;
 	}
 
 	private void ResetUpdate() {
-		_%%TABLE_NAME%%_EditRecord = _%%TABLE_NAME%%_EditRecord_Orig;
+		_%%TABLE_NAME%%_EditRecord = _%%TABLE_NAME%%_EditRecord_Orig!.Clone();
 	}
 
 	protected async void Update() {
 		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/%%TABLE_NAME%%/UpdateByKey", _%%TABLE_NAME%%_EditRecord);
 		if (response.IsSuccessStatusCode) {
-
+			showEdit = false;
 		}
 	}
 
