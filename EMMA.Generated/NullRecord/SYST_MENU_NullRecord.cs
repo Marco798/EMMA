@@ -36,6 +36,8 @@ namespace EMMA_BE.Generated {
 		internal bool IsSet_UPD_TIME { get; private set; }
 		internal bool IsSet_UPD_INFO { get; private set; }
 
+		public SYST_MENU_NullRecord() { }
+
 		public SYST_MENU_NullRecord(SYST_MENU_Record record) {
 			ID = record.ID;
 			NAME = record.NAME;

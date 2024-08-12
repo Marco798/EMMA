@@ -17,7 +17,8 @@
 			</tr>
 			@foreach (%%TABLE_NAME%%_Record record in _%%TABLE_NAME%%_Record_List) {
 				<tr>
-					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>%%FIELD_LIST%%
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
+%%INQUIRY_RECORD%%
 				</tr>
 			}
 		</table>
@@ -27,7 +28,8 @@
 
 @if (showNew) {
 	<div>
-		<table>%%NEW_FORM%%
+		<table>
+%%INSERT_FIELD%%
 		</table>
 		<input type="button" value="Back" @onclick="BackFromNew" />
 		<input type="button" value="Clean" @onclick="CleanNew" />
@@ -37,7 +39,8 @@
 
 @if (showEdit) {
 	<div>
-		<table>%%EDIT_FORM%%
+		<table>
+%%UPDATE_FIELD%%
 		</table>
 		<input type="button" value="Back" @onclick="BackFromEdit" />
 		<input type="button" value="Reset" @onclick="ResetUpdate" />
@@ -50,10 +53,10 @@
 	bool showEdit = false;
 	bool showNew = false;
 
-	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_InsertRecord = null;
+	private %%TABLE_NAME%%_NullRecord? _%%TABLE_NAME%%_InsertRecord = null;
 
-	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_EditRecord_Orig = null;
-	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_EditRecord = null;
+	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_UpdateRecord_Orig = null;
+	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_UpdateRecord = null;
 
 	protected override async Task OnInitializedAsync() {
 		var response = await Http.GetAsync(@"https://localhost:7062/%%TABLE_NAME%%/SelectAll");
@@ -85,22 +88,22 @@
 
 	private void Edit(%%TABLE_NAME%%_Record record) {
 		showEdit = true;
-		_%%TABLE_NAME%%_EditRecord_Orig = record.Clone();
-		_%%TABLE_NAME%%_EditRecord = record.Clone();
+		_%%TABLE_NAME%%_UpdateRecord_Orig = record.Clone();
+		_%%TABLE_NAME%%_UpdateRecord = record.Clone();
 	}
 
 	private void BackFromEdit() {
 		showEdit = false;
-		_%%TABLE_NAME%%_EditRecord_Orig = null;
-		_%%TABLE_NAME%%_EditRecord = null;
+		_%%TABLE_NAME%%_UpdateRecord_Orig = null;
+		_%%TABLE_NAME%%_UpdateRecord = null;
 	}
 
 	private void ResetUpdate() {
-		_%%TABLE_NAME%%_EditRecord = _%%TABLE_NAME%%_EditRecord_Orig!.Clone();
+		_%%TABLE_NAME%%_UpdateRecord = _%%TABLE_NAME%%_UpdateRecord_Orig!.Clone();
 	}
 
 	protected async void Update() {
-		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/%%TABLE_NAME%%/UpdateByKey", _%%TABLE_NAME%%_EditRecord);
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/%%TABLE_NAME%%/UpdateByKey", _%%TABLE_NAME%%_UpdateRecord);
 		if (response.IsSuccessStatusCode) {
 			showEdit = false;
 		}

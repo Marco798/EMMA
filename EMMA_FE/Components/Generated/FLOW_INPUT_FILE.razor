@@ -51,8 +51,8 @@
 @if (showEdit) {
 	<div>
 		<table>
-			<tr><TextBox Id="Edit_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_EditRecord!.NOME_FLUSSO" Description="NOME_FLUSSO" /></tr>
-			<tr><TextBox Id="Edit_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_EditRecord!.TIPO_FLUSSO" Description="TIPO_FLUSSO" /></tr>
+			<tr><TextBox Id="Edit_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_UpdateRecord!.NOME_FLUSSO" Description="NOME_FLUSSO" /></tr>
+			<tr><TextBox Id="Edit_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_UpdateRecord!.TIPO_FLUSSO" Description="TIPO_FLUSSO" /></tr>
 			<tr><td Id="Edit_FLOW_INPUT_FILE" style="border: none; text-align: right; display: block;">CONTENUTO</td></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromEdit" />
@@ -66,10 +66,10 @@
 	bool showEdit = false;
 	bool showNew = false;
 
-	private FLOW_INPUT_FILE_Record? _FLOW_INPUT_FILE_InsertRecord = null;
+	private FLOW_INPUT_FILE_NullRecord? _FLOW_INPUT_FILE_InsertRecord = null;
 
-	private FLOW_INPUT_FILE_Record? _FLOW_INPUT_FILE_EditRecord_Orig = null;
-	private FLOW_INPUT_FILE_Record? _FLOW_INPUT_FILE_EditRecord = null;
+	private FLOW_INPUT_FILE_Record? _FLOW_INPUT_FILE_UpdateRecord_Orig = null;
+	private FLOW_INPUT_FILE_Record? _FLOW_INPUT_FILE_UpdateRecord = null;
 
 	protected override async Task OnInitializedAsync() {
 		var response = await Http.GetAsync(@"https://localhost:7062/FLOW_INPUT_FILE/SelectAll");
@@ -101,22 +101,22 @@
 
 	private void Edit(FLOW_INPUT_FILE_Record record) {
 		showEdit = true;
-		_FLOW_INPUT_FILE_EditRecord_Orig = record.Clone();
-		_FLOW_INPUT_FILE_EditRecord = record.Clone();
+		_FLOW_INPUT_FILE_UpdateRecord_Orig = record.Clone();
+		_FLOW_INPUT_FILE_UpdateRecord = record.Clone();
 	}
 
 	private void BackFromEdit() {
 		showEdit = false;
-		_FLOW_INPUT_FILE_EditRecord_Orig = null;
-		_FLOW_INPUT_FILE_EditRecord = null;
+		_FLOW_INPUT_FILE_UpdateRecord_Orig = null;
+		_FLOW_INPUT_FILE_UpdateRecord = null;
 	}
 
 	private void ResetUpdate() {
-		_FLOW_INPUT_FILE_EditRecord = _FLOW_INPUT_FILE_EditRecord_Orig!.Clone();
+		_FLOW_INPUT_FILE_UpdateRecord = _FLOW_INPUT_FILE_UpdateRecord_Orig!.Clone();
 	}
 
 	protected async void Update() {
-		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/FLOW_INPUT_FILE/UpdateByKey", _FLOW_INPUT_FILE_EditRecord);
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/FLOW_INPUT_FILE/UpdateByKey", _FLOW_INPUT_FILE_UpdateRecord);
 		if (response.IsSuccessStatusCode) {
 			showEdit = false;
 		}

@@ -1,0 +1,1 @@
+﻿			<tr><td Id="Edit_%%TABLE_NAME%%" style="border: none; text-align: right; display: block;">%%COLUMN_NAME%%</td></tr>

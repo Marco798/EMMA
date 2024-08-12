@@ -80,5 +80,38 @@ namespace EMMA_BE.Generated {
 				throw new Exception(ex.Message);
 			}
 		}
+
+		public void Insert(SYST_TABLE_Record record) {
+			using SqlConnection connection = new(connectionString);
+
+			try {
+				StringBuilder query = new($"INSERT INTO SYST_TABLE VALUES ( ");
+				List<SqlParameter> parameters = [];
+				
+				query.Append("@TABLE_NAME, ");
+				parameters.Add(new SqlParameter("@TABLE_NAME", record.TABLE_NAME));
+
+				query.Append("@DESCRIPTION, ");
+				parameters.Add(new SqlParameter("@DESCRIPTION", record.DESCRIPTION));
+
+				query.Append("@SHORT_DESCRIPTION, ");
+				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
+
+				query.Length -= 2;
+
+				query.Append(")");
+
+				SqlCommand command = new(query.ToString(), connection);
+				command.Parameters.AddRange([.. parameters]);
+
+				connection.Open();
+				command.ExecuteNonQuery();
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+		}
 	}
 }

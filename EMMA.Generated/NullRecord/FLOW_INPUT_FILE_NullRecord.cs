@@ -33,6 +33,8 @@ namespace EMMA_BE.Generated {
 		internal bool IsSet_UPD_TIME { get; private set; }
 		internal bool IsSet_UPD_INFO { get; private set; }
 
+		public FLOW_INPUT_FILE_NullRecord() { }
+
 		public FLOW_INPUT_FILE_NullRecord(FLOW_INPUT_FILE_Record record) {
 			ID = record.ID;
 			NOME_FLUSSO = record.NOME_FLUSSO;

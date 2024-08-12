@@ -5,22 +5,27 @@ namespace Generator {
 		protected static readonly List<Tables_Record> tables_RecordList = [];
 		protected static readonly List<Columns_Record> columns_RecordList = [];
 
-		protected static string directory = @"..\..\..\Generated\";
-		protected static string pattern = @"..\..\..\Patterns\";
+		protected static string generatedDirectory = @"..\..\..\Generated\";
+		protected static string patternDirectory = @"..\..\..\Patterns\";
+
+		protected static string ID = "ID";
+		protected static string[] defaultFields = ["ID", "INS_DATE", "INS_TIME", "INS_INFO", "UPD_DATE", "UPD_TIME", "UPD_INFO"];
+		protected static string[] insFields = ["INS_DATE", "INS_TIME", "INS_INFO"];
+		protected static string[] updFields = ["UPD_DATE", "UPD_TIME", "UPD_INFO"];
 
 		static void Main() {
 			GetTableData();
 
-			if (Directory.Exists(directory)) {
-				Directory.Delete(directory, true);
+			if (Directory.Exists(generatedDirectory)) {
+				Directory.Delete(generatedDirectory, true);
 			}
 
-			Controller.Generate(directory);
-			Table.Generate(directory);
-			Record.Generate(directory);
-			NullRecord.Generate(directory);
-			Query.Generate(directory);
-			Component.Generate(directory);
+			Controller.Generate();
+			Table.Generate();
+			Record.Generate();
+			NullRecord.Generate();
+			Query.Generate();
+			Component.Generate();
 
 
 			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Query")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Query", true);
@@ -125,7 +130,7 @@ namespace Generator {
 			}
 		}
 
-		public static string ToPascalCase(string constantCase) {
+		protected static string ToPascalCase(string constantCase) {
 			string[] words = constantCase.Split('_');
 
 			string output = words[0] + "_";
@@ -135,6 +140,10 @@ namespace Generator {
 			}
 
 			return output;
+		}
+
+		protected static bool IsDefaultField(string columnName) {
+			return defaultFields.Contains(columnName);
 		}
 	}
 }

@@ -61,5 +61,29 @@ namespace %%NAME_SPACE%% {
 				throw new Exception(ex.Message);
 			}
 		}
+
+		public void Insert(%%TABLE_NAME%%_Record record) {
+			using SqlConnection connection = new(connectionString);
+
+			try {
+				StringBuilder query = new($"INSERT INTO %%TABLE_NAME%% VALUES ( ");
+				List<SqlParameter> parameters = [];
+				%%INSERT_FIELDS%%
+				query.Length -= 2;
+
+				query.Append(")");
+
+				SqlCommand command = new(query.ToString(), connection);
+				command.Parameters.AddRange([.. parameters]);
+
+				connection.Open();
+				command.ExecuteNonQuery();
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+		}
 	}
 }

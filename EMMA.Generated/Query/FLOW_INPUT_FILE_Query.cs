@@ -96,5 +96,56 @@ namespace EMMA_BE.Generated {
 				throw new Exception(ex.Message);
 			}
 		}
+
+		public void Insert(FLOW_INPUT_FILE_Record record) {
+			using SqlConnection connection = new(connectionString);
+
+			try {
+				StringBuilder query = new($"INSERT INTO FLOW_INPUT_FILE VALUES ( ");
+				List<SqlParameter> parameters = [];
+				
+				query.Append("@NOME_FLUSSO, ");
+				parameters.Add(new SqlParameter("@NOME_FLUSSO", record.NOME_FLUSSO));
+
+				query.Append("@TIPO_FLUSSO, ");
+				parameters.Add(new SqlParameter("@TIPO_FLUSSO", record.TIPO_FLUSSO));
+
+				query.Append("@CONTENUTO, ");
+				parameters.Add(new SqlParameter("@CONTENUTO", record.CONTENUTO));
+
+				query.Append("@INS_DATE, ");
+				parameters.Add(new SqlParameter("@INS_DATE", DateTime.Now.Date));
+
+				query.Append("@INS_TIME, ");
+				parameters.Add(new SqlParameter("@INS_TIME", DateTime.Now.TimeOfDay));
+
+				query.Append("@INS_INFO, ");
+				parameters.Add(new SqlParameter("@INS_INFO", DateTime.Now.ToString("yyyy-MM-dd;HH:mm:ss")));
+
+				query.Append("@UPD_DATE, ");
+				parameters.Add(new SqlParameter("@UPD_DATE", DateTime.Now.Date));
+
+				query.Append("@UPD_TIME, ");
+				parameters.Add(new SqlParameter("@UPD_TIME", DateTime.Now.TimeOfDay));
+
+				query.Append("@UPD_INFO, ");
+				parameters.Add(new SqlParameter("@UPD_INFO", DateTime.Now.ToString("yyyy-MM-dd;HH:mm:ss")));
+
+				query.Length -= 2;
+
+				query.Append(")");
+
+				SqlCommand command = new(query.ToString(), connection);
+				command.Parameters.AddRange([.. parameters]);
+
+				connection.Open();
+				command.ExecuteNonQuery();
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+		}
 	}
 }

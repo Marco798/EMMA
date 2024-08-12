@@ -3,11 +3,15 @@
 namespace Generator {
 	internal class Query : Program {
 
-		public static void Generate(string directory) {
-			string folder = @"Query\";
-			directory += folder;
+		private static string directory = string.Empty;
+		private static string pattern = string.Empty;
 
-			string pattern_Main = File.ReadAllText(pattern + folder + "Main.txt");
+		public static void Generate() {
+			string folder = @"Query\";
+			directory = generatedDirectory + folder;
+			pattern = patternDirectory + folder;
+
+			string pattern_Main = File.ReadAllText(pattern + "Main.txt");
 
 			if (!Directory.Exists(directory))
 				Directory.CreateDirectory(directory);
@@ -30,6 +34,7 @@ namespace Generator {
 
 				string recordField_List = string.Empty;
 				string updateByKeyField_List = string.Empty;
+				string insertField_List = string.Empty;
 
 				foreach (Columns_Record columns_Record in columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME)) {
 					#region recordField_List
@@ -69,7 +74,6 @@ namespace Generator {
 					#endregion
 
 					#region updateByKeyField_List
-
 					switch (columns_Record.COLUMN_NAME) {
 						case "ID":
 						case "INS_DATE":
@@ -101,10 +105,51 @@ namespace Generator {
 							break;
 					}
 					#endregion
+
+					#region insertField_List
+					switch (columns_Record.COLUMN_NAME) {
+						case "ID":
+							break;
+						case "INS_DATE":
+							insertField_List += $"\r\n				query.Append(\"@INS_DATE, \");";
+							insertField_List += $"\r\n				parameters.Add(new SqlParameter(\"@INS_DATE\", DateTime.Now.Date));\r\n";
+							break;
+						case "INS_TIME":
+							insertField_List += $"\r\n				query.Append(\"@INS_TIME, \");";
+							insertField_List += $"\r\n				parameters.Add(new SqlParameter(\"@INS_TIME\", DateTime.Now.TimeOfDay));\r\n";
+							break;
+						case "INS_INFO":
+							insertField_List += $"\r\n				query.Append(\"@INS_INFO, \");";
+							insertField_List += $"\r\n				parameters.Add(new SqlParameter(\"@INS_INFO\", DateTime.Now.ToString(\"yyyy-MM-dd;HH:mm:ss\")));\r\n";
+							break;
+						case "UPD_DATE":
+							insertField_List += $"\r\n				query.Append(\"@UPD_DATE, \");";
+							insertField_List += $"\r\n				parameters.Add(new SqlParameter(\"@UPD_DATE\", DateTime.Now.Date));\r\n";
+							break;
+						case "UPD_TIME":
+							insertField_List += $"\r\n				query.Append(\"@UPD_TIME, \");";
+							insertField_List += $"\r\n				parameters.Add(new SqlParameter(\"@UPD_TIME\", DateTime.Now.TimeOfDay));\r\n";
+							break;
+						case "UPD_INFO":
+							insertField_List += $"\r\n				query.Append(\"@UPD_INFO, \");";
+							insertField_List += $"\r\n				parameters.Add(new SqlParameter(\"@UPD_INFO\", DateTime.Now.ToString(\"yyyy-MM-dd;HH:mm:ss\")));\r\n";
+							break;
+						default:
+							string insert_Field = string.Empty;
+
+							insert_Field += "				query.Append(\"@%%FIELD_NAME%%, \");\r\n";
+							insert_Field += "				parameters.Add(new SqlParameter(\"@%%FIELD_NAME%%\", record.%%FIELD_NAME%%));\r\n";
+
+							insert_Field = insert_Field.Replace("%%FIELD_NAME%%", columns_Record.COLUMN_NAME);
+							insertField_List += "\r\n" + insert_Field;
+							break;
+					}
+					#endregion
 				}
 
 				value_Record_Main = value_Record_Main.Replace("%%SELECT_ALL_FIELDS%%", recordField_List);
 				value_Record_Main = value_Record_Main.Replace("%%UPDATE_BY_KEY_FIELDS%%", updateByKeyField_List);
+				value_Record_Main = value_Record_Main.Replace("%%INSERT_FIELDS%%", insertField_List);
 
 				File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}_Query.cs", value_Record_Main);
 			}

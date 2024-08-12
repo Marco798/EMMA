@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace EMMA_BE.Generated {
+namespace EMMA_BE.Generated.Controller {
 	[ApiController]
 	[Route("[controller]")]
 	public class SYST_MENUController : ControllerBase {
@@ -30,6 +30,18 @@ namespace EMMA_BE.Generated {
 		public IActionResult UpdateByKey(SYST_MENU_Record record) {
 			try {
 				_query.UpdateByKey(record.ID, new SYST_MENU_NullRecord(record));
+
+				return Ok();
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost("Insert")]
+		public IActionResult Insert(SYST_MENU_NullRecord record) {
+			try {
+				_query.Insert(record);
 
 				return Ok();
 			}

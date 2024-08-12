@@ -2,12 +2,16 @@
 {
     internal class Record : Program {
 
-		public static void Generate(string directory) {
-			string folder = @"Record\";
-			directory += folder;
+		private static string directory = string.Empty;
+		private static string pattern = string.Empty;
 
-			string pattern_Record_Main = File.ReadAllText(pattern + folder + "Main.txt");
-			string pattern_Record_Field = File.ReadAllText(pattern + folder + "Main_Field.txt");
+		public static void Generate() {
+			string folder = @"Record\";
+			directory = generatedDirectory + folder;
+			pattern = patternDirectory + folder;
+
+			string pattern_Record_Main = File.ReadAllText(pattern + "Main.txt");
+			string pattern_Record_Field = File.ReadAllText(pattern + "Main_Field.txt");
 
 			if (!Directory.Exists(directory))
 				Directory.CreateDirectory(directory);

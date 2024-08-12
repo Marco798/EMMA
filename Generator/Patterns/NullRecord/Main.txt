@@ -3,6 +3,8 @@
 	%%PRIVATE_RECORD_FIELD%%
 %%IS_SET_FIELD%%
 
+		public %%TABLE_NAME%%_NullRecord() { }
+
 		public %%TABLE_NAME%%_NullRecord(%%TABLE_NAME%%_Record record) {%%FROM_RECORD_FIELD%%
 		}
 	}

@@ -37,5 +37,17 @@ namespace %%NAME_SPACE%% {
 				return BadRequest(ex.Message);
 			}
 		}
+
+		[HttpPost("Insert")]
+		public IActionResult Insert(%%TABLE_NAME%%_NullRecord record) {
+			try {
+				_query.Insert(record);
+
+				return Ok();
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
 	}
 }

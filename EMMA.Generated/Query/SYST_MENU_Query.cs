@@ -101,5 +101,59 @@ namespace EMMA_BE.Generated {
 				throw new Exception(ex.Message);
 			}
 		}
+
+		public void Insert(SYST_MENU_Record record) {
+			using SqlConnection connection = new(connectionString);
+
+			try {
+				StringBuilder query = new($"INSERT INTO SYST_MENU VALUES ( ");
+				List<SqlParameter> parameters = [];
+				
+				query.Append("@NAME, ");
+				parameters.Add(new SqlParameter("@NAME", record.NAME));
+
+				query.Append("@PARENT, ");
+				parameters.Add(new SqlParameter("@PARENT", record.PARENT));
+
+				query.Append("@DESCRIPTION, ");
+				parameters.Add(new SqlParameter("@DESCRIPTION", record.DESCRIPTION));
+
+				query.Append("@SHORT_DESCRIPTION, ");
+				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
+
+				query.Append("@INS_DATE, ");
+				parameters.Add(new SqlParameter("@INS_DATE", DateTime.Now.Date));
+
+				query.Append("@INS_TIME, ");
+				parameters.Add(new SqlParameter("@INS_TIME", DateTime.Now.TimeOfDay));
+
+				query.Append("@INS_INFO, ");
+				parameters.Add(new SqlParameter("@INS_INFO", DateTime.Now.ToString("yyyy-MM-dd;HH:mm:ss")));
+
+				query.Append("@UPD_DATE, ");
+				parameters.Add(new SqlParameter("@UPD_DATE", DateTime.Now.Date));
+
+				query.Append("@UPD_TIME, ");
+				parameters.Add(new SqlParameter("@UPD_TIME", DateTime.Now.TimeOfDay));
+
+				query.Append("@UPD_INFO, ");
+				parameters.Add(new SqlParameter("@UPD_INFO", DateTime.Now.ToString("yyyy-MM-dd;HH:mm:ss")));
+
+				query.Length -= 2;
+
+				query.Append(")");
+
+				SqlCommand command = new(query.ToString(), connection);
+				command.Parameters.AddRange([.. parameters]);
+
+				connection.Open();
+				command.ExecuteNonQuery();
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+		}
 	}
 }

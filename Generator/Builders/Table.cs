@@ -1,10 +1,14 @@
 ﻿namespace Generator {
 	internal class Table : Program {
-		public static void Generate(string directory) {
-			string folder = @"Table\";
-			directory += folder;
 
-			string pattern_Record_Main = File.ReadAllText(pattern + folder + "Main.txt");
+		private static string directory = string.Empty;
+		private static string pattern = string.Empty;
+		public static void Generate() {
+			string folder = @"Table\";
+			directory = generatedDirectory + folder;
+			pattern = patternDirectory + folder;
+
+			string pattern_Record_Main = File.ReadAllText(pattern + "Main.txt");
 
 			if (!Directory.Exists(directory))
 				Directory.CreateDirectory(directory);

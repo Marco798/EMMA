@@ -45,9 +45,9 @@
 @if (showEdit) {
 	<div>
 		<table>
-			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_EditRecord!.TABLE_NAME" Description="TABLE_NAME" /></tr>
-			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_EditRecord!.DESCRIPTION" Description="DESCRIPTION" /></tr>
-			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_EditRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" /></tr>
+			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_UpdateRecord!.TABLE_NAME" Description="TABLE_NAME" /></tr>
+			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_UpdateRecord!.DESCRIPTION" Description="DESCRIPTION" /></tr>
+			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_UpdateRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" /></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromEdit" />
 		<input type="button" value="Reset" @onclick="ResetUpdate" />
@@ -60,10 +60,10 @@
 	bool showEdit = false;
 	bool showNew = false;
 
-	private SYST_TABLE_Record? _SYST_TABLE_InsertRecord = null;
+	private SYST_TABLE_NullRecord? _SYST_TABLE_InsertRecord = null;
 
-	private SYST_TABLE_Record? _SYST_TABLE_EditRecord_Orig = null;
-	private SYST_TABLE_Record? _SYST_TABLE_EditRecord = null;
+	private SYST_TABLE_Record? _SYST_TABLE_UpdateRecord_Orig = null;
+	private SYST_TABLE_Record? _SYST_TABLE_UpdateRecord = null;
 
 	protected override async Task OnInitializedAsync() {
 		var response = await Http.GetAsync(@"https://localhost:7062/SYST_TABLE/SelectAll");
@@ -95,22 +95,22 @@
 
 	private void Edit(SYST_TABLE_Record record) {
 		showEdit = true;
-		_SYST_TABLE_EditRecord_Orig = record.Clone();
-		_SYST_TABLE_EditRecord = record.Clone();
+		_SYST_TABLE_UpdateRecord_Orig = record.Clone();
+		_SYST_TABLE_UpdateRecord = record.Clone();
 	}
 
 	private void BackFromEdit() {
 		showEdit = false;
-		_SYST_TABLE_EditRecord_Orig = null;
-		_SYST_TABLE_EditRecord = null;
+		_SYST_TABLE_UpdateRecord_Orig = null;
+		_SYST_TABLE_UpdateRecord = null;
 	}
 
 	private void ResetUpdate() {
-		_SYST_TABLE_EditRecord = _SYST_TABLE_EditRecord_Orig!.Clone();
+		_SYST_TABLE_UpdateRecord = _SYST_TABLE_UpdateRecord_Orig!.Clone();
 	}
 
 	protected async void Update() {
-		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_TABLE/UpdateByKey", _SYST_TABLE_EditRecord);
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_TABLE/UpdateByKey", _SYST_TABLE_UpdateRecord);
 		if (response.IsSuccessStatusCode) {
 			showEdit = false;
 		}

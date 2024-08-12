@@ -15,6 +15,8 @@ namespace EMMA_BE.Generated {
 		internal bool IsSet_DESCRIPTION { get; private set; }
 		internal bool IsSet_SHORT_DESCRIPTION { get; private set; }
 
+		public SYST_TABLE_NullRecord() { }
+
 		public SYST_TABLE_NullRecord(SYST_TABLE_Record record) {
 			ID = record.ID;
 			TABLE_NAME = record.TABLE_NAME;

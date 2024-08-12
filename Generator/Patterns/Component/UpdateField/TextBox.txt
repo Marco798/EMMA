@@ -1,0 +1,1 @@
+﻿			<tr><TextBox Id="Edit_%%TABLE_NAME%%" IsTable=true @bind-Value="@_%%TABLE_NAME%%_UpdateRecord!.%%COLUMN_NAME%%" Description="%%COLUMN_NAME%%"%%LENGTH%%%%WIDTH%% /></tr>
