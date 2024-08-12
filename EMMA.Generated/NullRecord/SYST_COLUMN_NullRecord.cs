@@ -5,7 +5,7 @@ namespace EMMA_BE.Generated {
 		public string? COLUMN_NAME { get { return _COLUMN_NAME; } set { _COLUMN_NAME = value; IsSet_COLUMN_NAME = true; } }
 		public string? DESCRIPTION { get { return _DESCRIPTION; } set { _DESCRIPTION = value; IsSet_DESCRIPTION = true; } }
 		public string? SHORT_DESCRIPTION { get { return _SHORT_DESCRIPTION; } set { _SHORT_DESCRIPTION = value; IsSet_SHORT_DESCRIPTION = true; } }
-	
+
 		private int? _ID;
 		private string? _TABLE_NAME;
 		private string? _COLUMN_NAME;

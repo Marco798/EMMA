@@ -4,7 +4,7 @@ namespace EMMA_BE.Generated {
 		public string? TABLE_NAME { get { return _TABLE_NAME; } set { _TABLE_NAME = value; IsSet_TABLE_NAME = true; } }
 		public string? DESCRIPTION { get { return _DESCRIPTION; } set { _DESCRIPTION = value; IsSet_DESCRIPTION = true; } }
 		public string? SHORT_DESCRIPTION { get { return _SHORT_DESCRIPTION; } set { _SHORT_DESCRIPTION = value; IsSet_SHORT_DESCRIPTION = true; } }
-	
+
 		private int? _ID;
 		private string? _TABLE_NAME;
 		private string? _DESCRIPTION;

@@ -1,0 +1,1 @@
+﻿		private %%DATA_TYPE%%? _%%COLUMN_NAME%%;

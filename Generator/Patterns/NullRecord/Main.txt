@@ -1,11 +1,15 @@
 ﻿namespace %%NAME_SPACE%% {
-	public class %%TABLE_NAME%%_NullRecord {%%RECORD_FIELD%%
-	%%PRIVATE_RECORD_FIELD%%
+	public class %%TABLE_NAME%%_NullRecord {
+%%FIELD%%
+
+%%PRIVATE_FIELD%%
+
 %%IS_SET_FIELD%%
 
 		public %%TABLE_NAME%%_NullRecord() { }
 
-		public %%TABLE_NAME%%_NullRecord(%%TABLE_NAME%%_Record record) {%%FROM_RECORD_FIELD%%
+		public %%TABLE_NAME%%_NullRecord(%%TABLE_NAME%%_Record record) {
+%%FROM_RECORD_FIELD%%
 		}
 	}
 }

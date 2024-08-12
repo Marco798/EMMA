@@ -1,0 +1,1 @@
+﻿		internal bool IsSet_%%COLUMN_NAME%% { get; private set; }

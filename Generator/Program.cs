@@ -145,5 +145,17 @@ namespace Generator {
 		protected static bool IsDefaultField(string columnName) {
 			return defaultFields.Contains(columnName);
 		}
+
+		protected static string GetDataType_FromDB_ToCS(string dataType) {
+			return dataType switch {
+				"varchar" => "string",
+				"varbinary" => "byte[]",
+				"int" => "int",
+				"bigint" => "long",
+				"date" => "DateTime",
+				"time" => "TimeSpan",
+				_ => throw new Exception()
+			};
+		}
 	}
 }
