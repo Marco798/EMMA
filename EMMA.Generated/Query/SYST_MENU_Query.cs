@@ -21,7 +21,7 @@ namespace EMMA_BE.Generated {
 					while (reader.Read()) {
 						SYST_MENU_Record record = new();
 						int i = 0;
-						
+
 						record.ID = reader.GetInt32(i++);
 						record.NAME = reader.GetString(i++);
 						record.PARENT = reader.GetString(i++);
@@ -54,7 +54,7 @@ namespace EMMA_BE.Generated {
 			try {
 				StringBuilder query = new($"UPDATE SYST_MENU SET ");
 				List<SqlParameter> parameters = [];
-				
+
 				if (record.IsSet_NAME) {
 					query.Append("NAME = @NAME, ");
 					parameters.Add(new SqlParameter("@NAME", record.NAME));
@@ -108,7 +108,7 @@ namespace EMMA_BE.Generated {
 			try {
 				StringBuilder query = new($"INSERT INTO SYST_MENU VALUES ( ");
 				List<SqlParameter> parameters = [];
-				
+
 				query.Append("@NAME, ");
 				parameters.Add(new SqlParameter("@NAME", record.NAME));
 

@@ -1,0 +1,2 @@
+﻿						record.%%COLUMN_NAME%% = new byte[reader.GetBytes(i, 0, null, 0, 0)];
+						reader.GetBytes(i++, 0, record.%%COLUMN_NAME%%, 0, record.%%COLUMN_NAME%%.Length);

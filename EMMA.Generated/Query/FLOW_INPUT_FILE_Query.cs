@@ -21,7 +21,7 @@ namespace EMMA_BE.Generated {
 					while (reader.Read()) {
 						FLOW_INPUT_FILE_Record record = new();
 						int i = 0;
-						
+
 						record.ID = reader.GetInt64(i++);
 						record.NOME_FLUSSO = reader.GetString(i++);
 						record.TIPO_FLUSSO = reader.GetString(i++);
@@ -54,7 +54,7 @@ namespace EMMA_BE.Generated {
 			try {
 				StringBuilder query = new($"UPDATE FLOW_INPUT_FILE SET ");
 				List<SqlParameter> parameters = [];
-				
+
 				if (record.IsSet_NOME_FLUSSO) {
 					query.Append("NOME_FLUSSO = @NOME_FLUSSO, ");
 					parameters.Add(new SqlParameter("@NOME_FLUSSO", record.NOME_FLUSSO));
@@ -103,7 +103,7 @@ namespace EMMA_BE.Generated {
 			try {
 				StringBuilder query = new($"INSERT INTO FLOW_INPUT_FILE VALUES ( ");
 				List<SqlParameter> parameters = [];
-				
+
 				query.Append("@NOME_FLUSSO, ");
 				parameters.Add(new SqlParameter("@NOME_FLUSSO", record.NOME_FLUSSO));
 

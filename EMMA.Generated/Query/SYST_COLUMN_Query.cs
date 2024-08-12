@@ -21,7 +21,7 @@ namespace EMMA_BE.Generated {
 					while (reader.Read()) {
 						SYST_COLUMN_Record record = new();
 						int i = 0;
-						
+
 						record.ID = reader.GetInt32(i++);
 						record.TABLE_NAME = reader.GetString(i++);
 						record.COLUMN_NAME = reader.GetString(i++);
@@ -48,7 +48,7 @@ namespace EMMA_BE.Generated {
 			try {
 				StringBuilder query = new($"UPDATE SYST_COLUMN SET ");
 				List<SqlParameter> parameters = [];
-				
+
 				if (record.IsSet_TABLE_NAME) {
 					query.Append("TABLE_NAME = @TABLE_NAME, ");
 					parameters.Add(new SqlParameter("@TABLE_NAME", record.TABLE_NAME));
@@ -93,7 +93,7 @@ namespace EMMA_BE.Generated {
 			try {
 				StringBuilder query = new($"INSERT INTO SYST_COLUMN VALUES ( ");
 				List<SqlParameter> parameters = [];
-				
+
 				query.Append("@TABLE_NAME, ");
 				parameters.Add(new SqlParameter("@TABLE_NAME", record.TABLE_NAME));
 

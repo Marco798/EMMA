@@ -157,5 +157,25 @@ namespace Generator {
 				_ => throw new Exception()
 			};
 		}
+
+		protected static string GetDataType_FromDB_ToReader(string dataType) {
+			return dataType switch {
+				"varchar" => "String",
+				"varbinary" => string.Empty,
+				"int" => "Int32",
+				"bigint" => "Int64",
+				"date" => "DateTime",
+				"time" => "TimeSpan",
+				_ => throw new Exception()
+			};
+		}
+
+		protected static string GetIdType_FromDB_ToCS(string tableName) {
+			return columns_RecordList.First(x => x.TABLE_NAME == tableName && x.COLUMN_NAME == "ID").DATA_TYPE switch {
+				"int" => "int",
+				"bigint" => "long",
+				_ => throw new Exception(),
+			};
+		}
 	}
 }

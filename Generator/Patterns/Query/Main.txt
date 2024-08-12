@@ -21,7 +21,8 @@ namespace %%NAME_SPACE%% {
 					while (reader.Read()) {
 						%%TABLE_NAME%%_Record record = new();
 						int i = 0;
-						%%SELECT_ALL_FIELDS%%
+
+%%SELECT_ALL_FIELD%%
 
 						output.Add(record);
 					}
@@ -43,7 +44,8 @@ namespace %%NAME_SPACE%% {
 			try {
 				StringBuilder query = new($"UPDATE %%TABLE_NAME%% SET ");
 				List<SqlParameter> parameters = [];
-				%%UPDATE_BY_KEY_FIELDS%%
+
+%%UPDATE_BY_KEY_FIELD%%
 				query.Length -= 2;
 
 				query.Append(" WHERE ID = @ID");
@@ -68,7 +70,8 @@ namespace %%NAME_SPACE%% {
 			try {
 				StringBuilder query = new($"INSERT INTO %%TABLE_NAME%% VALUES ( ");
 				List<SqlParameter> parameters = [];
-				%%INSERT_FIELDS%%
+
+%%INSERT_FIELD%%
 				query.Length -= 2;
 
 				query.Append(")");
