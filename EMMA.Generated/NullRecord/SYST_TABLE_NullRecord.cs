@@ -23,5 +23,12 @@ namespace EMMA_BE.Generated {
 			DESCRIPTION = record.DESCRIPTION;
 			SHORT_DESCRIPTION = record.SHORT_DESCRIPTION;
 		}
+
+		public SYST_TABLE_NullRecord(SYST_TABLE_IdRecord record) {
+			ID = record.ID;
+			TABLE_NAME = record.TABLE_NAME;
+			DESCRIPTION = record.DESCRIPTION;
+			SHORT_DESCRIPTION = record.SHORT_DESCRIPTION;
+		}
 	}
 }

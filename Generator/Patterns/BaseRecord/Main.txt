@@ -2,8 +2,12 @@
 	public class %%TABLE_NAME%%_BaseRecord {
 %%FIELD%%
 
-		public %%TABLE_NAME%%_Record Clone() {
-			%%TABLE_NAME%%_Record output = new() {
+		public %%TABLE_NAME%%_BaseRecord() {
+%%CONSTRUCTOR_FIELD%%
+		}
+
+		public %%TABLE_NAME%%_BaseRecord Clone() {
+			%%TABLE_NAME%%_BaseRecord output = new() {
 %%CLONE_FIELD%%
 			};
 			return output;

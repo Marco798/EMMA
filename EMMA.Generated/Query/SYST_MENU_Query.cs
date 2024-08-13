@@ -102,11 +102,11 @@ namespace EMMA_BE.Generated {
 			}
 		}
 
-		public void Insert(SYST_MENU_Record record) {
+		public void Insert(SYST_MENU_BaseRecord record) {
 			using SqlConnection connection = new(connectionString);
 
 			try {
-				StringBuilder query = new($"INSERT INTO SYST_MENU VALUES ( ");
+				StringBuilder query = new($"INSERT INTO SYST_MENU VALUES (");
 				List<SqlParameter> parameters = [];
 
 				query.Append("@NAME, ");

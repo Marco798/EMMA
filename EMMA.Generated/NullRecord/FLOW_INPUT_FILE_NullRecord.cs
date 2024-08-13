@@ -47,5 +47,12 @@ namespace EMMA_BE.Generated {
 			UPD_TIME = record.UPD_TIME;
 			UPD_INFO = record.UPD_INFO;
 		}
+
+		public FLOW_INPUT_FILE_NullRecord(FLOW_INPUT_FILE_IdRecord record) {
+			ID = record.ID;
+			NOME_FLUSSO = record.NOME_FLUSSO;
+			TIPO_FLUSSO = record.TIPO_FLUSSO;
+			CONTENUTO = record.CONTENUTO;
+		}
 	}
 }

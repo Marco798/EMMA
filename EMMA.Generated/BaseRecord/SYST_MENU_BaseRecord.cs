@@ -5,8 +5,15 @@ namespace EMMA_BE.Generated {
 		public string DESCRIPTION { get; set; }
 		public string SHORT_DESCRIPTION { get; set; }
 
-		public SYST_MENU_Record Clone() {
-			SYST_MENU_Record output = new() {
+		public SYST_MENU_BaseRecord() {
+			NAME = string.Empty;
+			PARENT = string.Empty;
+			DESCRIPTION = string.Empty;
+			SHORT_DESCRIPTION = string.Empty;
+		}
+
+		public SYST_MENU_BaseRecord Clone() {
+			SYST_MENU_BaseRecord output = new() {
 				NAME = NAME,
 				PARENT = PARENT,
 				DESCRIPTION = DESCRIPTION,

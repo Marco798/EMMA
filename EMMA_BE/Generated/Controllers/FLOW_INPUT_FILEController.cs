@@ -27,7 +27,7 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpPost("UpdateByKey")]
-		public IActionResult UpdateByKey(FLOW_INPUT_FILE_Record record) {
+		public IActionResult UpdateByKey(FLOW_INPUT_FILE_IdRecord record) {
 			try {
 				_query.UpdateByKey(record.ID, new FLOW_INPUT_FILE_NullRecord(record));
 
@@ -39,7 +39,7 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpPost("Insert")]
-		public IActionResult Insert(FLOW_INPUT_FILE_NullRecord record) {
+		public IActionResult Insert(FLOW_INPUT_FILE_BaseRecord record) {
 			try {
 				_query.Insert(record);
 

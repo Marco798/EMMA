@@ -27,7 +27,7 @@ namespace %%NAME_SPACE%% {
 		}
 
 		[HttpPost("UpdateByKey")]
-		public IActionResult UpdateByKey(%%TABLE_NAME%%_Record record) {
+		public IActionResult UpdateByKey(%%TABLE_NAME%%_IdRecord record) {
 			try {
 				_query.UpdateByKey(record.ID, new %%TABLE_NAME%%_NullRecord(record));
 
@@ -39,7 +39,7 @@ namespace %%NAME_SPACE%% {
 		}
 
 		[HttpPost("Insert")]
-		public IActionResult Insert(%%TABLE_NAME%%_NullRecord record) {
+		public IActionResult Insert(%%TABLE_NAME%%_BaseRecord record) {
 			try {
 				_query.Insert(record);
 

@@ -53,10 +53,10 @@
 	bool showEdit = false;
 	bool showNew = false;
 
-	private %%TABLE_NAME%%_NullRecord? _%%TABLE_NAME%%_InsertRecord = null;
+	private %%TABLE_NAME%%_BaseRecord? _%%TABLE_NAME%%_InsertRecord = null;
 
-	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_UpdateRecord_Orig = null;
-	private %%TABLE_NAME%%_Record? _%%TABLE_NAME%%_UpdateRecord = null;
+	private %%TABLE_NAME%%_IdRecord? _%%TABLE_NAME%%_UpdateRecord_Orig = null;
+	private %%TABLE_NAME%%_IdRecord? _%%TABLE_NAME%%_UpdateRecord = null;
 
 	protected override async Task OnInitializedAsync() {
 		var response = await Http.GetAsync(@"https://localhost:7062/%%TABLE_NAME%%/SelectAll");
@@ -88,8 +88,8 @@
 
 	private void Edit(%%TABLE_NAME%%_Record record) {
 		showEdit = true;
-		_%%TABLE_NAME%%_UpdateRecord_Orig = record.Clone();
-		_%%TABLE_NAME%%_UpdateRecord = record.Clone();
+		_%%TABLE_NAME%%_UpdateRecord_Orig = new(record);
+		_%%TABLE_NAME%%_UpdateRecord = new(record);
 	}
 
 	private void BackFromEdit() {

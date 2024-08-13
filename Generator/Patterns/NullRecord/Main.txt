@@ -11,5 +11,9 @@
 		public %%TABLE_NAME%%_NullRecord(%%TABLE_NAME%%_Record record) {
 %%FROM_RECORD_FIELD%%
 		}
+
+		public %%TABLE_NAME%%_NullRecord(%%TABLE_NAME%%_IdRecord record) {
+%%FROM_ID_RECORD_FIELD%%
+		}
 	}
 }

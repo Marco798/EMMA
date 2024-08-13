@@ -97,11 +97,11 @@ namespace EMMA_BE.Generated {
 			}
 		}
 
-		public void Insert(FLOW_INPUT_FILE_Record record) {
+		public void Insert(FLOW_INPUT_FILE_BaseRecord record) {
 			using SqlConnection connection = new(connectionString);
 
 			try {
-				StringBuilder query = new($"INSERT INTO FLOW_INPUT_FILE VALUES ( ");
+				StringBuilder query = new($"INSERT INTO FLOW_INPUT_FILE VALUES (");
 				List<SqlParameter> parameters = [];
 
 				query.Append("@NOME_FLUSSO, ");

@@ -10,11 +10,13 @@
 		private static string pattern_PrivateField = string.Empty;
 		private static string pattern_IsSetField = string.Empty;
 		private static string pattern_FromRecordField = string.Empty;
+		private static string pattern_FromIdRecordField = string.Empty;
 
 		private static string field_List = string.Empty;
 		private static string privateField_List = string.Empty;
 		private static string isSetField_List = string.Empty;
 		private static string fromRecordField_List = string.Empty;
+		private static string fromIdRecordField_List = string.Empty;
 
 		public static void Generate() {
 			string folder = @"NullRecord\";
@@ -30,6 +32,7 @@
 			pattern_PrivateField = File.ReadAllText(pattern + "PrivateField.txt");
 			pattern_IsSetField = File.ReadAllText(pattern + "IsSetField.txt");
 			pattern_FromRecordField = File.ReadAllText(pattern + "FromRecordField.txt");
+			pattern_FromIdRecordField = File.ReadAllText(pattern + "FromIdRecordField.txt");
 			#endregion
 
 			foreach (Tables_Record tables_Record in tables_RecordList) {
@@ -48,6 +51,7 @@
 			privateField_List = string.Empty;
 			isSetField_List = string.Empty;
 			fromRecordField_List = string.Empty;
+			fromIdRecordField_List = string.Empty;
 			#endregion
 
 			foreach (Columns_Record columns_Record in columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME)) {
@@ -58,6 +62,7 @@
 			_Main = _Main.Replace("%%PRIVATE_FIELD%%", privateField_List[..^2]);
 			_Main = _Main.Replace("%%IS_SET_FIELD%%", isSetField_List[..^2]);
 			_Main = _Main.Replace("%%FROM_RECORD_FIELD%%", fromRecordField_List[..^2]);
+			_Main = _Main.Replace("%%FROM_ID_RECORD_FIELD%%", fromIdRecordField_List[..^2]);
 
 			_Main = _Main.Replace("%%NAME_SPACE%%", "EMMA_BE.Generated");
 			_Main = _Main.Replace("%%TABLE_NAME%%", tables_Record.TABLE_NAME);
@@ -90,6 +95,13 @@
 			#region FromRecordField
 			string fromRecordField = pattern_FromRecordField;
 			fromRecordField_List += fromRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			#endregion
+
+			#region FromIdRecordField
+			if (!auditFields.Contains(columns_Record.COLUMN_NAME)) {
+				string fromIdRecordField = pattern_FromIdRecordField;
+				fromIdRecordField_List += fromIdRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			}
 			#endregion
 		}
 	}

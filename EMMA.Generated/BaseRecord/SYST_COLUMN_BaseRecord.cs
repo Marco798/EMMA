@@ -5,8 +5,15 @@ namespace EMMA_BE.Generated {
 		public string DESCRIPTION { get; set; }
 		public string SHORT_DESCRIPTION { get; set; }
 
-		public SYST_COLUMN_Record Clone() {
-			SYST_COLUMN_Record output = new() {
+		public SYST_COLUMN_BaseRecord() {
+			TABLE_NAME = string.Empty;
+			COLUMN_NAME = string.Empty;
+			DESCRIPTION = string.Empty;
+			SHORT_DESCRIPTION = string.Empty;
+		}
+
+		public SYST_COLUMN_BaseRecord Clone() {
+			SYST_COLUMN_BaseRecord output = new() {
 				TABLE_NAME = TABLE_NAME,
 				COLUMN_NAME = COLUMN_NAME,
 				DESCRIPTION = DESCRIPTION,

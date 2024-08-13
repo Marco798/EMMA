@@ -87,11 +87,11 @@ namespace EMMA_BE.Generated {
 			}
 		}
 
-		public void Insert(SYST_COLUMN_Record record) {
+		public void Insert(SYST_COLUMN_BaseRecord record) {
 			using SqlConnection connection = new(connectionString);
 
 			try {
-				StringBuilder query = new($"INSERT INTO SYST_COLUMN VALUES ( ");
+				StringBuilder query = new($"INSERT INTO SYST_COLUMN VALUES (");
 				List<SqlParameter> parameters = [];
 
 				query.Append("@TABLE_NAME, ");

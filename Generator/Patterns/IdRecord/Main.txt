@@ -2,8 +2,14 @@
 	public class %%TABLE_NAME%%_IdRecord {
 %%FIELD%%
 
-		public %%TABLE_NAME%%_Record Clone() {
-			%%TABLE_NAME%%_Record output = new() {
+		public %%TABLE_NAME%%_IdRecord() { }
+
+		public %%TABLE_NAME%%_IdRecord(%%TABLE_NAME%%_Record record) {
+%%FROM_RECORD_FIELD%%
+		}
+
+		public %%TABLE_NAME%%_IdRecord Clone() {
+			%%TABLE_NAME%%_IdRecord output = new() {
 %%CLONE_FIELD%%
 			};
 			return output;

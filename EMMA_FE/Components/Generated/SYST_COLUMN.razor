@@ -63,10 +63,10 @@
 	bool showEdit = false;
 	bool showNew = false;
 
-	private SYST_COLUMN_NullRecord? _SYST_COLUMN_InsertRecord = null;
+	private SYST_COLUMN_BaseRecord? _SYST_COLUMN_InsertRecord = null;
 
-	private SYST_COLUMN_Record? _SYST_COLUMN_UpdateRecord_Orig = null;
-	private SYST_COLUMN_Record? _SYST_COLUMN_UpdateRecord = null;
+	private SYST_COLUMN_IdRecord? _SYST_COLUMN_UpdateRecord_Orig = null;
+	private SYST_COLUMN_IdRecord? _SYST_COLUMN_UpdateRecord = null;
 
 	protected override async Task OnInitializedAsync() {
 		var response = await Http.GetAsync(@"https://localhost:7062/SYST_COLUMN/SelectAll");
@@ -98,8 +98,8 @@
 
 	private void Edit(SYST_COLUMN_Record record) {
 		showEdit = true;
-		_SYST_COLUMN_UpdateRecord_Orig = record.Clone();
-		_SYST_COLUMN_UpdateRecord = record.Clone();
+		_SYST_COLUMN_UpdateRecord_Orig = new(record);
+		_SYST_COLUMN_UpdateRecord = new(record);
 	}
 
 	private void BackFromEdit() {

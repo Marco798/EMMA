@@ -69,10 +69,10 @@
 	bool showEdit = false;
 	bool showNew = false;
 
-	private SYST_MENU_NullRecord? _SYST_MENU_InsertRecord = null;
+	private SYST_MENU_BaseRecord? _SYST_MENU_InsertRecord = null;
 
-	private SYST_MENU_Record? _SYST_MENU_UpdateRecord_Orig = null;
-	private SYST_MENU_Record? _SYST_MENU_UpdateRecord = null;
+	private SYST_MENU_IdRecord? _SYST_MENU_UpdateRecord_Orig = null;
+	private SYST_MENU_IdRecord? _SYST_MENU_UpdateRecord = null;
 
 	protected override async Task OnInitializedAsync() {
 		var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
@@ -104,8 +104,8 @@
 
 	private void Edit(SYST_MENU_Record record) {
 		showEdit = true;
-		_SYST_MENU_UpdateRecord_Orig = record.Clone();
-		_SYST_MENU_UpdateRecord = record.Clone();
+		_SYST_MENU_UpdateRecord_Orig = new(record);
+		_SYST_MENU_UpdateRecord = new(record);
 	}
 
 	private void BackFromEdit() {

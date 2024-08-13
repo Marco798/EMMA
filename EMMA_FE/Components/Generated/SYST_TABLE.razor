@@ -60,10 +60,10 @@
 	bool showEdit = false;
 	bool showNew = false;
 
-	private SYST_TABLE_NullRecord? _SYST_TABLE_InsertRecord = null;
+	private SYST_TABLE_BaseRecord? _SYST_TABLE_InsertRecord = null;
 
-	private SYST_TABLE_Record? _SYST_TABLE_UpdateRecord_Orig = null;
-	private SYST_TABLE_Record? _SYST_TABLE_UpdateRecord = null;
+	private SYST_TABLE_IdRecord? _SYST_TABLE_UpdateRecord_Orig = null;
+	private SYST_TABLE_IdRecord? _SYST_TABLE_UpdateRecord = null;
 
 	protected override async Task OnInitializedAsync() {
 		var response = await Http.GetAsync(@"https://localhost:7062/SYST_TABLE/SelectAll");
@@ -95,8 +95,8 @@
 
 	private void Edit(SYST_TABLE_Record record) {
 		showEdit = true;
-		_SYST_TABLE_UpdateRecord_Orig = record.Clone();
-		_SYST_TABLE_UpdateRecord = record.Clone();
+		_SYST_TABLE_UpdateRecord_Orig = new(record);
+		_SYST_TABLE_UpdateRecord = new(record);
 	}
 
 	private void BackFromEdit() {

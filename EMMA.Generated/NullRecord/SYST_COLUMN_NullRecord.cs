@@ -27,5 +27,13 @@ namespace EMMA_BE.Generated {
 			DESCRIPTION = record.DESCRIPTION;
 			SHORT_DESCRIPTION = record.SHORT_DESCRIPTION;
 		}
+
+		public SYST_COLUMN_NullRecord(SYST_COLUMN_IdRecord record) {
+			ID = record.ID;
+			TABLE_NAME = record.TABLE_NAME;
+			COLUMN_NAME = record.COLUMN_NAME;
+			DESCRIPTION = record.DESCRIPTION;
+			SHORT_DESCRIPTION = record.SHORT_DESCRIPTION;
+		}
 	}
 }

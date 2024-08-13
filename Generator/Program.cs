@@ -14,6 +14,8 @@ namespace Generator {
 		protected static string[] insFields = ["INS_DATE", "INS_TIME", "INS_INFO"];
 		protected static string[] updFields = ["UPD_DATE", "UPD_TIME", "UPD_INFO"];
 
+		protected static string[] fieldsToBeInitialized = ["varchar", "varbinary"];
+
 		static void Main() {
 			GetTableData();
 
@@ -151,6 +153,14 @@ namespace Generator {
 				"bigint" => "Int64",
 				"date" => "DateTime",
 				"time" => "TimeSpan",
+				_ => throw new Exception()
+			};
+		}
+
+		protected static string GetDefaultValue(string dataType) {
+			return dataType switch {
+				"varchar" => "string.Empty",
+				"varbinary" => "[]",
 				_ => throw new Exception()
 			};
 		}

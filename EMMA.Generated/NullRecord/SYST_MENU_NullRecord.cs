@@ -51,5 +51,13 @@ namespace EMMA_BE.Generated {
 			UPD_TIME = record.UPD_TIME;
 			UPD_INFO = record.UPD_INFO;
 		}
+
+		public SYST_MENU_NullRecord(SYST_MENU_IdRecord record) {
+			ID = record.ID;
+			NAME = record.NAME;
+			PARENT = record.PARENT;
+			DESCRIPTION = record.DESCRIPTION;
+			SHORT_DESCRIPTION = record.SHORT_DESCRIPTION;
+		}
 	}
 }

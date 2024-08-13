@@ -27,7 +27,7 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpPost("UpdateByKey")]
-		public IActionResult UpdateByKey(SYST_COLUMN_Record record) {
+		public IActionResult UpdateByKey(SYST_COLUMN_IdRecord record) {
 			try {
 				_query.UpdateByKey(record.ID, new SYST_COLUMN_NullRecord(record));
 
@@ -39,7 +39,7 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpPost("Insert")]
-		public IActionResult Insert(SYST_COLUMN_NullRecord record) {
+		public IActionResult Insert(SYST_COLUMN_BaseRecord record) {
 			try {
 				_query.Insert(record);
 

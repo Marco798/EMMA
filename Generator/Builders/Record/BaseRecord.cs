@@ -6,9 +6,11 @@
 
 		private static string pattern_Main = string.Empty;
 		private static string pattern_Field = string.Empty;
+		private static string pattern_ConstructorField = string.Empty;
 		private static string pattern_CloneField = string.Empty;
 
 		private static string field_List = string.Empty;
+		private static string constructorField_List = string.Empty;
 		private static string cloneField_List = string.Empty;
 
 		public static void Generate() {
@@ -22,6 +24,7 @@
 			pattern_Main = File.ReadAllText(pattern + "Main.txt");
 
 			pattern_Field = File.ReadAllText(pattern + "Field.txt");
+			pattern_ConstructorField = File.ReadAllText(pattern + "ConstructorField.txt");
 			pattern_CloneField = File.ReadAllText(pattern + "CloneField.txt");
 			#endregion
 
@@ -38,6 +41,7 @@
 
 			#region Sections declaration
 			field_List = string.Empty;
+			constructorField_List = string.Empty;
 			cloneField_List = string.Empty;
 			#endregion
 
@@ -46,6 +50,7 @@
 			}
 
 			_Main = _Main.Replace("%%FIELD%%", field_List[..^2]);
+			_Main = _Main.Replace("%%CONSTRUCTOR_FIELD%%", constructorField_List[..^2]);
 			_Main = _Main.Replace("%%CLONE_FIELD%%", cloneField_List[..^3]);
 
 			_Main = _Main.Replace("%%NAME_SPACE%%", "EMMA_BE.Generated");
@@ -66,6 +71,14 @@
 			field = field.Replace("%%DATA_TYPE%%", dataType);
 			field = field.Replace("%%IS_NULLABLE%%", isNullable);
 			field_List += field.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			#endregion
+
+			#region ConstructorField
+			if (fieldsToBeInitialized.Contains(columns_Record.DATA_TYPE)) {
+				string constructorField = pattern_ConstructorField;
+				constructorField = constructorField.Replace("%%DEFAULT_VALUE%%", GetDefaultValue(columns_Record.DATA_TYPE));
+				constructorField_List += constructorField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			}
 			#endregion
 
 			#region CloneField
