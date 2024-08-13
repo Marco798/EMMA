@@ -21,6 +21,9 @@
 			foreach (Tables_Record tables_Record in tables_RecordList) {
 				TableElaboration(tables_Record);
 			}
+
+			if (Directory.Exists(@"..\..\..\..\EMMA_BE\Generated\Controllers")) Directory.Delete(@"..\..\..\..\EMMA_BE\Generated\Controllers", true);
+			Directory.Move(@"..\..\..\Generated\Controller", @"..\..\..\..\EMMA_BE\Generated\Controllers");
 		}
 
 		private static void TableElaboration(Tables_Record tables_Record) {

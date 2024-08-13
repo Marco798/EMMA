@@ -43,6 +43,9 @@ namespace Generator {
 			foreach (Tables_Record tables_Record in tables_RecordList) {
 				TableElaboration(tables_Record);
 			}
+
+			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Query")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Query", true);
+			Directory.Move(@"..\..\..\Generated\Query", @"..\..\..\..\EMMA.Generated\Query");
 		}
 
 		private static void TableElaboration(Tables_Record tables_Record) {

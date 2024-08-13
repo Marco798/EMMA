@@ -10,6 +10,7 @@ namespace Generator {
 
 		protected static string ID = "ID";
 		protected static string[] defaultFields = ["ID", "INS_DATE", "INS_TIME", "INS_INFO", "UPD_DATE", "UPD_TIME", "UPD_INFO"];
+		protected static string[] auditFields = ["INS_DATE", "INS_TIME", "INS_INFO", "UPD_DATE", "UPD_TIME", "UPD_INFO"];
 		protected static string[] insFields = ["INS_DATE", "INS_TIME", "INS_INFO"];
 		protected static string[] updFields = ["UPD_DATE", "UPD_TIME", "UPD_INFO"];
 
@@ -20,31 +21,15 @@ namespace Generator {
 				Directory.Delete(generatedDirectory, true);
 			}
 
-			Controller.Generate();
-			Table.Generate();
-			Record.Generate();
+			BaseRecord.Generate();
+			IdRecord.Generate();
 			NullRecord.Generate();
-			Query.Generate();
+			Record.Generate();
+
 			Component.Generate();
-
-
-			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Query")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Query", true);
-			Directory.Move(@"..\..\..\Generated\Query", @"..\..\..\..\EMMA.Generated\Query");
-
-			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Table")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Table", true);
-			Directory.Move(@"..\..\..\Generated\Table", @"..\..\..\..\EMMA.Generated\Table");
-
-			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\Record")) Directory.Delete(@"..\..\..\..\EMMA.Generated\Record", true);
-			Directory.Move(@"..\..\..\Generated\Record", @"..\..\..\..\EMMA.Generated\Record");
-
-			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\NullRecord")) Directory.Delete(@"..\..\..\..\EMMA.Generated\NullRecord", true);
-			Directory.Move(@"..\..\..\Generated\NullRecord", @"..\..\..\..\EMMA.Generated\NullRecord");
-
-			if (Directory.Exists(@"..\..\..\..\EMMA_BE\Generated\Controllers")) Directory.Delete(@"..\..\..\..\EMMA_BE\Generated\Controllers", true);
-			Directory.Move(@"..\..\..\Generated\Controller", @"..\..\..\..\EMMA_BE\Generated\Controllers");
-
-			if (Directory.Exists(@"..\..\..\..\EMMA_FE\Components\Generated")) Directory.Delete(@"..\..\..\..\EMMA_FE\Components\Generated", true);
-			Directory.Move(@"..\..\..\Generated\Component", @"..\..\..\..\EMMA_FE\Components\Generated");
+			Controller.Generate();
+			Query.Generate();
+			Table.Generate();
 		}
 
 		private static void GetTableData() {

@@ -1,0 +1,1 @@
+﻿				%%COLUMN_NAME%% = %%COLUMN_NAME%%,

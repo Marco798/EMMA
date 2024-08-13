@@ -1,0 +1,12 @@
+﻿namespace %%NAME_SPACE%% {
+	public class %%TABLE_NAME%%_IdRecord {
+%%FIELD%%
+
+		public %%TABLE_NAME%%_Record Clone() {
+			%%TABLE_NAME%%_Record output = new() {
+%%CLONE_FIELD%%
+			};
+			return output;
+		}
+	}
+}

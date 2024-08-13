@@ -1,6 +1,5 @@
-﻿namespace Generator
-{
-    internal class Record : Program {
+﻿namespace Generator {
+	internal class IdRecord : Program {
 
 		private static string directory = string.Empty;
 		private static string pattern = string.Empty;
@@ -13,7 +12,7 @@
 		private static string cloneField_List = string.Empty;
 
 		public static void Generate() {
-			string folder = @"Record\";
+			string folder = @"IdRecord\";
 			directory = generatedDirectory + folder;
 			pattern = patternDirectory + folder;
 
@@ -29,6 +28,9 @@
 			foreach (Tables_Record tables_Record in tables_RecordList) {
 				TableElaboration(tables_Record);
 			}
+
+			if (Directory.Exists(@"..\..\..\..\EMMA.Generated\IdRecord")) Directory.Delete(@"..\..\..\..\EMMA.Generated\IdRecord", true);
+			Directory.Move(@"..\..\..\Generated\IdRecord", @"..\..\..\..\EMMA.Generated\IdRecord");
 		}
 
 		private static void TableElaboration(Tables_Record tables_Record) {
@@ -49,10 +51,13 @@
 			_Main = _Main.Replace("%%NAME_SPACE%%", "EMMA_BE.Generated");
 			_Main = _Main.Replace("%%TABLE_NAME%%", tables_Record.TABLE_NAME);
 
-			File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}_Record.cs", _Main);
+			File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}_IdRecord.cs", _Main);
 		}
 
 		private static void ColumnElaboration(Columns_Record columns_Record) {
+			if (auditFields.Contains(columns_Record.COLUMN_NAME))
+				return;
+
 			string dataType = GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
 			string isNullable = GetIsNullable(columns_Record.IS_NULLABLE);
 
