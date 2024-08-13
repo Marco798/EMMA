@@ -177,5 +177,13 @@ namespace Generator {
 				_ => throw new Exception(),
 			};
 		}
+
+		protected static string GetIsNullable(string isNullable) {
+			return isNullable switch {
+				"NO" => "",
+				"YES" => "?",
+				_ => throw new Exception(),
+			};
+		}
 	}
 }

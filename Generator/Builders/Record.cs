@@ -5,61 +5,68 @@
 		private static string directory = string.Empty;
 		private static string pattern = string.Empty;
 
+		private static string pattern_Main = string.Empty;
+		private static string pattern_Field = string.Empty;
+		private static string pattern_CloneField = string.Empty;
+
+		private static string field_List = string.Empty;
+		private static string cloneField_List = string.Empty;
+
 		public static void Generate() {
 			string folder = @"Record\";
 			directory = generatedDirectory + folder;
 			pattern = patternDirectory + folder;
 
-			string pattern_Record_Main = File.ReadAllText(pattern + "Main.txt");
-			string pattern_Record_Field = File.ReadAllText(pattern + "Main_Field.txt");
+			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
-			if (!Directory.Exists(directory))
-				Directory.CreateDirectory(directory);
+			#region Pattern
+			pattern_Main = File.ReadAllText(pattern + "Main.txt");
+
+			pattern_Field = File.ReadAllText(pattern + "Field.txt");
+			pattern_CloneField = File.ReadAllText(pattern + "CloneField.txt");
+			#endregion
 
 			foreach (Tables_Record tables_Record in tables_RecordList) {
-				string value_Record_Main = pattern_Record_Main;
-
-				string tableName = ToPascalCase(tables_Record.TABLE_NAME);
-
-				value_Record_Main = value_Record_Main.Replace("%%NAME_SPACE%%", "EMMA_BE.Generated");
-				value_Record_Main = value_Record_Main.Replace("%%TABLE_NAME%%", tables_Record.TABLE_NAME);
-
-				string recordField_List = string.Empty;
-				string cloneField_List = string.Empty;
-				foreach (Columns_Record columns_Record in columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME)) {
-					string value_Record_Field = pattern_Record_Field;
-
-					string dataType = string.Empty;
-					dataType = columns_Record.DATA_TYPE switch {
-						"varchar" => "string",
-						"varbinary" => "byte[]",
-						"int" => "int",
-						"bigint" => "long",
-						"date" => "DateTime",
-						"time" => "TimeSpan",
-						_ => throw new Exception(),
-					};
-
-					string isNullable = string.Empty;
-					isNullable = columns_Record.IS_NULLABLE switch {
-						"NO" => "",
-						"YES" => "?",
-						_ => throw new Exception(),
-					};
-
-					value_Record_Field = value_Record_Field.Replace("%%DATA_TYPE%%", dataType);
-					value_Record_Field = value_Record_Field.Replace("%%IS_NULLABLE%%", isNullable);
-					value_Record_Field = value_Record_Field.Replace("%%FIELD_NAME%%", columns_Record.COLUMN_NAME);
-					recordField_List += "\r\n" + value_Record_Field;
-
-					cloneField_List += $"\t\t\t\t{columns_Record.COLUMN_NAME} = {columns_Record.COLUMN_NAME},\r\n";
-				}
-
-				value_Record_Main = value_Record_Main.Replace("%%RECORD_FIELD%%", recordField_List);
-				value_Record_Main = value_Record_Main.Replace("%%CLONE_FIELD%%", cloneField_List[..^3]);
-
-				File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}_Record.cs", value_Record_Main);
+				TableElaboration(tables_Record);
 			}
+		}
+
+		private static void TableElaboration(Tables_Record tables_Record) {
+			string _Main = pattern_Main;
+
+			#region Sections declaration
+			field_List = string.Empty;
+			cloneField_List = string.Empty;
+			#endregion
+
+			foreach (Columns_Record columns_Record in columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME)) {
+				ColumnElaboration(columns_Record);
+			}
+
+			_Main = _Main.Replace("%%FIELD%%", field_List[..^2]);
+			_Main = _Main.Replace("%%CLONE_FIELD%%", cloneField_List[..^3]);
+
+			_Main = _Main.Replace("%%NAME_SPACE%%", "EMMA_BE.Generated");
+			_Main = _Main.Replace("%%TABLE_NAME%%", tables_Record.TABLE_NAME);
+
+			File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}_Record.cs", _Main);
+		}
+
+		private static void ColumnElaboration(Columns_Record columns_Record) {
+			string dataType = GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
+			string isNullable = GetIsNullable(columns_Record.IS_NULLABLE);
+
+			#region Field
+			string field = pattern_Field;
+			field = field.Replace("%%DATA_TYPE%%", dataType);
+			field = field.Replace("%%IS_NULLABLE%%", isNullable);
+			field_List += field.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			#endregion
+
+			#region CloneField
+			string cloneField = pattern_CloneField;
+			cloneField_List += cloneField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			#endregion
 		}
 	}
 }

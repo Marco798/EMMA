@@ -1,1 +1,0 @@
-﻿		public %%DATA_TYPE%%%%IS_NULLABLE%% %%FIELD_NAME%% { get; set; }

@@ -1,5 +1,6 @@
 ﻿namespace %%NAME_SPACE%% {
-	public class %%TABLE_NAME%%_Record {%%RECORD_FIELD%%
+	public class %%TABLE_NAME%%_Record {
+%%FIELD%%
 
 		public %%TABLE_NAME%%_Record Clone() {
 			%%TABLE_NAME%%_Record output = new() {
