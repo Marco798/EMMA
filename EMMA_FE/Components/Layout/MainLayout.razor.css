@@ -1,15 +1,15 @@
 main {
-    margin-top: 50px;
+    margin-top: 40px;
     margin-bottom: 50px;
     flex-grow: 1;
     overflow: auto;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 90px);
+    padding: 10px;
 }
 
 .DIV_Header {
     width: 100%;
-    height: 50px;
-    background-color: green;
+    height: 40px;
     position: fixed;
     top: 0;
 }
@@ -17,7 +17,6 @@ main {
 .DIV_Footer {
     width: 100%;
     height: 50px;
-    background-color: yellow;
     position: fixed;
     bottom: 0;
 }

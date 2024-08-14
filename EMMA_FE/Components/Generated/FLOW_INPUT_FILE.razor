@@ -6,6 +6,10 @@
 @inject HttpClient Http
 @rendermode InteractiveServer
 
+<head>
+	<link href="css/Generated/Inquiry.css" rel="stylesheet" />
+</head>
+
 @if (!showNew && !showEdit) {
 	<div>
 		<table>
@@ -19,9 +23,9 @@
 				<tr>
 					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
 					<td>@record.ID</td>
-					<td>@record.NOME_FLUSSO</td>
-					<td>@record.TIPO_FLUSSO</td>
-					<td>@record.CONTENUTO</td>
+					<td>@record.FLOW_NAME</td>
+					<td>@record.FLOW_TYPE</td>
+					<td>@record.CONTENT</td>
 					<td>@record.INS_DATE</td>
 					<td>@record.INS_TIME</td>
 					<td>@record.INS_INFO</td>
@@ -38,9 +42,9 @@
 @if (showNew) {
 	<div>
 		<table>
-			<tr><TextBox Id="New_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_InsertRecord!.NOME_FLUSSO" Description="NOME_FLUSSO" /></tr>
-			<tr><TextBox Id="New_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_InsertRecord!.TIPO_FLUSSO" Description="TIPO_FLUSSO" /></tr>
-			<tr><td Id="New_FLOW_INPUT_FILE" style="border: none; text-align: right; display: block;">CONTENUTO</td></tr>
+			<tr><TextBox Id="New_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_InsertRecord!.FLOW_NAME" Description="FLOW_NAME" /></tr>
+			<tr><TextBox Id="New_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_InsertRecord!.FLOW_TYPE" Description="FLOW_TYPE" /></tr>
+			<tr><td Id="New_FLOW_INPUT_FILE" style="border: none; text-align: right; display: block;">CONTENT</td></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromNew" />
 		<input type="button" value="Clean" @onclick="CleanNew" />
@@ -51,9 +55,9 @@
 @if (showEdit) {
 	<div>
 		<table>
-			<tr><TextBox Id="Edit_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_UpdateRecord!.NOME_FLUSSO" Description="NOME_FLUSSO" /></tr>
-			<tr><TextBox Id="Edit_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_UpdateRecord!.TIPO_FLUSSO" Description="TIPO_FLUSSO" /></tr>
-			<tr><td Id="Edit_FLOW_INPUT_FILE" style="border: none; text-align: right; display: block;">CONTENUTO</td></tr>
+			<tr><TextBox Id="Edit_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_UpdateRecord!.FLOW_NAME" Description="FLOW_NAME" /></tr>
+			<tr><TextBox Id="Edit_FLOW_INPUT_FILE" IsTable=true @bind-Value="@_FLOW_INPUT_FILE_UpdateRecord!.FLOW_TYPE" Description="FLOW_TYPE" /></tr>
+			<tr><td Id="Edit_FLOW_INPUT_FILE" style="border: none; text-align: right; display: block;">CONTENT</td></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromEdit" />
 		<input type="button" value="Reset" @onclick="ResetUpdate" />

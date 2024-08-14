@@ -7,7 +7,6 @@ namespace Generator {
 		private static string pattern = string.Empty;
 
 		private static string pattern_Main = string.Empty;
-		private static string pattern_Css = string.Empty;
 		private static string pattern_InquiryRecord = string.Empty;
 		private static string pattern_insertField_TextBox = string.Empty;
 		private static string pattern_insertField_Default = string.Empty;
@@ -27,7 +26,6 @@ namespace Generator {
 
 			#region Pattern
 			pattern_Main = File.ReadAllText(pattern + "Main.txt");
-			pattern_Css = File.ReadAllText(pattern + "Css.txt");
 
 			pattern_InquiryRecord = File.ReadAllText(pattern + "InquiryRecord.txt");
 
@@ -66,7 +64,6 @@ namespace Generator {
 			_Main = _Main.Replace("%%TABLE_NAME%%", tables_Record.TABLE_NAME);
 
 			File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}.razor", _Main);
-			File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}.razor.css", pattern_Css);
 		}
 
 		private static void ColumnElaboration(Columns_Record columns_Record) {

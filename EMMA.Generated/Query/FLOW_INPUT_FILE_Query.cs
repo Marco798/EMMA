@@ -23,10 +23,10 @@ namespace EMMA_BE.Generated {
 						int i = 0;
 
 						record.ID = reader.GetInt64(i++);
-						record.NOME_FLUSSO = reader.GetString(i++);
-						record.TIPO_FLUSSO = reader.GetString(i++);
-						record.CONTENUTO = new byte[reader.GetBytes(i, 0, null, 0, 0)];
-						reader.GetBytes(i++, 0, record.CONTENUTO, 0, record.CONTENUTO.Length);
+						record.FLOW_NAME = reader.GetString(i++);
+						record.FLOW_TYPE = reader.GetString(i++);
+						record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
+						reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);
 						record.INS_DATE = reader.GetDateTime(i++);
 						record.INS_TIME = reader.GetTimeSpan(i++);
 						record.INS_INFO = reader.GetString(i++);
@@ -55,19 +55,19 @@ namespace EMMA_BE.Generated {
 				StringBuilder query = new($"UPDATE FLOW_INPUT_FILE SET ");
 				List<SqlParameter> parameters = [];
 
-				if (record.IsSet_NOME_FLUSSO) {
-					query.Append("NOME_FLUSSO = @NOME_FLUSSO, ");
-					parameters.Add(new SqlParameter("@NOME_FLUSSO", record.NOME_FLUSSO));
+				if (record.IsSet_FLOW_NAME) {
+					query.Append("FLOW_NAME = @FLOW_NAME, ");
+					parameters.Add(new SqlParameter("@FLOW_NAME", record.FLOW_NAME));
 				}
 
-				if (record.IsSet_TIPO_FLUSSO) {
-					query.Append("TIPO_FLUSSO = @TIPO_FLUSSO, ");
-					parameters.Add(new SqlParameter("@TIPO_FLUSSO", record.TIPO_FLUSSO));
+				if (record.IsSet_FLOW_TYPE) {
+					query.Append("FLOW_TYPE = @FLOW_TYPE, ");
+					parameters.Add(new SqlParameter("@FLOW_TYPE", record.FLOW_TYPE));
 				}
 
-				if (record.IsSet_CONTENUTO) {
-					query.Append("CONTENUTO = @CONTENUTO, ");
-					parameters.Add(new SqlParameter("@CONTENUTO", record.CONTENUTO));
+				if (record.IsSet_CONTENT) {
+					query.Append("CONTENT = @CONTENT, ");
+					parameters.Add(new SqlParameter("@CONTENT", record.CONTENT));
 				}
 
 				query.Append("UPD_DATE = @UPD_DATE, ");
@@ -104,14 +104,14 @@ namespace EMMA_BE.Generated {
 				StringBuilder query = new($"INSERT INTO FLOW_INPUT_FILE VALUES (");
 				List<SqlParameter> parameters = [];
 
-				query.Append("@NOME_FLUSSO, ");
-				parameters.Add(new SqlParameter("@NOME_FLUSSO", record.NOME_FLUSSO));
+				query.Append("@FLOW_NAME, ");
+				parameters.Add(new SqlParameter("@FLOW_NAME", record.FLOW_NAME));
 
-				query.Append("@TIPO_FLUSSO, ");
-				parameters.Add(new SqlParameter("@TIPO_FLUSSO", record.TIPO_FLUSSO));
+				query.Append("@FLOW_TYPE, ");
+				parameters.Add(new SqlParameter("@FLOW_TYPE", record.FLOW_TYPE));
 
-				query.Append("@CONTENUTO, ");
-				parameters.Add(new SqlParameter("@CONTENUTO", record.CONTENUTO));
+				query.Append("@CONTENT, ");
+				parameters.Add(new SqlParameter("@CONTENT", record.CONTENT));
 
 				query.Append("@INS_DATE, ");
 				parameters.Add(new SqlParameter("@INS_DATE", DateTime.Now.Date));

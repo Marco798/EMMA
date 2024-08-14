@@ -4,9 +4,9 @@ namespace EMMA_BE.Generated {
 		public static List<string> GetFieldList() {
 			return [
 				"ID",
-				"NOME_FLUSSO",
-				"TIPO_FLUSSO",
-				"CONTENUTO",
+				"FLOW_NAME",
+				"FLOW_TYPE",
+				"CONTENT",
 				"INS_DATE",
 				"INS_TIME",
 				"INS_INFO",

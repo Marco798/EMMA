@@ -1,9 +1,9 @@
 namespace EMMA_BE.Generated {
 	public class FLOW_INPUT_FILE_Record {
 		public long ID { get; set; }
-		public string NOME_FLUSSO { get; set; }
-		public string TIPO_FLUSSO { get; set; }
-		public byte[] CONTENUTO { get; set; }
+		public string FLOW_NAME { get; set; }
+		public string FLOW_TYPE { get; set; }
+		public byte[] CONTENT { get; set; }
 		public DateTime INS_DATE { get; set; }
 		public TimeSpan INS_TIME { get; set; }
 		public string INS_INFO { get; set; }
@@ -14,9 +14,9 @@ namespace EMMA_BE.Generated {
 		public FLOW_INPUT_FILE_Record Clone() {
 			FLOW_INPUT_FILE_Record output = new() {
 				ID = ID,
-				NOME_FLUSSO = NOME_FLUSSO,
-				TIPO_FLUSSO = TIPO_FLUSSO,
-				CONTENUTO = CONTENUTO,
+				FLOW_NAME = FLOW_NAME,
+				FLOW_TYPE = FLOW_TYPE,
+				CONTENT = CONTENT,
 				INS_DATE = INS_DATE,
 				INS_TIME = INS_TIME,
 				INS_INFO = INS_INFO,
