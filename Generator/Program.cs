@@ -139,6 +139,7 @@ namespace Generator {
 				"varbinary" => "byte[]",
 				"int" => "int",
 				"bigint" => "long",
+				"decimal" => "decimal",
 				"date" => "DateTime",
 				"time" => "TimeSpan",
 				_ => throw new Exception()
@@ -151,6 +152,7 @@ namespace Generator {
 				"varbinary" => string.Empty,
 				"int" => "Int32",
 				"bigint" => "Int64",
+				"decimal" => "Decimal",
 				"date" => "DateTime",
 				"time" => "TimeSpan",
 				_ => throw new Exception()

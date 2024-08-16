@@ -64,11 +64,11 @@ namespace %%NAME_SPACE%% {
 			}
 		}
 
-		public void Insert(%%TABLE_NAME%%_BaseRecord record) {
+		public %%ID_TYPE%% Insert(%%TABLE_NAME%%_BaseRecord record) {
 			using SqlConnection connection = new(connectionString);
 
 			try {
-				StringBuilder query = new($"INSERT INTO %%TABLE_NAME%% VALUES (");
+				StringBuilder query = new($"INSERT INTO %%TABLE_NAME%% OUTPUT INSERTED.ID VALUES (");
 				List<SqlParameter> parameters = [];
 
 %%INSERT_FIELD%%
@@ -80,8 +80,10 @@ namespace %%NAME_SPACE%% {
 				command.Parameters.AddRange([.. parameters]);
 
 				connection.Open();
-				command.ExecuteNonQuery();
+				%%ID_TYPE%% id = (%%ID_TYPE%%)command.ExecuteScalar();
 				connection.Close();
+
+				return id;
 			}
 			catch (Exception ex) {
 				connection.Close();

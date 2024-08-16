@@ -97,11 +97,11 @@ namespace EMMA_BE.Generated {
 			}
 		}
 
-		public void Insert(FLOW_INPUT_FILE_BaseRecord record) {
+		public long Insert(FLOW_INPUT_FILE_BaseRecord record) {
 			using SqlConnection connection = new(connectionString);
 
 			try {
-				StringBuilder query = new($"INSERT INTO FLOW_INPUT_FILE VALUES (");
+				StringBuilder query = new($"INSERT INTO FLOW_INPUT_FILE OUTPUT INSERTED.ID VALUES (");
 				List<SqlParameter> parameters = [];
 
 				query.Append("@FLOW_NAME, ");
@@ -139,8 +139,10 @@ namespace EMMA_BE.Generated {
 				command.Parameters.AddRange([.. parameters]);
 
 				connection.Open();
-				command.ExecuteNonQuery();
+				long id = (long)command.ExecuteScalar();
 				connection.Close();
+
+				return id;
 			}
 			catch (Exception ex) {
 				connection.Close();

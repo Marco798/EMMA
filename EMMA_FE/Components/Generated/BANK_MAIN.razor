@@ -1,0 +1,150 @@
+@page "/BANK_MAIN"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<head>
+	<link href="css/Generated/Inquiry.css" rel="stylesheet" />
+</head>
+
+@if (!showNew && !showEdit) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in BANK_MAIN_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (BANK_MAIN_Record record in _BANK_MAIN_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
+					<td>@record.ID</td>
+					<td>@record.OPERATION_DATE</td>
+					<td>@record.VALUE_DATE</td>
+					<td>@record.REASON</td>
+					<td>@record.DESCRIPTION</td>
+					<td>@record.OUTCOME</td>
+					<td>@record.INCOME</td>
+					<td>@record.TAG1</td>
+					<td>@record.TAG2</td>
+					<td>@record.TAG3</td>
+					<td>@record.TAG4</td>
+					<td>@record.FLOW_INPUT_FILE_ID</td>
+					<td>@record.INS_DATE</td>
+					<td>@record.INS_TIME</td>
+					<td>@record.INS_INFO</td>
+				</tr>
+			}
+		</table>
+		<input type="button" value="Insert" @onclick="New" />
+	</div>
+}
+
+@if (showNew) {
+	<div>
+		<table>
+			<tr><td Id="New_BANK_MAIN" style="border: none; text-align: right; display: block;">OPERATION_DATE</td></tr>
+			<tr><td Id="New_BANK_MAIN" style="border: none; text-align: right; display: block;">VALUE_DATE</td></tr>
+			<tr><TextBox Id="New_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_InsertRecord!.REASON" Description="REASON" Length="255" Width="255" /></tr>
+			<tr><TextBox Id="New_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_InsertRecord!.DESCRIPTION" Description="DESCRIPTION" Length="1000" Width="1000" /></tr>
+			<tr><td Id="New_BANK_MAIN" style="border: none; text-align: right; display: block;">OUTCOME</td></tr>
+			<tr><td Id="New_BANK_MAIN" style="border: none; text-align: right; display: block;">INCOME</td></tr>
+			<tr><TextBox Id="New_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_InsertRecord!.TAG1" Description="TAG1" Length="255" Width="255" /></tr>
+			<tr><TextBox Id="New_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_InsertRecord!.TAG2" Description="TAG2" Length="255" Width="255" /></tr>
+			<tr><TextBox Id="New_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_InsertRecord!.TAG3" Description="TAG3" Length="1000" Width="1000" /></tr>
+			<tr><TextBox Id="New_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_InsertRecord!.TAG4" Description="TAG4" Length="255" Width="255" /></tr>
+			<tr><td Id="New_BANK_MAIN" style="border: none; text-align: right; display: block;">FLOW_INPUT_FILE_ID</td></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromNew" />
+		<input type="button" value="Clean" @onclick="CleanNew" />
+		<input type="button" value="Insert" @onclick="Insert" />
+	</div>
+}
+
+@if (showEdit) {
+	<div>
+		<table>
+			<tr><td Id="Edit_BANK_MAIN" style="border: none; text-align: right; display: block;">OPERATION_DATE</td></tr>
+			<tr><td Id="Edit_BANK_MAIN" style="border: none; text-align: right; display: block;">VALUE_DATE</td></tr>
+			<tr><TextBox Id="Edit_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_UpdateRecord!.REASON" Description="REASON" Length="255" Width="255" /></tr>
+			<tr><TextBox Id="Edit_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_UpdateRecord!.DESCRIPTION" Description="DESCRIPTION" Length="1000" Width="1000" /></tr>
+			<tr><td Id="Edit_BANK_MAIN" style="border: none; text-align: right; display: block;">OUTCOME</td></tr>
+			<tr><td Id="Edit_BANK_MAIN" style="border: none; text-align: right; display: block;">INCOME</td></tr>
+			<tr><TextBox Id="Edit_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_UpdateRecord!.TAG1" Description="TAG1" Length="255" Width="255" /></tr>
+			<tr><TextBox Id="Edit_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_UpdateRecord!.TAG2" Description="TAG2" Length="255" Width="255" /></tr>
+			<tr><TextBox Id="Edit_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_UpdateRecord!.TAG3" Description="TAG3" Length="1000" Width="1000" /></tr>
+			<tr><TextBox Id="Edit_BANK_MAIN" IsTable=true @bind-Value="@_BANK_MAIN_UpdateRecord!.TAG4" Description="TAG4" Length="255" Width="255" /></tr>
+			<tr><td Id="Edit_BANK_MAIN" style="border: none; text-align: right; display: block;">FLOW_INPUT_FILE_ID</td></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
+	</div>
+}
+
+@code {
+	private List<BANK_MAIN_Record> _BANK_MAIN_Record_List = [];
+	bool showEdit = false;
+	bool showNew = false;
+
+	private BANK_MAIN_BaseRecord? _BANK_MAIN_InsertRecord = null;
+
+	private BANK_MAIN_IdRecord? _BANK_MAIN_UpdateRecord_Orig = null;
+	private BANK_MAIN_IdRecord? _BANK_MAIN_UpdateRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/BANK_MAIN/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_BANK_MAIN_Record_List = await response.Content.ReadFromJsonAsync<List<BANK_MAIN_Record>>() ?? [];
+		}
+	}
+
+	private void New() {
+		showNew = true;
+		_BANK_MAIN_InsertRecord = new();
+	}
+
+	private void BackFromNew() {
+		showNew = false;
+		_BANK_MAIN_InsertRecord = null;
+	}
+
+	private void CleanNew() {
+		_BANK_MAIN_InsertRecord = new();
+	}
+
+	protected async void Insert() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_MAIN/Insert", _BANK_MAIN_InsertRecord);
+		if (response.IsSuccessStatusCode) {
+			showNew = false;
+		}
+	}
+
+	private void Edit(BANK_MAIN_Record record) {
+		showEdit = true;
+		_BANK_MAIN_UpdateRecord_Orig = new(record);
+		_BANK_MAIN_UpdateRecord = new(record);
+	}
+
+	private void BackFromEdit() {
+		showEdit = false;
+		_BANK_MAIN_UpdateRecord_Orig = null;
+		_BANK_MAIN_UpdateRecord = null;
+	}
+
+	private void ResetUpdate() {
+		_BANK_MAIN_UpdateRecord = _BANK_MAIN_UpdateRecord_Orig!.Clone();
+	}
+
+	protected async void Update() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_MAIN/UpdateByKey", _BANK_MAIN_UpdateRecord);
+		if (response.IsSuccessStatusCode) {
+			showEdit = false;
+		}
+	}
+
+}

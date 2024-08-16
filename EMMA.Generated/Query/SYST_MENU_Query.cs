@@ -102,11 +102,11 @@ namespace EMMA_BE.Generated {
 			}
 		}
 
-		public void Insert(SYST_MENU_BaseRecord record) {
+		public int Insert(SYST_MENU_BaseRecord record) {
 			using SqlConnection connection = new(connectionString);
 
 			try {
-				StringBuilder query = new($"INSERT INTO SYST_MENU VALUES (");
+				StringBuilder query = new($"INSERT INTO SYST_MENU OUTPUT INSERTED.ID VALUES (");
 				List<SqlParameter> parameters = [];
 
 				query.Append("@NAME, ");
@@ -147,8 +147,10 @@ namespace EMMA_BE.Generated {
 				command.Parameters.AddRange([.. parameters]);
 
 				connection.Open();
-				command.ExecuteNonQuery();
+				int id = (int)command.ExecuteScalar();
 				connection.Close();
+
+				return id;
 			}
 			catch (Exception ex) {
 				connection.Close();
