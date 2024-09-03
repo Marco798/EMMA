@@ -1,21 +1,21 @@
 ﻿@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<div>
-	<div class="DIV_Title">
-		<span class="SPN_Title">EDITOR DB</span>
+<div class="DIV_MainDiv">
+	<div class="DIV_TitleDiv">
+		<span>EDITOR DB</span>
 	</div>
 
-	<div class="DIV_Selectors">
+	<div class="DIV_SelectDiv">
 		<label for="entity">Entity</label>
-		<select id="entity" value="@entity" style="margin-left:10px" @onchange="entityChange">
+		<select id="entity" value="@entity" @onchange="entityChange">
 			<option value="">---</option>
 			<option value="table">Table</option>
 			<option value="field">Field</option>
 		</select>
 
-		<label for="action" style="margin-left:30px">Action</label>
-		<select id="action" value="@action" style="margin-left:10px" @onchange="actionChange">
+		<label for="action" class="LBL_Action">Action</label>
+		<select id="action" value="@action" @onchange="actionChange">
 			<option value="">---</option>
 			<option value="create">Create</option>
 			<option value="edit">Edit</option>

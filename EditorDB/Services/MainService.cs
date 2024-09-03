@@ -8,7 +8,8 @@ namespace EditorDB.Services {
 		static string connectionString = string.Empty;
 		public SqlConnection connection = new();
 		public MainService() {
-			connectionString = "Server=localhost\\SQLEXPRESS;Database=EMMA;Integrated Security=True;";
+			//connectionString = "Server=localhost\\SQLEXPRESS;Database=EMMA;Integrated Security=True;";
+			connectionString = "Server=localhost,1433;Database=EMMA;User Id=sa;Password=<YourStrong!Passw0rd>;";
 			connection = new(connectionString);
 
 			Tables_RecordList = [];
@@ -24,9 +25,7 @@ namespace EditorDB.Services {
 			try {
 				connection.Open();
 
-				string queryTables = $"SELECT * " +
-					$"FROM INFORMATION_SCHEMA.TABLES " +
-					$"	LEFT JOIN SYST_TABLE ON (INFORMATION_SCHEMA.TABLES.TABLE_NAME = SYST_TABLE.TABLE_NAME)";
+				string queryTables = $"SELECT * FROM INFORMATION_SCHEMA.TABLES LEFT JOIN SYST_TABLE ON (INFORMATION_SCHEMA.TABLES.TABLE_NAME = SYST_TABLE.TABLE_NAME)";
 
 				using (SqlCommand command = new(queryTables, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
@@ -50,9 +49,7 @@ namespace EditorDB.Services {
 				connection.Close();
 				connection.Open();
 
-				string queryColumns = $"SELECT * " +
-					$"FROM INFORMATION_SCHEMA.COLUMNS " +
-					$"	LEFT JOIN SYST_COLUMN ON (INFORMATION_SCHEMA.COLUMNS.TABLE_NAME = SYST_COLUMN.TABLE_NAME AND INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME = SYST_COLUMN.COLUMN_NAME)";
+				string queryColumns = $"SELECT * FROM INFORMATION_SCHEMA.COLUMNS LEFT JOIN SYST_COLUMN ON (INFORMATION_SCHEMA.COLUMNS.TABLE_NAME = SYST_COLUMN.TABLE_NAME AND INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME = SYST_COLUMN.COLUMN_NAME)";
 
 				using (SqlCommand command = new(queryColumns, connection)) {
 					SqlDataReader reader = command.ExecuteReader();

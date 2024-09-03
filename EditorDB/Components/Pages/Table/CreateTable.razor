@@ -13,14 +13,18 @@
 
 <div>
 	<FormTitle Title="Create table"></FormTitle>
-	<table>
+	<table class="TBL_TableData">
 		<tr>
-			<td class="TD_TableLabel">Table name</td>
-			<td class="TD_TableField"><input id="newTableName" type="text" autocomplete="off" @bind="tableName" /></td>
-			<td class="TD_TableLabel">Description</td>
-			<td class="TD_TableField"><input id="newTableName" type="text" class="INP_TableDescription" autocomplete="off" @bind="tableDescription" /></td>
-			<td class="TD_TableLabel">Short description</td>
-			<td class="TD_TableField"><input id="newTableName" type="text" class="INP_TableDescription" autocomplete="off" @bind="tableShortDescription" /></td>
+			<td class="TD_TableData_Label"><label for="newTableName">Table name:</label></td>
+			<td class="TD_TableData_Input"><input id="newTableName" type="text" autocomplete="off" @bind="tableName" maxlength="50" /></td>
+		</tr>
+		<tr>
+			<td class="TD_TableData_Label"><label for="newTableDescription">Description:</label></td>
+			<td class="TD_TableData_Input"><input id="newTableDescription" type="text" autocomplete="off" @bind="tableDescription" maxlength="200" /></td>
+		</tr>
+		<tr>
+			<td class="TD_TableData_Label"><label for="newTableShortDescription">Short description:</label></td>
+			<td class="TD_TableData_Input"><input id="newTableShortDescription" type="text" autocomplete="off" @bind="tableShortDescription" maxlength="100" /></td>
 		</tr>
 	</table>
 	<table class="TBL_MainTable">
@@ -35,9 +39,7 @@
 			<th>Decimal digits</th>
 		</tr>
 		<tr>
-			<td>
-				<input type="checkbox" checked />
-			</td>
+			<td></td>
 			<td>ID</td>
 			<td></td>
 			<td>Integer</td>
@@ -62,7 +64,7 @@
 				<td>
 					<input id="@("fieldName" + field.Index)" type="text" @bind="@field.Name" />
 				</td>
-				<td><input type="checkbox" @bind="@field.Nullable" /></td>
+				<td class="TD_MainTable_CheckBox"><input type="checkbox" @bind="@field.Nullable" /></td>
 				<td>
 					<select @bind="@field.Category">
 						<option value=""></option>
@@ -80,7 +82,7 @@
 					</select>
 				</td>
 				<td>
-					@if (field.Category == BV_DataType.Category.String && !string.IsNullOrWhiteSpace(field.Type)) {
+					@if (new [] { BV_DataType.Category.String, BV_DataType.Category.Binary }.Contains(field.Category) && !string.IsNullOrWhiteSpace(field.Type)) {
 						<input type="text" @bind=@field.Length />
 					}
 				</td>
@@ -98,7 +100,7 @@
 		}
 		@foreach (var field in fields.Where(x => x.Index >= 1000).OrderBy(x => x.Index)) {
 			<tr>
-				<td><input type="checkbox" @bind="field.Enabled" /></td>
+				<td class="TD_MainTable_CheckBox"><input type="checkbox" @bind="field.Enabled" /></td>
 				<td>@field.Name</td>
 				<td></td>
 				<td>@field.Category</td>
