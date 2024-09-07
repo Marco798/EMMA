@@ -28,8 +28,9 @@
 
         public string DESCRIPTION { get; set; }
         public string SHORT_DESCRIPTION { get; set; }
+		public string? COMBO { get; set; }
 
-        public Columns_Record()
+		public Columns_Record()
         {
             TABLE_CATALOG = string.Empty;
             TABLE_SCHEMA = string.Empty;
@@ -41,6 +42,6 @@
 
             DESCRIPTION = string.Empty;
             SHORT_DESCRIPTION = string.Empty;
-        }
+		}
     }
 }

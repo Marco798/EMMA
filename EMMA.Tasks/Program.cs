@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NLog;
 using System.Data.SqlClient;
+using System.Globalization;
 
 namespace EMMA.Tasks {
 	public class Program {
@@ -9,6 +10,7 @@ namespace EMMA.Tasks {
 		protected static SqlConnection connection = new();
 		protected static IConfiguration configuration;
 
+		protected static readonly CultureInfo cultureInfo_en_US = new("en-US");
 
 		static void Main() {
 			try {

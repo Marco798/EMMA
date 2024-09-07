@@ -2,6 +2,8 @@
 	public class %%TABLE_NAME%%_BaseRecord {
 %%FIELD%%
 
+%%SET_FIELD%%
+
 		public %%TABLE_NAME%%_BaseRecord() {
 %%CONSTRUCTOR_FIELD%%
 		}

@@ -5,7 +5,7 @@ namespace EMMA_BE.Generated {
 		public byte[] CONTENT { get; private set; }
 
 		public void Set_FILE_NAME(string value) { FILE_NAME = value; }
-		public void Set_FILE_TYPE(string value) { FILE_TYPE = value; }
+		public void Set_FILE_TYPE(FILE_TYPE_Combo value) { FILE_TYPE = value.Value; }
 		public void Set_CONTENT(byte[] value) { CONTENT = value; }
 
 		public FILE_INPUT_BaseRecord() {

@@ -1,0 +1,12 @@
+﻿namespace %%NAME_SPACE%% {
+	public class %%COMBO_NAME%%_Combo {
+		public readonly string Value;
+
+		private %%COMBO_NAME%%_Combo(string value) {
+			Value = value;
+		}
+
+%%VALUE_FIELD%%
+	}
+
+}

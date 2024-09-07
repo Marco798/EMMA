@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EMMA.Commons\EMMA.Commons.csproj" />
     <ProjectReference Include="..\EMMA.Generated\EMMA.Generated.csproj" />
   </ItemGroup>
 

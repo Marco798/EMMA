@@ -6,10 +6,13 @@
 
 		private static string pattern_Main = string.Empty;
 		private static string pattern_Field = string.Empty;
+		private static string pattern_SetField = string.Empty;
+		private static string pattern_SetFieldCombo = string.Empty;
 		private static string pattern_ConstructorField = string.Empty;
 		private static string pattern_CloneField = string.Empty;
 
 		private static string field_List = string.Empty;
+		private static string setField_List = string.Empty;
 		private static string constructorField_List = string.Empty;
 		private static string cloneField_List = string.Empty;
 
@@ -24,6 +27,8 @@
 			pattern_Main = File.ReadAllText(pattern + "Main.txt");
 
 			pattern_Field = File.ReadAllText(pattern + "Field.txt");
+			pattern_SetField = File.ReadAllText(pattern + "SetField.txt");
+			pattern_SetFieldCombo = File.ReadAllText(pattern + "SetFieldCombo.txt");
 			pattern_ConstructorField = File.ReadAllText(pattern + "ConstructorField.txt");
 			pattern_CloneField = File.ReadAllText(pattern + "CloneField.txt");
 			#endregion
@@ -41,6 +46,7 @@
 
 			#region Sections declaration
 			field_List = string.Empty;
+			setField_List = string.Empty;
 			constructorField_List = string.Empty;
 			cloneField_List = string.Empty;
 			#endregion
@@ -50,6 +56,7 @@
 			}
 
 			_Main = _Main.Replace("%%FIELD%%", field_List[..^2]);
+			_Main = _Main.Replace("%%SET_FIELD%%", setField_List[..^2]);
 			_Main = _Main.Replace("%%CONSTRUCTOR_FIELD%%", constructorField_List[..^2]);
 			_Main = _Main.Replace("%%CLONE_FIELD%%", cloneField_List[..^3]);
 
@@ -71,6 +78,18 @@
 			field = field.Replace("%%DATA_TYPE%%", dataType);
 			field = field.Replace("%%IS_NULLABLE%%", isNullable);
 			field_List += field.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			#endregion
+
+			#region SetField
+			string setField = string.Empty;
+			if (columns_Record.COMBO == null) {
+				setField = pattern_SetField;
+				setField = setField.Replace("%%DATA_TYPE%%", dataType);
+			} else {
+				setField = pattern_SetFieldCombo;
+				setField = setField.Replace("%%COMBO_NAME%%", columns_Record.COMBO);
+			}
+			setField_List += setField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 			#endregion
 
 			#region ConstructorField
