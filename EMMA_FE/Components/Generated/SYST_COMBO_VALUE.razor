@@ -1,0 +1,123 @@
+@page "/SYST_COMBO_VALUE"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<head>
+	<link href="css/Generated/Inquiry.css" rel="stylesheet" />
+</head>
+
+@if (!showNew && !showEdit) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in SYST_COMBO_VALUE_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (SYST_COMBO_VALUE_Record record in _SYST_COMBO_VALUE_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
+					<td>@record.ID</td>
+					<td>@record.NAME</td>
+					<td>@record.VALUE</td>
+					<td>@record.COMBO</td>
+				</tr>
+			}
+		</table>
+		<input type="button" value="Insert" @onclick="New" />
+	</div>
+}
+
+@if (showNew) {
+	<div>
+		<table>
+			<tr><TextBox Id="New_SYST_COMBO_VALUE" IsTable=true @bind-Value="@_SYST_COMBO_VALUE_InsertRecord!.NAME" Description="NAME" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="New_SYST_COMBO_VALUE" IsTable=true @bind-Value="@_SYST_COMBO_VALUE_InsertRecord!.VALUE" Description="VALUE" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="New_SYST_COMBO_VALUE" IsTable=true @bind-Value="@_SYST_COMBO_VALUE_InsertRecord!.COMBO" Description="COMBO" Length="100" Width="100" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromNew" />
+		<input type="button" value="Clean" @onclick="CleanNew" />
+		<input type="button" value="Insert" @onclick="Insert" />
+	</div>
+}
+
+@if (showEdit) {
+	<div>
+		<table>
+			<tr><TextBox Id="Edit_SYST_COMBO_VALUE" IsTable=true @bind-Value="@_SYST_COMBO_VALUE_UpdateRecord!.NAME" Description="NAME" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="Edit_SYST_COMBO_VALUE" IsTable=true @bind-Value="@_SYST_COMBO_VALUE_UpdateRecord!.VALUE" Description="VALUE" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="Edit_SYST_COMBO_VALUE" IsTable=true @bind-Value="@_SYST_COMBO_VALUE_UpdateRecord!.COMBO" Description="COMBO" Length="100" Width="100" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
+	</div>
+}
+
+@code {
+	private List<SYST_COMBO_VALUE_Record> _SYST_COMBO_VALUE_Record_List = [];
+	bool showEdit = false;
+	bool showNew = false;
+
+	private SYST_COMBO_VALUE_BaseRecord? _SYST_COMBO_VALUE_InsertRecord = null;
+
+	private SYST_COMBO_VALUE_IdRecord? _SYST_COMBO_VALUE_UpdateRecord_Orig = null;
+	private SYST_COMBO_VALUE_IdRecord? _SYST_COMBO_VALUE_UpdateRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/SYST_COMBO_VALUE/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_SYST_COMBO_VALUE_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_COMBO_VALUE_Record>>() ?? [];
+		}
+	}
+
+	private void New() {
+		showNew = true;
+		_SYST_COMBO_VALUE_InsertRecord = new();
+	}
+
+	private void BackFromNew() {
+		showNew = false;
+		_SYST_COMBO_VALUE_InsertRecord = null;
+	}
+
+	private void CleanNew() {
+		_SYST_COMBO_VALUE_InsertRecord = new();
+	}
+
+	protected async void Insert() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_COMBO_VALUE/Insert", _SYST_COMBO_VALUE_InsertRecord);
+		if (response.IsSuccessStatusCode) {
+			showNew = false;
+		}
+	}
+
+	private void Edit(SYST_COMBO_VALUE_Record record) {
+		showEdit = true;
+		_SYST_COMBO_VALUE_UpdateRecord_Orig = new(record);
+		_SYST_COMBO_VALUE_UpdateRecord = new(record);
+	}
+
+	private void BackFromEdit() {
+		showEdit = false;
+		_SYST_COMBO_VALUE_UpdateRecord_Orig = null;
+		_SYST_COMBO_VALUE_UpdateRecord = null;
+	}
+
+	private void ResetUpdate() {
+		_SYST_COMBO_VALUE_UpdateRecord = _SYST_COMBO_VALUE_UpdateRecord_Orig!.Clone();
+	}
+
+	protected async void Update() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_COMBO_VALUE/UpdateByKey", _SYST_COMBO_VALUE_UpdateRecord);
+		if (response.IsSuccessStatusCode) {
+			showEdit = false;
+		}
+	}
+
+}

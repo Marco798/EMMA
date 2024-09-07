@@ -1,0 +1,126 @@
+@page "/SYST_MENU"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<head>
+	<link href="css/Generated/Inquiry.css" rel="stylesheet" />
+</head>
+
+@if (!showNew && !showEdit) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in SYST_MENU_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (SYST_MENU_Record record in _SYST_MENU_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
+					<td>@record.ID</td>
+					<td>@record.NAME</td>
+					<td>@record.PARENT</td>
+					<td>@record.DESCRIPTION</td>
+					<td>@record.SHORT_DESCRIPTION</td>
+				</tr>
+			}
+		</table>
+		<input type="button" value="Insert" @onclick="New" />
+	</div>
+}
+
+@if (showNew) {
+	<div>
+		<table>
+			<tr><TextBox Id="New_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_InsertRecord!.NAME" Description="NAME" Length="50" Width="50" /></tr>
+			<tr><TextBox Id="New_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_InsertRecord!.PARENT" Description="PARENT" Length="50" Width="50" /></tr>
+			<tr><TextBox Id="New_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_InsertRecord!.DESCRIPTION" Description="DESCRIPTION" Length="200" Width="200" /></tr>
+			<tr><TextBox Id="New_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_InsertRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="100" Width="100" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromNew" />
+		<input type="button" value="Clean" @onclick="CleanNew" />
+		<input type="button" value="Insert" @onclick="Insert" />
+	</div>
+}
+
+@if (showEdit) {
+	<div>
+		<table>
+			<tr><TextBox Id="Edit_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_UpdateRecord!.NAME" Description="NAME" Length="50" Width="50" /></tr>
+			<tr><TextBox Id="Edit_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_UpdateRecord!.PARENT" Description="PARENT" Length="50" Width="50" /></tr>
+			<tr><TextBox Id="Edit_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_UpdateRecord!.DESCRIPTION" Description="DESCRIPTION" Length="200" Width="200" /></tr>
+			<tr><TextBox Id="Edit_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_UpdateRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="100" Width="100" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
+	</div>
+}
+
+@code {
+	private List<SYST_MENU_Record> _SYST_MENU_Record_List = [];
+	bool showEdit = false;
+	bool showNew = false;
+
+	private SYST_MENU_BaseRecord? _SYST_MENU_InsertRecord = null;
+
+	private SYST_MENU_IdRecord? _SYST_MENU_UpdateRecord_Orig = null;
+	private SYST_MENU_IdRecord? _SYST_MENU_UpdateRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_SYST_MENU_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_MENU_Record>>() ?? [];
+		}
+	}
+
+	private void New() {
+		showNew = true;
+		_SYST_MENU_InsertRecord = new();
+	}
+
+	private void BackFromNew() {
+		showNew = false;
+		_SYST_MENU_InsertRecord = null;
+	}
+
+	private void CleanNew() {
+		_SYST_MENU_InsertRecord = new();
+	}
+
+	protected async void Insert() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_MENU/Insert", _SYST_MENU_InsertRecord);
+		if (response.IsSuccessStatusCode) {
+			showNew = false;
+		}
+	}
+
+	private void Edit(SYST_MENU_Record record) {
+		showEdit = true;
+		_SYST_MENU_UpdateRecord_Orig = new(record);
+		_SYST_MENU_UpdateRecord = new(record);
+	}
+
+	private void BackFromEdit() {
+		showEdit = false;
+		_SYST_MENU_UpdateRecord_Orig = null;
+		_SYST_MENU_UpdateRecord = null;
+	}
+
+	private void ResetUpdate() {
+		_SYST_MENU_UpdateRecord = _SYST_MENU_UpdateRecord_Orig!.Clone();
+	}
+
+	protected async void Update() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_MENU/UpdateByKey", _SYST_MENU_UpdateRecord);
+		if (response.IsSuccessStatusCode) {
+			showEdit = false;
+		}
+	}
+
+}

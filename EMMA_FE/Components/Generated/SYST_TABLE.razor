@@ -1,0 +1,123 @@
+@page "/SYST_TABLE"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<head>
+	<link href="css/Generated/Inquiry.css" rel="stylesheet" />
+</head>
+
+@if (!showNew && !showEdit) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in SYST_TABLE_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (SYST_TABLE_Record record in _SYST_TABLE_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
+					<td>@record.ID</td>
+					<td>@record.TABLE_NAME</td>
+					<td>@record.DESCRIPTION</td>
+					<td>@record.SHORT_DESCRIPTION</td>
+				</tr>
+			}
+		</table>
+		<input type="button" value="Insert" @onclick="New" />
+	</div>
+}
+
+@if (showNew) {
+	<div>
+		<table>
+			<tr><TextBox Id="New_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_InsertRecord!.TABLE_NAME" Description="TABLE_NAME" Length="50" Width="50" /></tr>
+			<tr><TextBox Id="New_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_InsertRecord!.DESCRIPTION" Description="DESCRIPTION" Length="200" Width="200" /></tr>
+			<tr><TextBox Id="New_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_InsertRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="100" Width="100" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromNew" />
+		<input type="button" value="Clean" @onclick="CleanNew" />
+		<input type="button" value="Insert" @onclick="Insert" />
+	</div>
+}
+
+@if (showEdit) {
+	<div>
+		<table>
+			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_UpdateRecord!.TABLE_NAME" Description="TABLE_NAME" Length="50" Width="50" /></tr>
+			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_UpdateRecord!.DESCRIPTION" Description="DESCRIPTION" Length="200" Width="200" /></tr>
+			<tr><TextBox Id="Edit_SYST_TABLE" IsTable=true @bind-Value="@_SYST_TABLE_UpdateRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="100" Width="100" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
+	</div>
+}
+
+@code {
+	private List<SYST_TABLE_Record> _SYST_TABLE_Record_List = [];
+	bool showEdit = false;
+	bool showNew = false;
+
+	private SYST_TABLE_BaseRecord? _SYST_TABLE_InsertRecord = null;
+
+	private SYST_TABLE_IdRecord? _SYST_TABLE_UpdateRecord_Orig = null;
+	private SYST_TABLE_IdRecord? _SYST_TABLE_UpdateRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/SYST_TABLE/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_SYST_TABLE_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_TABLE_Record>>() ?? [];
+		}
+	}
+
+	private void New() {
+		showNew = true;
+		_SYST_TABLE_InsertRecord = new();
+	}
+
+	private void BackFromNew() {
+		showNew = false;
+		_SYST_TABLE_InsertRecord = null;
+	}
+
+	private void CleanNew() {
+		_SYST_TABLE_InsertRecord = new();
+	}
+
+	protected async void Insert() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_TABLE/Insert", _SYST_TABLE_InsertRecord);
+		if (response.IsSuccessStatusCode) {
+			showNew = false;
+		}
+	}
+
+	private void Edit(SYST_TABLE_Record record) {
+		showEdit = true;
+		_SYST_TABLE_UpdateRecord_Orig = new(record);
+		_SYST_TABLE_UpdateRecord = new(record);
+	}
+
+	private void BackFromEdit() {
+		showEdit = false;
+		_SYST_TABLE_UpdateRecord_Orig = null;
+		_SYST_TABLE_UpdateRecord = null;
+	}
+
+	private void ResetUpdate() {
+		_SYST_TABLE_UpdateRecord = _SYST_TABLE_UpdateRecord_Orig!.Clone();
+	}
+
+	protected async void Update() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_TABLE/UpdateByKey", _SYST_TABLE_UpdateRecord);
+		if (response.IsSuccessStatusCode) {
+			showEdit = false;
+		}
+	}
+
+}
