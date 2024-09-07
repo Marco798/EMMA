@@ -5,20 +5,20 @@ using System.Text;
 namespace EMMA_BE.Generated.Controller {
 	[ApiController]
 	[Route("[controller]")]
-	public class BANK_MAINController : ControllerBase {
+	public class FILE_INPUTController : ControllerBase {
 
 		protected readonly IConfiguration _configuration;
-		protected readonly BANK_MAIN_Query _query;
+		protected readonly FILE_INPUT_Query _query;
 
-		public BANK_MAINController(IConfiguration configuration) {
+		public FILE_INPUTController(IConfiguration configuration) {
 			_configuration = configuration;
-			_query = new BANK_MAIN_Query(_configuration);
+			_query = new FILE_INPUT_Query(_configuration);
 		}
 
 		[HttpGet("SelectAll")]
 		public IActionResult SelectAll() {
 			try {
-				List<BANK_MAIN_Record> _Record_List = _query.SelectAll();
+				List<FILE_INPUT_Record> _Record_List = _query.SelectAll();
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {
@@ -27,9 +27,9 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpPost("UpdateByKey")]
-		public IActionResult UpdateByKey(BANK_MAIN_IdRecord record) {
+		public IActionResult UpdateByKey(FILE_INPUT_IdRecord record) {
 			try {
-				_query.UpdateByKey(record.ID, new BANK_MAIN_NullRecord(record));
+				_query.UpdateByKey(record.ID, new FILE_INPUT_NullRecord(record));
 
 				return Ok();
 			}
@@ -39,7 +39,7 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpPost("Insert")]
-		public IActionResult Insert(BANK_MAIN_BaseRecord record) {
+		public IActionResult Insert(FILE_INPUT_BaseRecord record) {
 			try {
 				_query.Insert(record);
 

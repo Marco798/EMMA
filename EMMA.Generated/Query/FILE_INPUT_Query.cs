@@ -4,29 +4,29 @@ using System.Data.SqlClient;
 using System.Text;
 
 namespace EMMA_BE.Generated {
-	public class SYST_MENU_Query(IConfiguration configuration) : QueryBase(configuration) {
-		private const string NomeTabella = "SYST_Menu";
-		private const string NomeTabellaDB = "SYST_MENU";
+	public class FILE_INPUT_Query(IConfiguration configuration) : QueryBase(configuration) {
+		private const string NomeTabella = "FILE_Input";
+		private const string NomeTabellaDB = "FILE_INPUT";
 	
-		public List<SYST_MENU_Record> SelectAll() {
+		public List<FILE_INPUT_Record> SelectAll() {
 			using SqlConnection connection = new(connectionString);
 
-			List<SYST_MENU_Record> output = [];
+			List<FILE_INPUT_Record> output = [];
 			try {
 				connection.Open();
 
-				string query = "SELECT * FROM SYST_MENU";
+				string query = "SELECT * FROM FILE_INPUT";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
-						SYST_MENU_Record record = new();
+						FILE_INPUT_Record record = new();
 						int i = 0;
 
 						record.ID = reader.GetInt32(i++);
-						record.NAME = reader.GetString(i++);
-						record.PARENT = reader.GetString(i++);
-						record.DESCRIPTION = reader.GetString(i++);
-						record.SHORT_DESCRIPTION = reader.GetString(i++);
+						record.FILE_NAME = reader.GetString(i++);
+						record.FILE_TYPE = reader.GetString(i++);
+						record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
+						reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);
 						record.INS_DATE = reader.GetDateTime(i++);
 						record.INS_TIME = reader.GetTimeSpan(i++);
 						record.INS_INFO = reader.GetString(i++);
@@ -48,31 +48,26 @@ namespace EMMA_BE.Generated {
 			return output;
 		}
 
-		public void UpdateByKey(int id, SYST_MENU_NullRecord record) {
+		public void UpdateByKey(int id, FILE_INPUT_NullRecord record) {
 			using SqlConnection connection = new(connectionString);
 
 			try {
-				StringBuilder query = new($"UPDATE SYST_MENU SET ");
+				StringBuilder query = new($"UPDATE FILE_INPUT SET ");
 				List<SqlParameter> parameters = [];
 
-				if (record.IsSet_NAME) {
-					query.Append("NAME = @NAME, ");
-					parameters.Add(new SqlParameter("@NAME", record.NAME));
+				if (record.IsSet_FILE_NAME) {
+					query.Append("FILE_NAME = @FILE_NAME, ");
+					parameters.Add(new SqlParameter("@FILE_NAME", record.FILE_NAME));
 				}
 
-				if (record.IsSet_PARENT) {
-					query.Append("PARENT = @PARENT, ");
-					parameters.Add(new SqlParameter("@PARENT", record.PARENT));
+				if (record.IsSet_FILE_TYPE) {
+					query.Append("FILE_TYPE = @FILE_TYPE, ");
+					parameters.Add(new SqlParameter("@FILE_TYPE", record.FILE_TYPE));
 				}
 
-				if (record.IsSet_DESCRIPTION) {
-					query.Append("DESCRIPTION = @DESCRIPTION, ");
-					parameters.Add(new SqlParameter("@DESCRIPTION", record.DESCRIPTION));
-				}
-
-				if (record.IsSet_SHORT_DESCRIPTION) {
-					query.Append("SHORT_DESCRIPTION = @SHORT_DESCRIPTION, ");
-					parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
+				if (record.IsSet_CONTENT) {
+					query.Append("CONTENT = @CONTENT, ");
+					parameters.Add(new SqlParameter("@CONTENT", record.CONTENT));
 				}
 
 				query.Append("UPD_DATE = @UPD_DATE, ");
@@ -102,24 +97,21 @@ namespace EMMA_BE.Generated {
 			}
 		}
 
-		public int Insert(SYST_MENU_BaseRecord record) {
+		public int Insert(FILE_INPUT_BaseRecord record) {
 			using SqlConnection connection = new(connectionString);
 
 			try {
-				StringBuilder query = new($"INSERT INTO SYST_MENU OUTPUT INSERTED.ID VALUES (");
+				StringBuilder query = new($"INSERT INTO FILE_INPUT OUTPUT INSERTED.ID VALUES (");
 				List<SqlParameter> parameters = [];
 
-				query.Append("@NAME, ");
-				parameters.Add(new SqlParameter("@NAME", record.NAME));
+				query.Append("@FILE_NAME, ");
+				parameters.Add(new SqlParameter("@FILE_NAME", record.FILE_NAME));
 
-				query.Append("@PARENT, ");
-				parameters.Add(new SqlParameter("@PARENT", record.PARENT));
+				query.Append("@FILE_TYPE, ");
+				parameters.Add(new SqlParameter("@FILE_TYPE", record.FILE_TYPE));
 
-				query.Append("@DESCRIPTION, ");
-				parameters.Add(new SqlParameter("@DESCRIPTION", record.DESCRIPTION));
-
-				query.Append("@SHORT_DESCRIPTION, ");
-				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
+				query.Append("@CONTENT, ");
+				parameters.Add(new SqlParameter("@CONTENT", record.CONTENT));
 
 				query.Append("@INS_DATE, ");
 				parameters.Add(new SqlParameter("@INS_DATE", DateTime.Now.Date));

@@ -1,13 +1,12 @@
 namespace EMMA_BE.Generated {
-	public static class SYST_MENU_Table {
+	public static class FILE_INPUT_Table {
 
 		public static List<string> GetFieldList() {
 			return [
 				"ID",
-				"NAME",
-				"PARENT",
-				"DESCRIPTION",
-				"SHORT_DESCRIPTION",
+				"FILE_NAME",
+				"FILE_TYPE",
+				"CONTENT",
 				"INS_DATE",
 				"INS_TIME",
 				"INS_INFO",

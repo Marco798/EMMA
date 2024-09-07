@@ -14,7 +14,7 @@ namespace Generator {
 		protected static string[] insFields = ["INS_DATE", "INS_TIME", "INS_INFO"];
 		protected static string[] updFields = ["UPD_DATE", "UPD_TIME", "UPD_INFO"];
 
-		protected static string[] fieldsToBeInitialized = ["varchar", "varbinary"];
+		protected static string[] fieldsToBeInitialized = ["varchar", "char", "varbinary"];
 
 		static void Main() {
 			GetTableData();
@@ -35,15 +35,13 @@ namespace Generator {
 		}
 
 		private static void GetTableData() {
-			string connectionString = "Server=localhost\\SQLEXPRESS;Database=EMMA;Integrated Security=True;";
+			string connectionString = "Server=localhost,1433;Database=EMMA;User Id=sa;Password=<YourStrong!Passw0rd>;";
 			SqlConnection connection = new(connectionString);
 
 			try {
 				connection.Open();
 
-				string queryTables = $"SELECT * " +
-					$"FROM INFORMATION_SCHEMA.TABLES " +
-					$"	LEFT JOIN SYST_TABLE ON (INFORMATION_SCHEMA.TABLES.TABLE_NAME = SYST_TABLE.TABLE_NAME)";
+				string queryTables = $"SELECT * FROM INFORMATION_SCHEMA.TABLES LEFT JOIN SYST_TABLE ON (INFORMATION_SCHEMA.TABLES.TABLE_NAME = SYST_TABLE.TABLE_NAME) WHERE INFORMATION_SCHEMA.TABLES.TABLE_NAME NOT LIKE 'SYST%'";
 
 				using (SqlCommand command = new(queryTables, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
@@ -67,9 +65,7 @@ namespace Generator {
 				connection.Close();
 				connection.Open();
 
-				string queryColumns = $"SELECT * " +
-					$"FROM INFORMATION_SCHEMA.COLUMNS " +
-					$"	LEFT JOIN SYST_COLUMN ON (INFORMATION_SCHEMA.COLUMNS.TABLE_NAME = SYST_COLUMN.TABLE_NAME AND INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME = SYST_COLUMN.COLUMN_NAME)";
+				string queryColumns = $"SELECT * FROM INFORMATION_SCHEMA.COLUMNS LEFT JOIN SYST_COLUMN ON (INFORMATION_SCHEMA.COLUMNS.TABLE_NAME = SYST_COLUMN.TABLE_NAME AND INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME = SYST_COLUMN.COLUMN_NAME) WHERE INFORMATION_SCHEMA.COLUMNS.TABLE_NAME NOT LIKE 'SYST%'";
 
 				using (SqlCommand command = new(queryColumns, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
@@ -136,6 +132,7 @@ namespace Generator {
 		protected static string GetDataType_FromDB_ToCS(string dataType) {
 			return dataType switch {
 				"varchar" => "string",
+				"char" => "string",
 				"varbinary" => "byte[]",
 				"int" => "int",
 				"bigint" => "long",
@@ -149,6 +146,7 @@ namespace Generator {
 		protected static string GetDataType_FromDB_ToReader(string dataType) {
 			return dataType switch {
 				"varchar" => "String",
+				"char" => "String",
 				"varbinary" => string.Empty,
 				"int" => "Int32",
 				"bigint" => "Int64",
@@ -162,6 +160,7 @@ namespace Generator {
 		protected static string GetDefaultValue(string dataType) {
 			return dataType switch {
 				"varchar" => "string.Empty",
+				"char" => "string.Empty",
 				"varbinary" => "[]",
 				_ => throw new Exception()
 			};
