@@ -4,6 +4,8 @@ namespace EditorDB.Services {
 	public class MainService {
 		public List<Tables_Record> Tables_RecordList { get; set; }
 		public List<Columns_Record> Columns_RecordList { get; set; }
+		public List<Combo_Record> Combo_RecordList { get; set; }
+		public List<ComboValues_Record> ComboValues_RecordList { get; set; }
 
 		static string connectionString = string.Empty;
 		public SqlConnection connection = new();
@@ -14,6 +16,8 @@ namespace EditorDB.Services {
 
 			Tables_RecordList = [];
 			Columns_RecordList = [];
+			Combo_RecordList = [];
+			ComboValues_RecordList = [];
 
 			Update();
 		}
@@ -81,11 +85,49 @@ namespace EditorDB.Services {
 						columns_Record.DOMAIN_SCHEMA = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
 						columns_Record.DOMAIN_NAME = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
 
-						i += 2;
+						i += 3;
 						columns_Record.DESCRIPTION = reader.GetString(i++);
 						columns_Record.SHORT_DESCRIPTION = reader.GetString(i++);
+						columns_Record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
 
 						Columns_RecordList.Add(columns_Record);
+					}
+				}
+
+				connection.Close();
+				connection.Open();
+
+				string queryCombo = $"SELECT * FROM SYST_COMBO";
+
+				using (SqlCommand command = new(queryCombo, connection)) {
+					SqlDataReader reader = command.ExecuteReader();
+					while (reader.Read()) {
+						Combo_Record combo_Record = new();
+						int i = 1;
+
+						combo_Record.NAME = reader.GetString(i++);
+						combo_Record.TYPE = reader.GetString(i++);
+
+						Combo_RecordList.Add(combo_Record);
+					}
+				}
+
+				connection.Close();
+				connection.Open();
+
+				string queryComboValues = $"SELECT * FROM SYST_COMBO_VALUE";
+
+				using (SqlCommand command = new(queryComboValues, connection)) {
+					SqlDataReader reader = command.ExecuteReader();
+					while (reader.Read()) {
+						ComboValues_Record comboValue_Record = new();
+						int i = 1;
+
+						comboValue_Record.NAME = reader.GetString(i++);
+						comboValue_Record.VALUE = reader.GetString(i++);
+						comboValue_Record.COMBO = reader.GetString(i++);
+
+						ComboValues_RecordList.Add(comboValue_Record);
 					}
 				}
 
