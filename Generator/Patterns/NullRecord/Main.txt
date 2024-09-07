@@ -1,6 +1,6 @@
 ﻿namespace %%NAME_SPACE%% {
 	public class %%TABLE_NAME%%_NullRecord {
-%%FIELD%%
+%%FIELD%%%%SET_FIELD_COMBO%%
 
 %%PRIVATE_FIELD%%
 

@@ -1,12 +1,8 @@
 namespace EMMA_BE.Generated {
 	public class SYST_COMBO_VALUE_BaseRecord {
-		public string NAME { get; private set; }
-		public string VALUE { get; private set; }
-		public string COMBO { get; private set; }
-
-		public void Set_NAME(string value) { NAME = value; }
-		public void Set_VALUE(string value) { VALUE = value; }
-		public void Set_COMBO(string value) { COMBO = value; }
+		public string NAME { get; set; }
+		public string VALUE { get; set; }
+		public string COMBO { get; set; }
 
 		public SYST_COMBO_VALUE_BaseRecord() {
 			NAME = string.Empty;

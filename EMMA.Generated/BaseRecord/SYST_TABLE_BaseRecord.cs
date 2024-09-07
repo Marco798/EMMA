@@ -1,12 +1,8 @@
 namespace EMMA_BE.Generated {
 	public class SYST_TABLE_BaseRecord {
-		public string TABLE_NAME { get; private set; }
-		public string DESCRIPTION { get; private set; }
-		public string SHORT_DESCRIPTION { get; private set; }
-
-		public void Set_TABLE_NAME(string value) { TABLE_NAME = value; }
-		public void Set_DESCRIPTION(string value) { DESCRIPTION = value; }
-		public void Set_SHORT_DESCRIPTION(string value) { SHORT_DESCRIPTION = value; }
+		public string TABLE_NAME { get; set; }
+		public string DESCRIPTION { get; set; }
+		public string SHORT_DESCRIPTION { get; set; }
 
 		public SYST_TABLE_BaseRecord() {
 			TABLE_NAME = string.Empty;

@@ -1,18 +1,19 @@
-﻿namespace Generator
-{
-    internal class NullRecord : Program {
+﻿namespace Generator {
+	internal class NullRecord : Program {
 
 		private static string directory = string.Empty;
 		private static string pattern = string.Empty;
 
 		private static string pattern_Main = string.Empty;
 		private static string pattern_Field = string.Empty;
+		private static string pattern_SetFieldCombo = string.Empty;
 		private static string pattern_PrivateField = string.Empty;
 		private static string pattern_IsSetField = string.Empty;
 		private static string pattern_FromRecordField = string.Empty;
 		private static string pattern_FromIdRecordField = string.Empty;
 
 		private static string field_List = string.Empty;
+		private static string setFieldCombo_List = string.Empty;
 		private static string privateField_List = string.Empty;
 		private static string isSetField_List = string.Empty;
 		private static string fromRecordField_List = string.Empty;
@@ -29,6 +30,7 @@
 			pattern_Main = File.ReadAllText(pattern + "Main.txt");
 
 			pattern_Field = File.ReadAllText(pattern + "Field.txt");
+			pattern_SetFieldCombo = File.ReadAllText(pattern + "SetFieldCombo.txt");
 			pattern_PrivateField = File.ReadAllText(pattern + "PrivateField.txt");
 			pattern_IsSetField = File.ReadAllText(pattern + "IsSetField.txt");
 			pattern_FromRecordField = File.ReadAllText(pattern + "FromRecordField.txt");
@@ -48,6 +50,7 @@
 
 			#region Sections declaration
 			field_List = string.Empty;
+			setFieldCombo_List = string.Empty;
 			privateField_List = string.Empty;
 			isSetField_List = string.Empty;
 			fromRecordField_List = string.Empty;
@@ -59,6 +62,7 @@
 			}
 
 			_Main = _Main.Replace("%%FIELD%%", field_List[..^2]);
+			_Main = _Main.Replace("%%SET_FIELD_COMBO%%", string.IsNullOrWhiteSpace(setFieldCombo_List) ? string.Empty : "\r\n\r\n" + setFieldCombo_List[..^2]);
 			_Main = _Main.Replace("%%PRIVATE_FIELD%%", privateField_List[..^2]);
 			_Main = _Main.Replace("%%IS_SET_FIELD%%", isSetField_List[..^2]);
 			_Main = _Main.Replace("%%FROM_RECORD_FIELD%%", fromRecordField_List[..^2]);
@@ -72,13 +76,21 @@
 
 		private static void ColumnElaboration(Columns_Record columns_Record) {
 			string dataType = GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
-			string accessLevel = IsDefaultField(columns_Record.COLUMN_NAME) ? "internal " : "";
+			string accessLevel = columns_Record.COMBO != null ? "private " : (IsDefaultField(columns_Record.COLUMN_NAME) ? "internal " : "");
 
 			#region Field
 			string field = pattern_Field;
-			field = field.Replace("%%DATA_TYPE%%", dataType);
 			field = field.Replace("%%ACCESS_LEVEL%%", accessLevel);
+			field = field.Replace("%%DATA_TYPE%%", dataType);
 			field_List += field.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			#endregion
+
+			#region SetFieldCombo
+			if (columns_Record.COMBO != null) {
+				string setFieldCombo = pattern_SetFieldCombo;
+				setFieldCombo = setFieldCombo.Replace("%%COMBO_NAME%%", columns_Record.COMBO);
+				setFieldCombo_List += setFieldCombo.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			}
 			#endregion
 
 			#region PrivateField

@@ -2,8 +2,10 @@ namespace EMMA_BE.Generated {
 	public class FILE_INPUT_IdRecord {
 		public int ID { get; set; }
 		public string FILE_NAME { get; set; }
-		public string FILE_TYPE { get; set; }
+		public string FILE_TYPE { get; private set; }
 		public byte[] CONTENT { get; set; }
+
+		public void Set_FILE_TYPE(FILE_TYPE_Combo value) { FILE_TYPE = value.Value; }
 
 		public FILE_INPUT_IdRecord() { }
 

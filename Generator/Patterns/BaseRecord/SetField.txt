@@ -1,1 +1,0 @@
-﻿		public void Set_%%COLUMN_NAME%%(%%DATA_TYPE%% value) { %%COLUMN_NAME%% = value; }

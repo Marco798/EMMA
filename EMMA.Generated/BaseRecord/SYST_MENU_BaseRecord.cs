@@ -1,14 +1,9 @@
 namespace EMMA_BE.Generated {
 	public class SYST_MENU_BaseRecord {
-		public string NAME { get; private set; }
-		public string PARENT { get; private set; }
-		public string DESCRIPTION { get; private set; }
-		public string SHORT_DESCRIPTION { get; private set; }
-
-		public void Set_NAME(string value) { NAME = value; }
-		public void Set_PARENT(string value) { PARENT = value; }
-		public void Set_DESCRIPTION(string value) { DESCRIPTION = value; }
-		public void Set_SHORT_DESCRIPTION(string value) { SHORT_DESCRIPTION = value; }
+		public string NAME { get; set; }
+		public string PARENT { get; set; }
+		public string DESCRIPTION { get; set; }
+		public string SHORT_DESCRIPTION { get; set; }
 
 		public SYST_MENU_BaseRecord() {
 			NAME = string.Empty;

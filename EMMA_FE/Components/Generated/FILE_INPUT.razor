@@ -43,7 +43,6 @@
 	<div>
 		<table>
 			<tr><TextBox Id="New_FILE_INPUT" IsTable=true @bind-Value="@_FILE_INPUT_InsertRecord!.FILE_NAME" Description="FILE_NAME" Length="200" Width="200" /></tr>
-			<tr><TextBox Id="New_FILE_INPUT" IsTable=true @bind-Value="@_FILE_INPUT_InsertRecord!.FILE_TYPE" Description="FILE_TYPE" Length="5" Width="5" /></tr>
 			<tr><td Id="New_FILE_INPUT" style="border: none; text-align: right; display: block;">CONTENT</td></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromNew" />
@@ -56,7 +55,6 @@
 	<div>
 		<table>
 			<tr><TextBox Id="Edit_FILE_INPUT" IsTable=true @bind-Value="@_FILE_INPUT_UpdateRecord!.FILE_NAME" Description="FILE_NAME" Length="200" Width="200" /></tr>
-			<tr><TextBox Id="Edit_FILE_INPUT" IsTable=true @bind-Value="@_FILE_INPUT_UpdateRecord!.FILE_TYPE" Description="FILE_TYPE" Length="5" Width="5" /></tr>
 			<tr><td Id="Edit_FILE_INPUT" style="border: none; text-align: right; display: block;">CONTENT</td></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromEdit" />
