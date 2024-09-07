@@ -12,6 +12,7 @@
 			<option value="">---</option>
 			<option value="table">Table</option>
 			<option value="field">Field</option>
+			<option value="combo">Combo</option>
 		</select>
 
 		<label for="action" class="LBL_Action">Action</label>
@@ -48,5 +49,7 @@
 			NavigationManager.NavigateTo("/renameTable");
 		else if (entity == "table" && action == "delete")
 			NavigationManager.NavigateTo("/deleteTable");
+		else if (entity == "combo" && action == "create")
+			NavigationManager.NavigateTo("/createCombo");
 	}
 }

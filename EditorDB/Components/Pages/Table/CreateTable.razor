@@ -64,7 +64,7 @@
 				<td>
 					<input id="@("fieldName" + field.Index)" type="text" @bind="@field.Name" />
 				</td>
-				<td class="TD_MainTable_CheckBox"><input type="checkbox" @bind="@field.Nullable" /></td>
+				<td class="TD_MainTable_Nullable"><label @onclick="@(x => field.Nullable = !field.Nullable)">@(field.Nullable ? "Nullable" : "Not nullable")</label></td>
 				<td>
 					<select @bind="@field.Category">
 						<option value=""></option>
@@ -82,7 +82,7 @@
 					</select>
 				</td>
 				<td>
-					@if (new [] { BV_DataType.Category.String, BV_DataType.Category.Binary }.Contains(field.Category) && !string.IsNullOrWhiteSpace(field.Type)) {
+					@if (new[] { BV_DataType.Category.String, BV_DataType.Category.Binary }.Contains(field.Category) && !string.IsNullOrWhiteSpace(field.Type)) {
 						<input type="text" @bind=@field.Length />
 					}
 				</td>

@@ -1,0 +1,115 @@
+﻿@page "/createCombo"
+@using System.Data.SqlClient
+@using EditorDB.Components.Pages.Table.Common
+@using EditorDB.Classes
+@rendermode InteractiveServer
+
+@inject Services.MainService mainService
+<head>
+	<link href="css/TableStyle.css" rel="stylesheet" />
+</head>
+
+<div>
+	<FormTitle Title="Create combo"></FormTitle>
+	<table class="TBL_ComboData">
+		<tr>
+			<td class="TD_ComboData_Label"><label for="newComboName">Combo name:</label></td>
+			<td class="TD_ComboData_Input"><input id="newComboName" type="text" autocomplete="off" @bind="comboName" maxlength="100" /></td>
+		</tr>
+		<tr>
+			<td class="TD_ComboData_Label"><label for="newComboType">Combo type:</label></td>
+			<td class="TD_ComboData_Input">
+				<select @bind="@comboType">
+					<option value=""></option>
+					<option value="S">String</option>
+					<option value="B">Boolean</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<table class="TBL_MainTable">
+		<tr>
+			<th></th>
+			<th>Name</th>
+			<th>Value</th>
+		</tr>
+		@foreach (ComboValueData comboValue in comboValues.OrderBy(x => x.Index)) {
+			<tr>
+				<td>
+					<input type="button" value="+" @onclick="@(x => AddValue(comboValue.Index + 1))">
+					<input type="button" value="-" @onclick="@(x => RemoveValue(comboValue.Index))">
+				</td>
+				<td>
+					<input id="@("comboValueName" + comboValue.Index)" type="text" @bind="@comboValue.Name" />
+				</td>
+				<td>
+					<input id="@("comboValueValue" + comboValue.Index)" type="text" @bind="@comboValue.Value" />
+				</td>
+			</tr>
+		}
+	</table>
+
+	<input type="button" value="Save" @onclick="Save_Click">
+</div>
+
+@code {
+	string comboName = string.Empty;
+	string comboType = string.Empty;
+	List<ComboValueData> comboValues = new();
+
+	protected override void OnInitialized() {
+		base.OnInitialized();
+		comboValues.Add(new(0));
+	}
+
+	private void AddValue(int index) {
+		foreach (ComboValueData comboValue in comboValues.Where(x => x.Index >= index)) {
+			comboValue.Index++;
+		}
+
+		comboValues.Insert(index, new ComboValueData(index));
+	}
+
+	private void RemoveValue(int index) {
+		if (comboValues.Count == 1) return;
+
+		foreach (ComboValueData comboValue in comboValues.Where(x => x.Index >= index)) {
+			comboValue.Index--;
+		}
+
+		comboValues.RemoveAt(index);
+	}
+
+	public void Save_Click() {
+		SqlConnection connection = mainService.connection;
+		connection.Open();
+
+		SqlTransaction transaction = connection.BeginTransaction();
+		try {
+			using (SqlCommand command = connection.CreateCommand()) {
+				command.Transaction = transaction;
+
+				comboName = comboName.ToUpper();
+
+				string query = $"INSERT INTO SYST_COMBO VALUES ('{comboName}', '{comboType}')\n\n";
+				foreach (ComboValueData comboValue in comboValues.OrderBy(x => x.Index)) {
+					query += $"INSERT INTO SYST_COMBO_VALUE VALUES ('{comboValue.Name}', '{comboValue.Value}', '{comboName}')\n";
+				}
+
+				command.CommandText = query;
+				command.ExecuteNonQuery();
+			}
+
+			transaction.Commit();
+			connection.Close();
+		}
+		catch (Exception ex) {
+			transaction.Rollback();
+			connection.Close();
+			throw new Exception($"Errore while creating combo {comboName}: {ex.Message}");
+		}
+
+		mainService.Update();
+	}
+}
+}

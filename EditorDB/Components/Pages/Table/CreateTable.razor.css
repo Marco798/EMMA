@@ -71,8 +71,10 @@ select {
         font-size: 15px;
     }
 
-.TD_MainTable_CheckBox {
+.TD_MainTable_Nullable {
     text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .TBL_MainTable tr {
