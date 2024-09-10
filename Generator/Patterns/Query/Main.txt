@@ -1,13 +1,16 @@
 ﻿using EMMA.Commons;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 
 namespace %%NAME_SPACE%% {
 	public class %%TABLE_NAME%%_Query(IConfiguration configuration) : QueryBase(configuration) {
-		private const string NomeTabella = "%%TABLE_NAME_PC%%";
-		private const string NomeTabellaDB = "%%TABLE_NAME%%";
-	
+		private const string TableName = "%%TABLE_NAME_PC%%";
+		private const string TableNameDB = "%%TABLE_NAME%%";
+
+		#region Select
+		#region SelectAll
 		public List<%%TABLE_NAME%%_Record> SelectAll() {
 			using SqlConnection connection = new(connectionString);
 
@@ -37,9 +40,22 @@ namespace %%NAME_SPACE%% {
 
 			return output;
 		}
+		#endregion
+		#endregion
+		
+		#region Update
+		#region UpdateByKey
+		public void UpdateByKey(int id, %%TABLE_NAME%%_NullRecord record) {
+			UpdateByKey(null, null, false, id, record);
+		}
 
-		public void UpdateByKey(%%ID_TYPE%% id, %%TABLE_NAME%%_NullRecord record) {
-			using SqlConnection connection = new(connectionString);
+		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, %%ID_TYPE%% id, %%TABLE_NAME%%_NullRecord record) {
+			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
+				throw new Exception();
+			}
+
+			connection ??= new(connectionString);
+			ConnectionState initialConnectionState = connection.State;
 
 			try {
 				StringBuilder query = new($"UPDATE %%TABLE_NAME%% SET ");
@@ -53,19 +69,38 @@ namespace %%NAME_SPACE%% {
 
 				SqlCommand command = new(query.ToString(), connection);
 				command.Parameters.AddRange([.. parameters]);
+				if (transaction != null) command.Transaction = transaction;
 
-				connection.Open();
+				if (initialConnectionState != ConnectionState.Open) connection.Open();
+
 				command.ExecuteNonQuery();
-				connection.Close();
+				if (transaction != null && !keepAlive_transaction)
+					transaction.Commit();
+
+				if (initialConnectionState != ConnectionState.Open) connection.Close();
 			}
 			catch (Exception ex) {
+				transaction?.Rollback();
+
 				connection.Close();
 				throw new Exception(ex.Message);
 			}
 		}
+		#endregion
+		#endregion
+		
+		#region Insert
+		public void Insert(%%TABLE_NAME%%_BaseRecord record) {
+			Insert(null, null, false, record);
+		}
 
-		public %%ID_TYPE%% Insert(%%TABLE_NAME%%_BaseRecord record) {
-			using SqlConnection connection = new(connectionString);
+		public %%ID_TYPE%% Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, %%TABLE_NAME%%_BaseRecord record) {
+			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
+				throw new Exception();
+			}
+
+			connection ??= new(connectionString);
+			ConnectionState initialConnectionState = connection.State;
 
 			try {
 				StringBuilder query = new($"INSERT INTO %%TABLE_NAME%% OUTPUT INSERTED.ID VALUES (");
@@ -78,17 +113,25 @@ namespace %%NAME_SPACE%% {
 
 				SqlCommand command = new(query.ToString(), connection);
 				command.Parameters.AddRange([.. parameters]);
+				if (transaction != null) command.Transaction = transaction;
 
-				connection.Open();
+				if (initialConnectionState != ConnectionState.Open) connection.Open();
+
 				%%ID_TYPE%% id = (%%ID_TYPE%%)command.ExecuteScalar();
-				connection.Close();
+				if (transaction != null && !keepAlive_transaction)
+					transaction.Commit();
+
+				if (initialConnectionState != ConnectionState.Open) connection.Close();
 
 				return id;
 			}
 			catch (Exception ex) {
+				transaction?.Rollback();
+
 				connection.Close();
 				throw new Exception(ex.Message);
 			}
 		}
+		#endregion
 	}
 }

@@ -1,13 +1,16 @@
 using EMMA.Commons;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 
 namespace EMMA_BE.Generated {
 	public class FILE_INPUT_Query(IConfiguration configuration) : QueryBase(configuration) {
-		private const string NomeTabella = "FILE_Input";
-		private const string NomeTabellaDB = "FILE_INPUT";
-	
+		private const string TableName = "FILE_Input";
+		private const string TableNameDB = "FILE_INPUT";
+
+		#region Select
+		#region SelectAll
 		public List<FILE_INPUT_Record> SelectAll() {
 			using SqlConnection connection = new(connectionString);
 
@@ -24,7 +27,7 @@ namespace EMMA_BE.Generated {
 
 						record.ID = reader.GetInt32(i++);
 						record.FILE_NAME = reader.GetString(i++);
-						record.FILE_TYPE = reader.GetString(i++);
+						record.Set_FILE_TYPE(new FILE_TYPE_Combo(reader.GetString(i++)));
 						record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
 						reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);
 						record.INS_DATE = reader.GetDateTime(i++);
@@ -47,9 +50,22 @@ namespace EMMA_BE.Generated {
 
 			return output;
 		}
-
+		#endregion
+		#endregion
+		
+		#region Update
+		#region UpdateByKey
 		public void UpdateByKey(int id, FILE_INPUT_NullRecord record) {
-			using SqlConnection connection = new(connectionString);
+			UpdateByKey(null, null, false, id, record);
+		}
+
+		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, FILE_INPUT_NullRecord record) {
+			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
+				throw new Exception();
+			}
+
+			connection ??= new(connectionString);
+			ConnectionState initialConnectionState = connection.State;
 
 			try {
 				StringBuilder query = new($"UPDATE FILE_INPUT SET ");
@@ -86,19 +102,38 @@ namespace EMMA_BE.Generated {
 
 				SqlCommand command = new(query.ToString(), connection);
 				command.Parameters.AddRange([.. parameters]);
+				if (transaction != null) command.Transaction = transaction;
 
-				connection.Open();
+				if (initialConnectionState != ConnectionState.Open) connection.Open();
+
 				command.ExecuteNonQuery();
-				connection.Close();
+				if (transaction != null && !keepAlive_transaction)
+					transaction.Commit();
+
+				if (initialConnectionState != ConnectionState.Open) connection.Close();
 			}
 			catch (Exception ex) {
+				transaction?.Rollback();
+
 				connection.Close();
 				throw new Exception(ex.Message);
 			}
 		}
+		#endregion
+		#endregion
+		
+		#region Insert
+		public void Insert(FILE_INPUT_BaseRecord record) {
+			Insert(null, null, false, record);
+		}
 
-		public int Insert(FILE_INPUT_BaseRecord record) {
-			using SqlConnection connection = new(connectionString);
+		public int Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, FILE_INPUT_BaseRecord record) {
+			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
+				throw new Exception();
+			}
+
+			connection ??= new(connectionString);
+			ConnectionState initialConnectionState = connection.State;
 
 			try {
 				StringBuilder query = new($"INSERT INTO FILE_INPUT OUTPUT INSERTED.ID VALUES (");
@@ -137,17 +172,25 @@ namespace EMMA_BE.Generated {
 
 				SqlCommand command = new(query.ToString(), connection);
 				command.Parameters.AddRange([.. parameters]);
+				if (transaction != null) command.Transaction = transaction;
 
-				connection.Open();
+				if (initialConnectionState != ConnectionState.Open) connection.Open();
+
 				int id = (int)command.ExecuteScalar();
-				connection.Close();
+				if (transaction != null && !keepAlive_transaction)
+					transaction.Commit();
+
+				if (initialConnectionState != ConnectionState.Open) connection.Close();
 
 				return id;
 			}
 			catch (Exception ex) {
+				transaction?.Rollback();
+
 				connection.Close();
 				throw new Exception(ex.Message);
 			}
 		}
+		#endregion
 	}
 }

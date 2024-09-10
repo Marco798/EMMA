@@ -1,0 +1,1 @@
+﻿						record.Set_%%COLUMN_NAME%%(new %%COMBO_NAME%%_Combo(reader.Get%%DATA_TYPE%%(i++)));

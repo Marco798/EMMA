@@ -2,6 +2,8 @@
 	public class %%TABLE_NAME%%_Record {
 %%FIELD%%%%SET_FIELD_COMBO%%
 
+		public %%TABLE_NAME%%_Id GetId() { return new %%TABLE_NAME%%_Id(ID); }
+
 		public %%TABLE_NAME%%_Record Clone() {
 			%%TABLE_NAME%%_Record output = new() {
 %%CLONE_FIELD%%

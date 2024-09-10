@@ -9,6 +9,7 @@ namespace Generator {
 		private static string pattern_Main = string.Empty;
 		private static string pattern_SelectAllField_Binary = string.Empty;
 		private static string pattern_SelectAllField_NotNullable = string.Empty;
+		private static string pattern_SelectAllField_NotNullableCombo = string.Empty;
 		private static string pattern_SelectAllField_Nullable = string.Empty;
 		private static string pattern_UpdateByKeyField_UpdateByKey = string.Empty;
 		private static string pattern_UpdateByKeyField_DefaultField = string.Empty;
@@ -31,6 +32,7 @@ namespace Generator {
 
 			pattern_SelectAllField_Binary = File.ReadAllText(pattern + @"SelectAllField\Binary.txt");
 			pattern_SelectAllField_NotNullable = File.ReadAllText(pattern + @"SelectAllField\NotNullable.txt");
+			pattern_SelectAllField_NotNullableCombo = File.ReadAllText(pattern + @"SelectAllField\NotNullableCombo.txt");
 			pattern_SelectAllField_Nullable = File.ReadAllText(pattern + @"SelectAllField\Nullable.txt");
 
 			pattern_UpdateByKeyField_UpdateByKey = File.ReadAllText(pattern + @"UpdateByKeyField\UpdateByKey.txt");
@@ -84,12 +86,13 @@ namespace Generator {
 			}
 			else {
 				switch (columns_Record.IS_NULLABLE) {
-					case "NO": selectAllField = pattern_SelectAllField_NotNullable; break;
+					case "NO": selectAllField = columns_Record.COMBO == null ? pattern_SelectAllField_NotNullable : pattern_SelectAllField_NotNullableCombo; break;
 					case "YES": selectAllField = pattern_SelectAllField_Nullable; break;
 					default: break;
 				}
 			}
 			selectAllField = selectAllField.Replace("%%DATA_TYPE%%", dataType);
+			selectAllField = selectAllField.Replace("%%COMBO_NAME%%", columns_Record.COMBO);
 			selectAllField_List += selectAllField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 			#endregion
 

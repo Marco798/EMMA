@@ -6,6 +6,8 @@ namespace EMMA_BE.Generated {
 		public string DESCRIPTION { get; set; }
 		public string SHORT_DESCRIPTION { get; set; }
 
+		public SYST_MENU_Id GetId() { return new SYST_MENU_Id(ID); }
+
 		public SYST_MENU_IdRecord() { }
 
 		public SYST_MENU_IdRecord(SYST_MENU_Record record) {

@@ -7,6 +7,8 @@ namespace EMMA_BE.Generated {
 
 		public void Set_FILE_TYPE(FILE_TYPE_Combo value) { FILE_TYPE = value.Value; }
 
+		public FILE_INPUT_Id GetId() { return new FILE_INPUT_Id(ID); }
+
 		public FILE_INPUT_IdRecord() { }
 
 		public FILE_INPUT_IdRecord(FILE_INPUT_Record record) {

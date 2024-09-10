@@ -1,10 +1,8 @@
-namespace EMMA_BE.Generated {
-	public class FILE_TYPE_Combo {
-		public readonly string Value;
+using EMMA.Commons;
 
-		private FILE_TYPE_Combo(string value) {
-			Value = value;
-		}
+namespace EMMA_BE.Generated {
+	public class FILE_TYPE_Combo : ComboBase {
+		internal FILE_TYPE_Combo(string value) : base(value) { }
 
 		public static readonly FILE_TYPE_Combo CSV = new("CSV");
 

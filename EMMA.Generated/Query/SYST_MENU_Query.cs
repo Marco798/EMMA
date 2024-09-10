@@ -1,13 +1,16 @@
 using EMMA.Commons;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 
 namespace EMMA_BE.Generated {
 	public class SYST_MENU_Query(IConfiguration configuration) : QueryBase(configuration) {
-		private const string NomeTabella = "SYST_Menu";
-		private const string NomeTabellaDB = "SYST_MENU";
-	
+		private const string TableName = "SYST_Menu";
+		private const string TableNameDB = "SYST_MENU";
+
+		#region Select
+		#region SelectAll
 		public List<SYST_MENU_Record> SelectAll() {
 			using SqlConnection connection = new(connectionString);
 
@@ -41,9 +44,22 @@ namespace EMMA_BE.Generated {
 
 			return output;
 		}
-
+		#endregion
+		#endregion
+		
+		#region Update
+		#region UpdateByKey
 		public void UpdateByKey(int id, SYST_MENU_NullRecord record) {
-			using SqlConnection connection = new(connectionString);
+			UpdateByKey(null, null, false, id, record);
+		}
+
+		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, SYST_MENU_NullRecord record) {
+			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
+				throw new Exception();
+			}
+
+			connection ??= new(connectionString);
+			ConnectionState initialConnectionState = connection.State;
 
 			try {
 				StringBuilder query = new($"UPDATE SYST_MENU SET ");
@@ -76,19 +92,38 @@ namespace EMMA_BE.Generated {
 
 				SqlCommand command = new(query.ToString(), connection);
 				command.Parameters.AddRange([.. parameters]);
+				if (transaction != null) command.Transaction = transaction;
 
-				connection.Open();
+				if (initialConnectionState != ConnectionState.Open) connection.Open();
+
 				command.ExecuteNonQuery();
-				connection.Close();
+				if (transaction != null && !keepAlive_transaction)
+					transaction.Commit();
+
+				if (initialConnectionState != ConnectionState.Open) connection.Close();
 			}
 			catch (Exception ex) {
+				transaction?.Rollback();
+
 				connection.Close();
 				throw new Exception(ex.Message);
 			}
 		}
+		#endregion
+		#endregion
+		
+		#region Insert
+		public void Insert(SYST_MENU_BaseRecord record) {
+			Insert(null, null, false, record);
+		}
 
-		public int Insert(SYST_MENU_BaseRecord record) {
-			using SqlConnection connection = new(connectionString);
+		public int Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, SYST_MENU_BaseRecord record) {
+			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
+				throw new Exception();
+			}
+
+			connection ??= new(connectionString);
+			ConnectionState initialConnectionState = connection.State;
 
 			try {
 				StringBuilder query = new($"INSERT INTO SYST_MENU OUTPUT INSERTED.ID VALUES (");
@@ -112,17 +147,25 @@ namespace EMMA_BE.Generated {
 
 				SqlCommand command = new(query.ToString(), connection);
 				command.Parameters.AddRange([.. parameters]);
+				if (transaction != null) command.Transaction = transaction;
 
-				connection.Open();
+				if (initialConnectionState != ConnectionState.Open) connection.Open();
+
 				int id = (int)command.ExecuteScalar();
-				connection.Close();
+				if (transaction != null && !keepAlive_transaction)
+					transaction.Commit();
+
+				if (initialConnectionState != ConnectionState.Open) connection.Close();
 
 				return id;
 			}
 			catch (Exception ex) {
+				transaction?.Rollback();
+
 				connection.Close();
 				throw new Exception(ex.Message);
 			}
 		}
+		#endregion
 	}
 }

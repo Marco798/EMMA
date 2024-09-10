@@ -4,6 +4,8 @@ namespace EMMA_BE.Generated {
 		public string NAME { get; set; }
 		public string TYPE { get; set; }
 
+		public SYST_COMBO_Id GetId() { return new SYST_COMBO_Id(ID); }
+
 		public SYST_COMBO_Record Clone() {
 			SYST_COMBO_Record output = new() {
 				ID = ID,

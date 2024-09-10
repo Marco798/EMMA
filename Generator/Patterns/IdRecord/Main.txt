@@ -2,6 +2,8 @@
 	public class %%TABLE_NAME%%_IdRecord {
 %%FIELD%%%%SET_FIELD_COMBO%%
 
+		public %%TABLE_NAME%%_Id GetId() { return new %%TABLE_NAME%%_Id(ID); }
+
 		public %%TABLE_NAME%%_IdRecord() { }
 
 		public %%TABLE_NAME%%_IdRecord(%%TABLE_NAME%%_Record record) {

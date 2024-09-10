@@ -1,0 +1,7 @@
+﻿using EMMA.Commons;
+
+namespace %%NAME_SPACE%% {
+	public class %%TABLE_NAME%%_Id : IdBase {
+		internal %%TABLE_NAME%%_Id(%%FIELD_TYPE%% value) : base(value) { }
+	}
+}

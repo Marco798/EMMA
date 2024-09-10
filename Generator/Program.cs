@@ -36,6 +36,7 @@ namespace Generator {
 			Table.Generate();
 
 			Combo.Generate();
+			Id.Generate();
 		}
 
 		private static void GetTableData() {

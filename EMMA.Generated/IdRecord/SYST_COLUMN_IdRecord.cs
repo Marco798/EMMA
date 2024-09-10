@@ -7,6 +7,8 @@ namespace EMMA_BE.Generated {
 		public string SHORT_DESCRIPTION { get; set; }
 		public string? COMBO { get; set; }
 
+		public SYST_COLUMN_Id GetId() { return new SYST_COLUMN_Id(ID); }
+
 		public SYST_COLUMN_IdRecord() { }
 
 		public SYST_COLUMN_IdRecord(SYST_COLUMN_Record record) {

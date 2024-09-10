@@ -1,10 +1,8 @@
-﻿namespace %%NAME_SPACE%% {
-	public class %%COMBO_NAME%%_Combo {
-		public readonly string Value;
+﻿using EMMA.Commons;
 
-		private %%COMBO_NAME%%_Combo(string value) {
-			Value = value;
-		}
+namespace %%NAME_SPACE%% {
+	public class %%COMBO_NAME%%_Combo : ComboBase {
+		internal %%COMBO_NAME%%_Combo(string value) : base(value) { }
 
 %%VALUE_FIELD%%
 	}
