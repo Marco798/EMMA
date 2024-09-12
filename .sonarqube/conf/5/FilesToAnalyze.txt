@@ -1,0 +1,14 @@
+﻿C:\EMMA\EMMA_BE\Generated\Controllers\FILE_INPUTController.cs
+C:\EMMA\EMMA_BE\Generated\Controllers\SYST_COLUMNController.cs
+C:\EMMA\EMMA_BE\Generated\Controllers\SYST_COMBOController.cs
+C:\EMMA\EMMA_BE\Generated\Controllers\SYST_COMBO_VALUEController.cs
+C:\EMMA\EMMA_BE\Generated\Controllers\SYST_MENUController.cs
+C:\EMMA\EMMA_BE\Generated\Controllers\SYST_TABLEController.cs
+C:\EMMA\EMMA_BE\Program.cs
+C:\EMMA\EMMA_BE\obj\Debug\net8.0\EMMA_BE.GlobalUsings.g.cs
+C:\EMMA\EMMA_BE\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+C:\EMMA\EMMA_BE\obj\Debug\net8.0\EMMA_BE.AssemblyInfo.cs
+C:\EMMA\EMMA_BE\appsettings.Development.json
+C:\EMMA\EMMA_BE\appsettings.json
+C:\EMMA\EMMA_BE\EMMA_BE.http
+C:\EMMA\EMMA_BE\Properties\launchSettings.json

@@ -1,0 +1,5 @@
+﻿C:\EMMA\EMMA.Tasks\Program.cs
+C:\EMMA\EMMA.Tasks\Tasks\BANK_AcquireFlow.cs
+C:\EMMA\EMMA.Tasks\appsettings.json
+C:\EMMA\EMMA.Tasks\Log\log_2024-08-15.log
+C:\EMMA\EMMA.Tasks\Log\log_2024-08-16.log

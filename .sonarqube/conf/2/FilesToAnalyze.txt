@@ -1,0 +1,3 @@
+﻿C:\EMMA\EMMA.Commons\ComboBase.cs
+C:\EMMA\EMMA.Commons\IdBase.cs
+C:\EMMA\EMMA.Commons\QueryBase.cs
