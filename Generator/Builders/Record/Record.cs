@@ -3,7 +3,6 @@
     internal class Record : Program {
 
 		private static string directory = string.Empty;
-		private static string pattern = string.Empty;
 
 		private static string pattern_Main = string.Empty;
 		private static string pattern_Field = string.Empty;
@@ -15,9 +14,9 @@
 		private static string cloneField_List = string.Empty;
 
 		public static void Generate() {
-			string folder = @"Record\";
-			directory = generatedDirectory + folder;
-			pattern = patternDirectory + folder;
+			const string folder = @"Record\";
+			directory =	Consts.generatedDirectory + folder;
+			string pattern = Consts.patternDirectory + folder;
 
 			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 

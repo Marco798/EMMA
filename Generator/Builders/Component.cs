@@ -4,7 +4,6 @@ namespace Generator {
 	internal class Component : Program {
 
 		private static string directory = string.Empty;
-		private static string pattern = string.Empty;
 
 		private static string pattern_Main = string.Empty;
 		private static string pattern_InquiryRecord = string.Empty;
@@ -18,9 +17,9 @@ namespace Generator {
 		private static string updateField_List = string.Empty;
 
 		public static void Generate() {
-			string folder = @"Component\";
-			directory = generatedDirectory + folder;
-			pattern = patternDirectory + folder;
+			const string folder = @"Component\";
+			directory = Consts.generatedDirectory + folder;
+			string pattern = Consts.patternDirectory + folder;
 
 			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
@@ -78,39 +77,35 @@ namespace Generator {
 
 			#region InsertField
 			string insertField_Record = string.Empty;
-			if (!IsDefaultField(columns_Record.COLUMN_NAME)) {
-				if (columns_Record.COMBO == null) {
-					switch (columns_Record.DATA_TYPE) {
-						case "varchar":
-							insertField_Record = pattern_insertField_TextBox;
-							insertField_Record = insertField_Record.Replace("%%LENGTH%%", length);
-							insertField_Record = insertField_Record.Replace("%%WIDTH%%", width);
-							break;
-						default:
-							insertField_Record = pattern_insertField_Default;
-							break;
-					}
-					insertField_List += insertField_Record.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			if (!IsDefaultField(columns_Record.COLUMN_NAME) && columns_Record.COMBO == null) {
+				switch (columns_Record.DATA_TYPE) {
+					case "varchar":
+						insertField_Record = pattern_insertField_TextBox;
+						insertField_Record = insertField_Record.Replace("%%LENGTH%%", length);
+						insertField_Record = insertField_Record.Replace("%%WIDTH%%", width);
+						break;
+					default:
+						insertField_Record = pattern_insertField_Default;
+						break;
 				}
+				insertField_List += insertField_Record.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 			}
 			#endregion
 
 			#region UpdateField
 			string updateField_Record = string.Empty;
-			if (!IsDefaultField(columns_Record.COLUMN_NAME)) {
-				if (columns_Record.COMBO == null) {
-					switch (columns_Record.DATA_TYPE) {
-						case "varchar":
-							updateField_Record = pattern_updateField_TextBox;
-							updateField_Record = updateField_Record.Replace("%%LENGTH%%", length);
-							updateField_Record = updateField_Record.Replace("%%WIDTH%%", width);
-							break;
-						default:
-							updateField_Record = pattern_updateField_Default;
-							break;
-					}
-					updateField_List += updateField_Record.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			if (!IsDefaultField(columns_Record.COLUMN_NAME) && columns_Record.COMBO == null) {
+				switch (columns_Record.DATA_TYPE) {
+					case "varchar":
+						updateField_Record = pattern_updateField_TextBox;
+						updateField_Record = updateField_Record.Replace("%%LENGTH%%", length);
+						updateField_Record = updateField_Record.Replace("%%WIDTH%%", width);
+						break;
+					default:
+						updateField_Record = pattern_updateField_Default;
+						break;
 				}
+				updateField_List += updateField_Record.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 			}
 			#endregion
 		}

@@ -2,7 +2,6 @@
 	internal class Table : Program {
 
 		private static string directory = string.Empty;
-		private static string pattern = string.Empty;
 
 		private static string pattern_Main = string.Empty;
 		private static string pattern_GetFieldField = string.Empty;
@@ -10,9 +9,9 @@
 		private static string getFieldField_List = string.Empty;
 
 		public static void Generate() {
-			string folder = @"Table\";
-			directory = generatedDirectory + folder;
-			pattern = patternDirectory + folder;
+			const string folder = @"Table\";
+			directory = Consts.generatedDirectory + folder;
+			string pattern = Consts.patternDirectory + folder;
 
 			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 

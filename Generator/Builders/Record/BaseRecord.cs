@@ -2,7 +2,6 @@
 	internal class BaseRecord : Program {
 
 		private static string directory = string.Empty;
-		private static string pattern = string.Empty;
 
 		private static string pattern_Main = string.Empty;
 		private static string pattern_Field = string.Empty;
@@ -16,9 +15,9 @@
 		private static string cloneField_List = string.Empty;
 
 		public static void Generate() {
-			string folder = @"BaseRecord\";
-			directory = generatedDirectory + folder;
-			pattern = patternDirectory + folder;
+			const string folder = @"BaseRecord\";
+			directory = Consts.generatedDirectory + folder;
+			string pattern = Consts.patternDirectory + folder;
 
 			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
@@ -65,7 +64,7 @@
 		}
 
 		private static void ColumnElaboration(Columns_Record columns_Record) {
-			if (defaultFields.Contains(columns_Record.COLUMN_NAME))
+			if (Consts.defaultFields.Contains(columns_Record.COLUMN_NAME))
 				return;
 
 			string dataType = GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
@@ -89,7 +88,7 @@
 			#endregion
 
 			#region ConstructorField
-			if (fieldsToBeInitialized.Contains(columns_Record.DATA_TYPE)) {
+			if (Consts.fieldsToBeInitialized.Contains(columns_Record.DATA_TYPE)) {
 				string constructorField = pattern_ConstructorField;
 				constructorField = constructorField.Replace("%%DEFAULT_VALUE%%", GetDefaultValue(columns_Record.DATA_TYPE));
 				constructorField_List += constructorField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";

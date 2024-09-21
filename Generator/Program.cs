@@ -1,28 +1,30 @@
-﻿using System.Data.SqlClient;
+﻿using Generator.Exceptions;
+using System.Data.SqlClient;
+using System.Text;
 
 namespace Generator {
-	internal class Program {
-		protected static readonly List<Tables_Record> tables_RecordList = [];
-		protected static readonly List<Columns_Record> columns_RecordList = [];
-		protected static readonly List<Combo_Record> combo_RecordList = [];
-		protected static readonly List<ComboValues_Record> comboValues_RecordList = [];
+	public class Program {
+		internal static readonly List<Tables_Record> tables_RecordList = [];
+		internal static readonly List<Columns_Record> columns_RecordList = [];
+		internal static readonly List<Combo_Record> combo_RecordList = [];
+		internal static readonly List<ComboValues_Record> comboValues_RecordList = [];
 
-		protected static string generatedDirectory = @"..\..\..\Generated\";
-		protected static string patternDirectory = @"..\..\..\Patterns\";
+		private const string queryTables = $"SELECT * FROM INFORMATION_SCHEMA.TABLES FULL JOIN SYST_TABLE ON (INFORMATION_SCHEMA.TABLES.TABLE_NAME = SYST_TABLE.TABLE_NAME)";
+		private const string queryColumns = $"SELECT * FROM INFORMATION_SCHEMA.COLUMNS FULL JOIN SYST_COLUMN ON (INFORMATION_SCHEMA.COLUMNS.TABLE_NAME = SYST_COLUMN.TABLE_NAME AND INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME = SYST_COLUMN.COLUMN_NAME)";
+		private const string queryCombo = $"SELECT * FROM SYST_COMBO";
+		private const string queryComboValues = $"SELECT * FROM SYST_COMBO_VALUE";
 
-		protected static string ID = "ID";
-		protected static string[] defaultFields = ["ID", "INS_DATE", "INS_TIME", "INS_INFO", "UPD_DATE", "UPD_TIME", "UPD_INFO"];
-		protected static string[] auditFields = ["INS_DATE", "INS_TIME", "INS_INFO", "UPD_DATE", "UPD_TIME", "UPD_INFO"];
-		protected static string[] insFields = ["INS_DATE", "INS_TIME", "INS_INFO"];
-		protected static string[] updFields = ["UPD_DATE", "UPD_TIME", "UPD_INFO"];
+		private static SqlConnection connection = new();
 
-		protected static string[] fieldsToBeInitialized = ["varchar", "char", "varbinary"];
+		protected Program() {
 
-		static void Main() {
+		}
+
+		public static void Main() {
 			GetTableData();
 
-			if (Directory.Exists(generatedDirectory)) {
-				Directory.Delete(generatedDirectory, true);
+			if (Directory.Exists(Consts.generatedDirectory)) {
+				Directory.Delete(Consts.generatedDirectory, true);
 			}
 
 			BaseRecord.Generate();
@@ -39,189 +41,191 @@ namespace Generator {
 			Id.Generate();
 		}
 
+		static void GetData(string query, Action<SqlDataReader> addToList) {
+			SqlCommand command = new(query, connection);
+			SqlDataReader reader = command.ExecuteReader();
+			while (reader.Read()) {
+				addToList(reader);
+			}
+			reader.Close();
+		}
+
 		private static void GetTableData() {
-			string connectionString = "Server=localhost,1433;Database=EMMA;User Id=sa;Password=<YourStrong!Passw0rd>;";
-			SqlConnection connection = new(connectionString);
+			const string connectionString = "Server=localhost,1433;Database=EMMA;User Id=sa;Password=<YourStrong!Passw0rd>;";
+			connection = new(connectionString);
 
 			try {
 				connection.Open();
 
-				string queryTables = $"SELECT * FROM INFORMATION_SCHEMA.TABLES FULL JOIN SYST_TABLE ON (INFORMATION_SCHEMA.TABLES.TABLE_NAME = SYST_TABLE.TABLE_NAME)";
-
-				using (SqlCommand command = new(queryTables, connection)) {
-					SqlDataReader reader = command.ExecuteReader();
-					while (reader.Read()) {
-						Tables_Record tables_Record = new();
-						int i = 0;
-
-						tables_Record.TABLE_CATALOG = reader.GetString(i++);
-						tables_Record.TABLE_SCHEMA = reader.GetString(i++);
-						tables_Record.TABLE_NAME = reader.GetString(i++);
-						tables_Record.TABLE_TYPE = reader.GetString(i++);
-
-						i++;
-						tables_Record.DESCRIPTION = reader.GetString(i++);
-						tables_Record.SHORT_DESCRIPTION = reader.GetString(i++);
-
-						tables_RecordList.Add(tables_Record);
-					}
-				}
-
-				connection.Close();
-				connection.Open();
-
-				string queryColumns = $"SELECT * FROM INFORMATION_SCHEMA.COLUMNS FULL JOIN SYST_COLUMN ON (INFORMATION_SCHEMA.COLUMNS.TABLE_NAME = SYST_COLUMN.TABLE_NAME AND INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME = SYST_COLUMN.COLUMN_NAME)";
-
-				using (SqlCommand command = new(queryColumns, connection)) {
-					SqlDataReader reader = command.ExecuteReader();
-					while (reader.Read()) {
-						Columns_Record columns_Record = new();
-						int i = 0;
-
-						columns_Record.TABLE_CATALOG = reader.GetString(i++);
-						columns_Record.TABLE_SCHEMA = reader.GetString(i++);
-						columns_Record.TABLE_NAME = reader.GetString(i++);
-						columns_Record.COLUMN_NAME = reader.GetString(i++);
-						columns_Record.ORDINAL_POSITION = reader.GetInt32(i++);
-						columns_Record.COLUMN_DEFAULT = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						columns_Record.IS_NULLABLE = reader.GetString(i++);
-						columns_Record.DATA_TYPE = reader.GetString(i++);
-						columns_Record.CHARACTER_MAXIMUM_LENGTH = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
-						columns_Record.CHARACTER_OCTET_LENGTH = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
-						columns_Record.NUMERIC_PRECISION = reader.IsDBNull(i) ? null : reader.GetByte(i); i++;
-						columns_Record.NUMERIC_PRECISION_RADIX = reader.IsDBNull(i) ? null : reader.GetInt16(i); i++;
-						columns_Record.NUMERIC_SCALE = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
-						columns_Record.DATETIME_PRECISION = reader.IsDBNull(i) ? null : reader.GetInt16(i); i++;
-						columns_Record.CHARACTER_SET_CATALOG = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						columns_Record.CHARACTER_SET_SCHEMA = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						columns_Record.CHARACTER_SET_NAME = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						columns_Record.COLLATION_CATALOG = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						columns_Record.COLLATION_SCHEMA = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						columns_Record.COLLATION_NAME = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						columns_Record.DOMAIN_CATALOG = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						columns_Record.DOMAIN_SCHEMA = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						columns_Record.DOMAIN_NAME = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-
-						i += 3;
-						columns_Record.DESCRIPTION = reader.GetString(i++);
-						columns_Record.SHORT_DESCRIPTION = reader.GetString(i++);
-						columns_Record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-
-						columns_RecordList.Add(columns_Record);
-					}
-				}
-
-				connection.Close();
-				connection.Open();
-
-				string queryCombo = $"SELECT * FROM SYST_COMBO";
-
-				using (SqlCommand command = new(queryCombo, connection)) {
-					SqlDataReader reader = command.ExecuteReader();
-					while (reader.Read()) {
-						Combo_Record combo_Record = new();
-						int i = 1;
-
-						combo_Record.NAME = reader.GetString(i++);
-						combo_Record.TYPE = reader.GetString(i++);
-
-						combo_RecordList.Add(combo_Record);
-					}
-				}
-
-				connection.Close();
-				connection.Open();
-
-				string queryComboValues = $"SELECT * FROM SYST_COMBO_VALUE";
-
-				using (SqlCommand command = new(queryComboValues, connection)) {
-					SqlDataReader reader = command.ExecuteReader();
-					while (reader.Read()) {
-						ComboValues_Record comboValue_Record = new();
-						int i = 1;
-
-						comboValue_Record.NAME = reader.GetString(i++);
-						comboValue_Record.VALUE = reader.GetString(i++);
-						comboValue_Record.COMBO = reader.GetString(i++);
-
-						comboValues_RecordList.Add(comboValue_Record);
-					}
-				}
+				GetData(queryTables, reader => tables_RecordList.Add(GetTablesRecord(reader)));
+				GetData(queryColumns, reader => columns_RecordList.Add(GetColumnsRecord(reader)));
+				GetData(queryCombo, reader => combo_RecordList.Add(GetComboRecord(reader)));
+				GetData(queryComboValues, reader => comboValues_RecordList.Add(GetComboValuesRecord(reader)));
 
 				connection.Close();
 			}
 			catch (Exception e) {
 				connection.Close();
-				throw new Exception($"Error while retrieving syst data: {e.Message}");
+				throw new RetrievingSystDataException($"Error while retrieving syst data: {e.Message}");
 			}
+		}
+
+		private static Tables_Record GetTablesRecord(SqlDataReader reader) {
+			Tables_Record tables_Record = new();
+			int i = 0;
+
+			tables_Record.TABLE_CATALOG = reader.GetString(i++);
+			tables_Record.TABLE_SCHEMA = reader.GetString(i++);
+			tables_Record.TABLE_NAME = reader.GetString(i++);
+			tables_Record.TABLE_TYPE = reader.GetString(i++);
+
+			i++;
+			tables_Record.DESCRIPTION = reader.GetString(i++);
+			tables_Record.SHORT_DESCRIPTION = reader.GetString(i);
+
+			return tables_Record;
+		}
+
+		private static Columns_Record GetColumnsRecord(SqlDataReader reader) {
+			Columns_Record columns_Record = new();
+			int i = 0;
+
+			columns_Record.TABLE_CATALOG = reader.GetString(i++);
+			columns_Record.TABLE_SCHEMA = reader.GetString(i++);
+			columns_Record.TABLE_NAME = reader.GetString(i++);
+			columns_Record.COLUMN_NAME = reader.GetString(i++);
+			columns_Record.ORDINAL_POSITION = reader.GetInt32(i++);
+			columns_Record.COLUMN_DEFAULT = ReaderGetNullableString(reader, i++);
+			columns_Record.IS_NULLABLE = reader.GetString(i++);
+			columns_Record.DATA_TYPE = reader.GetString(i++);
+			columns_Record.CHARACTER_MAXIMUM_LENGTH = ReaderGetNullableInt32(reader, i++);
+			columns_Record.CHARACTER_OCTET_LENGTH = ReaderGetNullableInt32(reader, i++);
+			columns_Record.NUMERIC_PRECISION = ReaderGetNullableByte(reader, i++);
+			columns_Record.NUMERIC_PRECISION_RADIX = ReaderGetNullableInt16(reader, i++);
+			columns_Record.NUMERIC_SCALE = ReaderGetNullableInt32(reader, i++);
+			columns_Record.DATETIME_PRECISION = ReaderGetNullableInt16(reader, i++);
+			columns_Record.CHARACTER_SET_CATALOG = ReaderGetNullableString(reader, i++);
+			columns_Record.CHARACTER_SET_SCHEMA = ReaderGetNullableString(reader, i++);
+			columns_Record.CHARACTER_SET_NAME = ReaderGetNullableString(reader, i++);
+			columns_Record.COLLATION_CATALOG = ReaderGetNullableString(reader, i++);
+			columns_Record.COLLATION_SCHEMA = ReaderGetNullableString(reader, i++);
+			columns_Record.COLLATION_NAME = ReaderGetNullableString(reader, i++);
+			columns_Record.DOMAIN_CATALOG = ReaderGetNullableString(reader, i++);
+			columns_Record.DOMAIN_SCHEMA = ReaderGetNullableString(reader, i++);
+			columns_Record.DOMAIN_NAME = ReaderGetNullableString(reader, i++);
+
+			i += 3;
+			columns_Record.DESCRIPTION = reader.GetString(i++);
+			columns_Record.SHORT_DESCRIPTION = reader.GetString(i++);
+			columns_Record.COMBO = ReaderGetNullableString(reader, i);
+
+			return columns_Record;
+		}
+
+		private static Combo_Record GetComboRecord(SqlDataReader reader) {
+			Combo_Record combo_Record = new();
+			int i = 1;
+
+			combo_Record.NAME = reader.GetString(i++);
+			combo_Record.TYPE = reader.GetString(i);
+
+			return combo_Record;
+		}
+
+		private static ComboValues_Record GetComboValuesRecord(SqlDataReader reader) {
+			ComboValues_Record comboValue_Record = new();
+			int i = 1;
+
+			comboValue_Record.NAME = reader.GetString(i++);
+			comboValue_Record.VALUE = reader.GetString(i++);
+			comboValue_Record.COMBO = reader.GetString(i);
+
+			return comboValue_Record;
+		}
+
+		private static string? ReaderGetNullableString(SqlDataReader reader, int i) {
+			return reader.IsDBNull(i) ? null : reader.GetString(i);
+		}
+
+		private static byte? ReaderGetNullableByte(SqlDataReader reader, int i) {
+			return reader.IsDBNull(i) ? null : reader.GetByte(i);
+		}
+
+		private static short? ReaderGetNullableInt16(SqlDataReader reader, int i) {
+			return reader.IsDBNull(i) ? null : reader.GetInt16(i);
+		}
+
+		private static int? ReaderGetNullableInt32(SqlDataReader reader, int i) {
+			return reader.IsDBNull(i) ? null : reader.GetInt32(i);
 		}
 
 		protected static string ToPascalCase(string constantCase) {
 			string[] words = constantCase.Split('_');
 
-			string output = words[0] + "_";
-			foreach(string word in words.Skip(1)) {
-				output += word.ToUpper()[0];
-				output += word[1..].ToLower();
+			StringBuilder output = new();
+			output.Append(words[0] + "_");
+			foreach (string word in words.Skip(1)) {
+				output.Append(word.ToUpper()[0]);
+				output.Append(word[1..].ToLower());
 			}
 
-			return output;
+			return output.ToString();
 		}
 
 		protected static bool IsDefaultField(string columnName) {
-			return defaultFields.Contains(columnName);
+			return Consts.defaultFields.Contains(columnName);
 		}
 
 		protected static string GetDataType_FromDB_ToCS(string dataType) {
 			return dataType switch {
-				"varchar" => "string",
-				"char" => "string",
-				"varbinary" => "byte[]",
-				"int" => "int",
-				"bigint" => "long",
-				"decimal" => "decimal",
-				"date" => "DateTime",
-				"time" => "TimeSpan",
-				_ => throw new Exception()
+				Consts._DB_DataType_varchar => Consts._CS_DataType_string,
+				Consts._DB_DataType_char => Consts._CS_DataType_string,
+				Consts._DB_DataType_varbinary => Consts._CS_DataType_byteArray,
+				Consts._DB_DataType_int => Consts._CS_DataType_int,
+				Consts._DB_DataType_bigint => Consts._CS_DataType_long,
+				Consts._DB_DataType_decimal => Consts._CS_DataType_decimal,
+				Consts._DB_DataType_date => Consts._CS_DataType_DateTime,
+				Consts._DB_DataType_time => Consts._CS_DataType_TimeSpan,
+				_ => throw new UnmanagedDataTypeException()
 			};
 		}
 
 		protected static string GetDataType_FromDB_ToReader(string dataType) {
 			return dataType switch {
-				"varchar" => "String",
-				"char" => "String",
-				"varbinary" => string.Empty,
-				"int" => "Int32",
-				"bigint" => "Int64",
-				"decimal" => "Decimal",
-				"date" => "DateTime",
-				"time" => "TimeSpan",
-				_ => throw new Exception()
+				Consts._DB_DataType_varchar => Consts._Reader_DataType_String,
+				Consts._DB_DataType_char => Consts._Reader_DataType_String,
+				Consts._DB_DataType_varbinary => string.Empty,
+				Consts._DB_DataType_int => Consts._Reader_DataType_Int32,
+				Consts._DB_DataType_bigint => Consts._Reader_DataType_Int64,
+				Consts._DB_DataType_decimal => Consts._Reader_DataType_Decimal,
+				Consts._DB_DataType_date => Consts._Reader_DataType_DateTime,
+				Consts._DB_DataType_time => Consts._Reader_DataType_TimeSpan,
+				_ => throw new UnmanagedDataTypeException()
 			};
 		}
 
 		protected static string GetDefaultValue(string dataType) {
 			return dataType switch {
-				"varchar" => "string.Empty",
-				"char" => "string.Empty",
-				"varbinary" => "[]",
-				_ => throw new Exception()
+				Consts._DB_DataType_varchar => Consts._Default_DataType_stringEmpty,
+				Consts._DB_DataType_char => Consts._Default_DataType_stringEmpty,
+				Consts._DB_DataType_varbinary => Consts._Default_DataType_emptyArray,
+				_ => throw new UnmanagedDataTypeException()
 			};
 		}
 
 		protected static string GetIdType_FromDB_ToCS(string tableName) {
-			return columns_RecordList.First(x => x.TABLE_NAME == tableName && x.COLUMN_NAME == "ID").DATA_TYPE switch {
-				"int" => "int",
-				"bigint" => "long",
-				_ => throw new Exception(),
+			return columns_RecordList.First(x => x.TABLE_NAME == tableName && x.COLUMN_NAME == Consts.ID).DATA_TYPE switch {
+				Consts._DB_DataType_int => Consts._CS_DataType_int,
+				Consts._DB_DataType_bigint => Consts._CS_DataType_long,
+				_ => throw new UnmanagedDataTypeException(),
 			};
 		}
 
 		protected static string GetIsNullable(string isNullable) {
 			return isNullable switch {
-				"NO" => "",
-				"YES" => "?",
-				_ => throw new Exception(),
+				Consts._NO => string.Empty,
+				Consts._YES => Consts._IsNullable,
+				_ => throw new NotIsNullableValueException(),
 			};
 		}
 	}

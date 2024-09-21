@@ -9,8 +9,8 @@
 
 		public static void Generate() {
 			string folder = @"Controller\";
-			directory = generatedDirectory + folder;
-			pattern = patternDirectory + folder;
+			directory = Consts.generatedDirectory + folder;
+			pattern = Consts.patternDirectory + folder;
 
 			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 

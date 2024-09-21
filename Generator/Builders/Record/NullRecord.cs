@@ -2,7 +2,6 @@
 	internal class NullRecord : Program {
 
 		private static string directory = string.Empty;
-		private static string pattern = string.Empty;
 
 		private static string pattern_Main = string.Empty;
 		private static string pattern_Field = string.Empty;
@@ -20,9 +19,9 @@
 		private static string fromIdRecordField_List = string.Empty;
 
 		public static void Generate() {
-			string folder = @"NullRecord\";
-			directory = generatedDirectory + folder;
-			pattern = patternDirectory + folder;
+			const string folder = @"NullRecord\";
+			directory = Consts.generatedDirectory + folder;
+			string pattern = Consts.patternDirectory + folder;
 
 			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
@@ -76,7 +75,8 @@
 
 		private static void ColumnElaboration(Columns_Record columns_Record) {
 			string dataType = GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
-			string accessLevel = columns_Record.COMBO != null ? "private " : (IsDefaultField(columns_Record.COLUMN_NAME) ? "internal " : "");
+			string isDefaultValue = IsDefaultField(columns_Record.COLUMN_NAME) ? "internal " : "";
+			string accessLevel = columns_Record.COMBO != null ? "private " : isDefaultValue;
 
 			#region Field
 			string field = pattern_Field;
@@ -110,7 +110,7 @@
 			#endregion
 
 			#region FromIdRecordField
-			if (!auditFields.Contains(columns_Record.COLUMN_NAME)) {
+			if (!Consts.auditFields.Contains(columns_Record.COLUMN_NAME)) {
 				string fromIdRecordField = pattern_FromIdRecordField;
 				fromIdRecordField_List += fromIdRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 			}

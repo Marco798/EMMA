@@ -4,7 +4,6 @@ namespace Generator {
 	internal class Query : Program {
 
 		private static string directory = string.Empty;
-		private static string pattern = string.Empty;
 
 		private static string pattern_Main = string.Empty;
 		private static string pattern_SelectAllField_Binary = string.Empty;
@@ -21,9 +20,9 @@ namespace Generator {
 		private static string insertField_List = string.Empty;
 
 		public static void Generate() {
-			string folder = @"Query\";
-			directory = generatedDirectory + folder;
-			pattern = patternDirectory + folder;
+			const string folder = @"Query\";
+			directory = Consts.generatedDirectory + folder;
+			string pattern = Consts.patternDirectory + folder;
 
 			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 

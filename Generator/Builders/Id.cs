@@ -2,14 +2,13 @@
 	internal class Id : Program {
 
 		private static string directory = string.Empty;
-		private static string pattern = string.Empty;
 
 		private static string pattern_Main = string.Empty;
 
 		public static void Generate() {
 			string folder = @"Id\";
-			directory = generatedDirectory + folder;
-			pattern = patternDirectory + folder;
+			directory = Consts.generatedDirectory + folder;
+			string pattern = Consts.patternDirectory + folder;
 
 			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
@@ -34,19 +33,11 @@
 			#region Sections declaration
 			#endregion
 
-			foreach (Columns_Record columns_Record in columns_RecordList.Where(x => x.TABLE_NAME == tables_Record.TABLE_NAME).OrderBy(x => x.ORDINAL_POSITION)) {
-				ColumnElaboration(columns_Record);
-			}
-
 			_Main = _Main.Replace("%%NAME_SPACE%%", "EMMA_BE.Generated");
 			_Main = _Main.Replace("%%FIELD_TYPE%%", idFieldType);
 			_Main = _Main.Replace("%%TABLE_NAME%%", tables_Record.TABLE_NAME);
 
 			File.WriteAllText(directory + $"{tables_Record.TABLE_NAME}_Id.cs", _Main);
-		}
-
-		private static void ColumnElaboration(Columns_Record columns_Record) {
-
 		}
 	}
 }
