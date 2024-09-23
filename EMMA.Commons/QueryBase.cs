@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Data.SqlClient;
 
 namespace EMMA.Commons {
 	public class QueryBase {
@@ -10,5 +11,31 @@ namespace EMMA.Commons {
 			_configuration = configuration;
 			connectionString = _configuration.GetConnectionString("locale") ?? throw new Exception($"Stringa di connessione [locale] non trovata");
 		}
+
+		public List<T> CustomSelect<T>(string query) where T : ICustomSelect_Record, new()  {
+			using SqlConnection connection = new(connectionString);
+
+			List<T> output = [];
+			try {
+				connection.Open();
+
+				using (SqlCommand command = new(query, connection)) {
+					SqlDataReader reader = command.ExecuteReader();
+					T customSelect_Record = new();
+					while (reader.Read()) {
+						T record = (T)customSelect_Record.GetRecord(reader);
+						output.Add(record);
+					}
+				}
+
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+
+			return output;
+		} 
 	}
 }
