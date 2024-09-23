@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using EMMA_BE.Generated;
+using Microsoft.Extensions.Configuration;
 using NLog;
 using System.Data.SqlClient;
 using System.Globalization;
@@ -16,19 +17,22 @@ namespace EMMA.Tasks {
 			try {
 				Initialize();
 				logger.Info(new string('=', 100));
-				logger.Info($"Inizio Elaborazione - {DateTime.Now}");
+				logger.Info($"Elaboration START - {DateTime.Now}");
 				logger.Info(new string('=', 100));
 
-				BANK_AcquireFlow task = new() {
-					inputParams = new() {
-						FileName = @"C:\EMMA\SingleRun\INPUT\EstrattoConto_BMED_Dicembre2017.csv"
-					}
-				};
+				//string month = MONTH_Combo.DICEMBRE.Value;
+				//BANK_AcquireFlow task = new() {
+				//	inputParams = new() {
+				//		FileName = $@"C:\Users\marco\Downloads\EstrattoConto_BMED_{month}2020.csv"
+				//	}
+				//};
+
+				BANK_AssignPatternToStatement task = new();
 
 				task.Run();
 
 				logger.Info(new string('=', 100));
-				logger.Info("Elaborazione terminata");
+				logger.Info("Elaboration END");
 				logger.Info(new string('=', 100));
 
 			}

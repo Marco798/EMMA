@@ -1,22 +1,23 @@
-﻿using System.Data.SqlClient;
-using System.Data;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Text;
 using EMMA_BE.Generated;
 
 namespace EMMA.Tasks {
 	internal class BANK_AcquireFlow : Program {
-		public InputParams inputParams;
+		public InputParams? inputParams;
 
 		public class InputParams {
 			public string? FileName { get; set; }
 		}
 
 		public void Run() {
+			#region InputParams check
 			if (inputParams == null) throw new Exception("InputParams not initialized");
-			if(string.IsNullOrWhiteSpace(inputParams.FileName)) throw new Exception("FileName not initialized");
+			if (string.IsNullOrWhiteSpace(inputParams.FileName)) throw new Exception("FileName not initialized");
+			#endregion
 
+			#region input file recover and check
 			string fileName = Path.GetFileName(inputParams.FileName);
 
 			logger.Info(new string('=', 100));
@@ -27,118 +28,142 @@ namespace EMMA.Tasks {
 				return;
 			}
 
-			string[] contenutoFile = File.ReadAllLines(inputParams.FileName, Encoding.ASCII);
+			string[] fileContent = File.ReadAllLines(inputParams.FileName, Encoding.ASCII);
+			#endregion
 
+			#region Header area check
 			try {
-				if (!Regex.IsMatch(contenutoFile[0], @"^Controvalori aggiornati al \d{2}/\d{2}/\d{4}$")) throw new Exception();
-				if (!string.IsNullOrEmpty(contenutoFile[1])) throw new Exception();
-				if (!Regex.IsMatch(contenutoFile[2], @$"^ ; ; ; ; ; ; ; ;Conto n\?: ;({possibiliValoriConti});")) throw new Exception();
-				if (!contenutoFile[3].StartsWith(" ; ; ; ; ; ; ; ;Saldo: ;")) throw new Exception();
-				if (contenutoFile[4] != " ; ; ; ; ; ; ; ;Intestato a:;MARCO ALLEGRI;") throw new Exception();
-				if (contenutoFile[5] != "Data Operazione;Data valuta;Causale;Descrizione;Uscite;Entrate;Tag1;Tag2;Tag3;Tag4;") throw new Exception();
+				if (!Regex.IsMatch(fileContent[0], @"^Controvalori aggiornati al \d{2}/\d{2}/\d{4}$")) throw new Exception();
+				if (!string.IsNullOrEmpty(fileContent[1])) throw new Exception();
+				if (!Regex.IsMatch(fileContent[2], @$"^ ; ; ; ; ; ; ; ;Conto n\?: ;({acceptedValues_Account});")) throw new Exception();
+				if (!fileContent[3].StartsWith(" ; ; ; ; ; ; ; ;Saldo: ;")) throw new Exception();
+				if (fileContent[4] != " ; ; ; ; ; ; ; ;Intestato a:;MARCO ALLEGRI;") throw new Exception();
+				if (fileContent[5] != "Data Operazione;Data valuta;Causale;Descrizione;Uscite;Entrate;Tag1;Tag2;Tag3;Tag4;") throw new Exception();
 			}
 			catch {
 				logger.Error("Invalid file header");
 			}
+			#endregion
 
-			List<Record_BMED> record_List = [];
-			foreach (string line in contenutoFile.Skip(6)) {
-				Record_BMED record = new(line);
-				record_List.Add(record);
+			#region From csv to BMED_Record class convertion
+			List<BMED_Record> _BMED_record_List = [];
+			foreach (string line in fileContent.Skip(6)) {
+				BMED_Record _BMED_record = new(line);
+				_BMED_record_List.Add(_BMED_record);
 			}
 
-			byte[] contenutoFile_Bytes = File.ReadAllBytes(inputParams.FileName);
+			#region Check data intregrity
+			if (_BMED_record_List.Select(x => x.OperationDate.Month).Distinct().Count() != 1)
+				throw new Exception("Incogruent data. There are differente months in the same report");
+			if (_BMED_record_List.Select(x => x.OperationDate.Year).Distinct().Count() != 1)
+				throw new Exception("Incogruent data. There are differente years in the same report");
 
-			var compressedStream = new MemoryStream();
-			var compressionStream = new GZipStream(compressedStream, CompressionMode.Compress);
+			int intMonth = _BMED_record_List.Select(x => x.OperationDate.Month).Distinct().First();
+			int intYear = _BMED_record_List.Select(x => x.OperationDate.Year).Distinct().First();
+			string fileName_DateSection = fileName.Split('_')[2];
+			string fileNameMonth = fileName_DateSection.Substring(0, fileName_DateSection.Length - 8);
+			switch(intMonth) {
+				case 1: if (fileNameMonth != "Gennaio") throw new Exception(); break;
+				case 2: if (fileNameMonth != "Febbraio") throw new Exception(); break;
+				case 3: if (fileNameMonth != "Marzo") throw new Exception(); break;
+				case 4: if (fileNameMonth != "Aprile") throw new Exception(); break;
+				case 5: if (fileNameMonth != "Maggio") throw new Exception(); break;
+				case 6: if (fileNameMonth != "Giugno") throw new Exception(); break;
+				case 7: if (fileNameMonth != "Luglio") throw new Exception(); break;
+				case 8: if (fileNameMonth != "Agosto") throw new Exception(); break;
+				case 9: if (fileNameMonth != "Settembre") throw new Exception(); break;
+				case 10: if (fileNameMonth != "Ottobre") throw new Exception(); break;
+				case 11: if (fileNameMonth != "Novembre") throw new Exception(); break;
+				case 12: if (fileNameMonth != "Dicembre") throw new Exception(); break;
+			}
 
-			compressionStream.Write(contenutoFile_Bytes, 0, contenutoFile_Bytes.Length);
+			int fileNameYear = int.Parse(fileName_DateSection.Substring(fileName_DateSection.Length - 8, 4));
+			if(fileNameYear != intYear) throw new Exception();
+			#endregion
+
+			//The CSV start with the most recent operations so revert the list order
+			_BMED_record_List.Reverse();
+			#endregion
+
+			#region Re-read file as byte array for db data saving
+			byte[] fileContent_Bytes = File.ReadAllBytes(inputParams.FileName);
+
+			MemoryStream compressedStream = new();
+			GZipStream compressionStream = new(compressedStream, CompressionMode.Compress);
+
+			compressionStream.Write(fileContent_Bytes, 0, fileContent_Bytes.Length);
 
 			compressionStream.Flush();
 
 			byte[] compressedBytes = compressedStream.ToArray();
+			#endregion
 
-			FLOW_INPUT_FILE_Query _FLOW_INPUT_FILE_Query = new(configuration);
-			BANK_MAIN_Query _BANK_MAIN_Query = new(configuration);
+			#region Insert FILE_INPUT
+			FILE_INPUT_Query _FILE_INPUT_Query = new(configuration);
 
-			FLOW_INPUT_FILE_BaseRecord _FLOW_INPUT_FILE_BaseRecord = new() {
-				FLOW_NAME = fileName,
-				FLOW_TYPE = "B",
+			FILE_INPUT_BaseRecord _FILE_INPUT_BaseRecord = new() {
+				FILE_NAME = fileName,
 				CONTENT = compressedBytes
 			};
+			_FILE_INPUT_BaseRecord.Set_FILE_TYPE(FILE_TYPE_Combo.CSV);
+			_FILE_INPUT_BaseRecord.Set_FILE_CATEGORY(FILE_CATEGORY_Combo.BANK_STATEMENT);
 
-			long flowId = _FLOW_INPUT_FILE_Query.Insert(_FLOW_INPUT_FILE_BaseRecord);
+			int _ID_FILE_INPUT = _FILE_INPUT_Query.Insert(_FILE_INPUT_BaseRecord);
+			#endregion
 
-			foreach(Record_BMED record in record_List) {
-				BANK_MAIN_BaseRecord _BANK_MAIN_BaseRecord = new() {
-					OPERATION_DATE = record.DataOperazione,
-					VALUE_DATE = record.DataValuta,
-					REASON = record.Causale,
-					DESCRIPTION = record.Descrizione,
-					OUTCOME = record.Uscite,
-					INCOME = record.Entrate,
-					TAG1 = record.Tag1,
+			#region Insert all BANK_STATEMENT records
+			BANK_STATEMENT_Query _BANK_MAIN_Query = new(configuration);
+
+			foreach (BMED_Record record in _BMED_record_List) {
+				BANK_STATEMENT_BaseRecord _BANK_MAIN_BaseRecord = new() {
+					OPERATION_DATE = record.OperationDate,
+					VALUE_DATE = record.ValueDate,
+					REASON = record.Reason,
+					DESCRIPTION = record.Description,
+					OUTCOME = record.Outcome,
+					INCOME = record.Income,
 					TAG2 = record.Tag2,
 					TAG3 = record.Tag3,
 					TAG4 = record.Tag4,
-					FLOW_INPUT_FILE_ID = flowId
+					ID_FILE_INPUT = _ID_FILE_INPUT
 				};
+				_BANK_MAIN_BaseRecord.Set_TAG1(Get_BALANCE_DIRECTION(record.Tag1));
 
 				_BANK_MAIN_Query.Insert(_BANK_MAIN_BaseRecord);
 			}
+			#endregion
 		}
 
-		private class Record_BMED {
-			public DateTime DataOperazione { get; set; }
-			public DateTime DataValuta { get; set; }
-			public string Causale { get; set; }
-			public string Descrizione { get; set; }
-			public decimal? Uscite { get; set; }
-			public decimal? Entrate { get; set; }
-			public string Tag1 { get; set; }
-			public string Tag2 { get; set; }
-			public string Tag3 { get; set; }
-			public string Tag4 { get; set; }
-
-			public Record_BMED(string line) {
-				int i = 0;
-				string[] campi = line.Split(';');
-
-				DataOperazione = DateTime.Parse(campi[i]); i++;
-				DataValuta = DateTime.Parse(campi[i]); i++;
-				Causale = campi[i]; i++;
-				Descrizione = campi[i]; i++;
-				Uscite = string.IsNullOrEmpty(campi[i]) ? null : decimal.Parse(campi[i]); i++;
-				Entrate = string.IsNullOrEmpty(campi[i]) ? null : decimal.Parse(campi[i]); i++;
-				Tag1 = campi[i]; i++;
-				Tag2 = campi[i]; i++;
-				Tag3 = campi[i]; i++;
-				Tag4 = campi[i]; i++;
-			}
+		private static BALANCE_DIRECTION_Combo Get_BALANCE_DIRECTION(string tag1) {
+			return tag1 switch {
+				"Entrata" => BALANCE_DIRECTION_Combo.INCOME,
+				"Uscita" => BALANCE_DIRECTION_Combo.OUTCOME,
+				_ => throw new Exception(),
+			};
 		}
 
-		private bool CheckFileName(string fileName) {
-			string pattern = $@"^EstrattoConto_({possibiliValoriIstituti})_({possibiliValoriMesi})20" + @"\d{2}.csv$";
+		private static bool CheckFileName(string fileName) {
+			string pattern = $@"^EstrattoConto_({acceptedValues_Institute})_({acceptedValues_Month})20" + @"\d{2}.csv$";
 			if (!Regex.IsMatch(fileName, pattern)) return false;
 
 			try {
-				string[] sezioniNomeFile = fileName.Split('_');
+				string[] fileName_Split = fileName.Split('_');
 
-				if (sezioniNomeFile[0] != "EstrattoConto") return false;
+				if (fileName_Split[0] != "EstrattoConto") return false;
 
-				if (!istituti.Contains(sezioniNomeFile[1])) return false;
+				if (!institutes.Contains(fileName_Split[1])) return false;
 
-				string mese = sezioniNomeFile[2].Substring(0, sezioniNomeFile[2].Length - 8);
-				if (!mesi.Contains(mese)) return false;
+				string month = fileName_Split[2].Substring(0, fileName_Split[2].Length - 8);
+				if (!months.Contains(month)) return false;
 
-				int anno = int.Parse(sezioniNomeFile[2].Substring(sezioniNomeFile[2].Length - 8, 4));
-				if (anno < 2017) return false;
+				int year = int.Parse(fileName_Split[2].Substring(fileName_Split[2].Length - 8, 4));
+				if (year < 2017) return false;
 
-				if (!sezioniNomeFile[2].EndsWith(".csv")) return false;
+				if (!fileName_Split[2].EndsWith(".csv")) return false;
 
-				logger.Info($"Institute [{sezioniNomeFile[1]}]");
-				logger.Info($"Month [{mese}]");
-				logger.Info($"Year [{anno}]");
+				logger.Info($"Institute [{fileName_Split[1]}]");
+				logger.Info($"Month [{month}]");
+				logger.Info($"Year [{year}]");
 				return true;
 			}
 			catch {
@@ -146,16 +171,45 @@ namespace EMMA.Tasks {
 			}
 		}
 
-		private static readonly string[] istituti = ["BMED"];
+		private static readonly string[] institutes = ["BMED"];
 
-		private static readonly string[] mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+		private static readonly string[] months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
-		private static readonly string[] conti = ["001/01854908/05"];
+		private static readonly string[] accounts = ["001/01854908/05"];
 
-		private static readonly string possibiliValoriIstituti = string.Join("|", istituti);
+		private static readonly string acceptedValues_Institute = string.Join("|", institutes);
 
-		private static readonly string possibiliValoriMesi = string.Join("|", mesi);
+		private static readonly string acceptedValues_Month = string.Join("|", months);
 
-		private static readonly string possibiliValoriConti = string.Join("|", conti);
+		private static readonly string acceptedValues_Account = string.Join("|", accounts);
+
+		private class BMED_Record {
+			public DateTime OperationDate { get; set; }
+			public DateTime ValueDate { get; set; }
+			public string Reason { get; set; }
+			public string Description { get; set; }
+			public decimal? Outcome { get; set; }
+			public decimal? Income { get; set; }
+			public string Tag1 { get; set; }
+			public string Tag2 { get; set; }
+			public string Tag3 { get; set; }
+			public string Tag4 { get; set; }
+
+			public BMED_Record(string line) {
+				int i = 0;
+				string[] fields = line.Split(';');
+
+				OperationDate = DateTime.Parse(fields[i++]);
+				ValueDate = DateTime.Parse(fields[i++]);
+				Reason = fields[i++];
+				Description = fields[i++];
+				Outcome = string.IsNullOrEmpty(fields[i]) ? null : decimal.Parse(fields[i], cultureInfo_en_US); i++;
+				Income = string.IsNullOrEmpty(fields[i]) ? null : decimal.Parse(fields[i], cultureInfo_en_US); i++;
+				Tag1 = fields[i++];
+				Tag2 = fields[i++];
+				Tag3 = fields[i++];
+				Tag4 = fields[i++];
+			}
+		}
 	}
 }
