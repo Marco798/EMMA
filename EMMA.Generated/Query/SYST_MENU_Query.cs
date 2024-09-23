@@ -113,8 +113,8 @@ namespace EMMA_BE.Generated {
 		#endregion
 		
 		#region Insert
-		public void Insert(SYST_MENU_BaseRecord record) {
-			Insert(null, null, false, record);
+		public int Insert(SYST_MENU_BaseRecord record) {
+			return Insert(null, null, false, record);
 		}
 
 		public int Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, SYST_MENU_BaseRecord record) {

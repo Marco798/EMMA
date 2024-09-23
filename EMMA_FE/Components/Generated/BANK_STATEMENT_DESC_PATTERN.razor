@@ -1,0 +1,123 @@
+@page "/BANK_STATEMENT_DESC_PATTERN"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<head>
+	<link href="css/Generated/Inquiry.css" rel="stylesheet" />
+</head>
+
+@if (!showNew && !showEdit) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in BANK_STATEMENT_DESC_PATTERN_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (BANK_STATEMENT_DESC_PATTERN_Record record in _BANK_STATEMENT_DESC_PATTERN_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
+					<td>@record.ID</td>
+					<td>@record.PATTERN</td>
+					<td>@record.DESCRIPTION</td>
+					<td>@record.INS_DATE</td>
+					<td>@record.INS_TIME</td>
+					<td>@record.INS_INFO</td>
+				</tr>
+			}
+		</table>
+		<input type="button" value="Insert" @onclick="New" />
+	</div>
+}
+
+@if (showNew) {
+	<div>
+		<table>
+			<tr><TextBox Id="New_BANK_STATEMENT_DESC_PATTERN" IsTable=true @bind-Value="@_BANK_STATEMENT_DESC_PATTERN_InsertRecord!.PATTERN" Description="PATTERN" Length="700" Width="700" /></tr>
+			<tr><TextBox Id="New_BANK_STATEMENT_DESC_PATTERN" IsTable=true @bind-Value="@_BANK_STATEMENT_DESC_PATTERN_InsertRecord!.DESCRIPTION" Description="DESCRIPTION" Length="500" Width="500" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromNew" />
+		<input type="button" value="Clean" @onclick="CleanNew" />
+		<input type="button" value="Insert" @onclick="Insert" />
+	</div>
+}
+
+@if (showEdit) {
+	<div>
+		<table>
+			<tr><TextBox Id="Edit_BANK_STATEMENT_DESC_PATTERN" IsTable=true @bind-Value="@_BANK_STATEMENT_DESC_PATTERN_UpdateRecord!.PATTERN" Description="PATTERN" Length="700" Width="700" /></tr>
+			<tr><TextBox Id="Edit_BANK_STATEMENT_DESC_PATTERN" IsTable=true @bind-Value="@_BANK_STATEMENT_DESC_PATTERN_UpdateRecord!.DESCRIPTION" Description="DESCRIPTION" Length="500" Width="500" /></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
+	</div>
+}
+
+@code {
+	private List<BANK_STATEMENT_DESC_PATTERN_Record> _BANK_STATEMENT_DESC_PATTERN_Record_List = [];
+	bool showEdit = false;
+	bool showNew = false;
+
+	private BANK_STATEMENT_DESC_PATTERN_BaseRecord? _BANK_STATEMENT_DESC_PATTERN_InsertRecord = null;
+
+	private BANK_STATEMENT_DESC_PATTERN_IdRecord? _BANK_STATEMENT_DESC_PATTERN_UpdateRecord_Orig = null;
+	private BANK_STATEMENT_DESC_PATTERN_IdRecord? _BANK_STATEMENT_DESC_PATTERN_UpdateRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/BANK_STATEMENT_DESC_PATTERN/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_BANK_STATEMENT_DESC_PATTERN_Record_List = await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_DESC_PATTERN_Record>>() ?? [];
+		}
+	}
+
+	private void New() {
+		showNew = true;
+		_BANK_STATEMENT_DESC_PATTERN_InsertRecord = new();
+	}
+
+	private void BackFromNew() {
+		showNew = false;
+		_BANK_STATEMENT_DESC_PATTERN_InsertRecord = null;
+	}
+
+	private void CleanNew() {
+		_BANK_STATEMENT_DESC_PATTERN_InsertRecord = new();
+	}
+
+	protected async void Insert() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT_DESC_PATTERN/Insert", _BANK_STATEMENT_DESC_PATTERN_InsertRecord);
+		if (response.IsSuccessStatusCode) {
+			showNew = false;
+		}
+	}
+
+	private void Edit(BANK_STATEMENT_DESC_PATTERN_Record record) {
+		showEdit = true;
+		_BANK_STATEMENT_DESC_PATTERN_UpdateRecord_Orig = new(record);
+		_BANK_STATEMENT_DESC_PATTERN_UpdateRecord = new(record);
+	}
+
+	private void BackFromEdit() {
+		showEdit = false;
+		_BANK_STATEMENT_DESC_PATTERN_UpdateRecord_Orig = null;
+		_BANK_STATEMENT_DESC_PATTERN_UpdateRecord = null;
+	}
+
+	private void ResetUpdate() {
+		_BANK_STATEMENT_DESC_PATTERN_UpdateRecord = _BANK_STATEMENT_DESC_PATTERN_UpdateRecord_Orig!.Clone();
+	}
+
+	protected async void Update() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT_DESC_PATTERN/UpdateByKey", _BANK_STATEMENT_DESC_PATTERN_UpdateRecord);
+		if (response.IsSuccessStatusCode) {
+			showEdit = false;
+		}
+	}
+
+}

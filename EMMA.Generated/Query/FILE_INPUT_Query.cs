@@ -28,14 +28,12 @@ namespace EMMA_BE.Generated {
 						record.ID = reader.GetInt32(i++);
 						record.FILE_NAME = reader.GetString(i++);
 						record.Set_FILE_TYPE(new FILE_TYPE_Combo(reader.GetString(i++)));
+						record.Set_FILE_CATEGORY(new FILE_CATEGORY_Combo(reader.GetString(i++)));
 						record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
 						reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);
 						record.INS_DATE = reader.GetDateTime(i++);
 						record.INS_TIME = reader.GetTimeSpan(i++);
 						record.INS_INFO = reader.GetString(i++);
-						record.UPD_DATE = reader.GetDateTime(i++);
-						record.UPD_TIME = reader.GetTimeSpan(i++);
-						record.UPD_INFO = reader.GetString(i++);
 
 						output.Add(record);
 					}
@@ -81,19 +79,15 @@ namespace EMMA_BE.Generated {
 					parameters.Add(new SqlParameter("@FILE_TYPE", record.FILE_TYPE));
 				}
 
+				if (record.IsSet_FILE_CATEGORY) {
+					query.Append("FILE_CATEGORY = @FILE_CATEGORY, ");
+					parameters.Add(new SqlParameter("@FILE_CATEGORY", record.FILE_CATEGORY));
+				}
+
 				if (record.IsSet_CONTENT) {
 					query.Append("CONTENT = @CONTENT, ");
 					parameters.Add(new SqlParameter("@CONTENT", record.CONTENT));
 				}
-
-				query.Append("UPD_DATE = @UPD_DATE, ");
-				parameters.Add(new SqlParameter("@UPD_DATE", DateTime.Now.Date));
-
-				query.Append("UPD_TIME = @UPD_TIME, ");
-				parameters.Add(new SqlParameter("@UPD_TIME", DateTime.Now.TimeOfDay));
-
-				query.Append("UPD_INFO = @UPD_INFO, ");
-				parameters.Add(new SqlParameter("@UPD_INFO", DateTime.Now.ToString("yyyy-MM-dd;HH:mm:ss")));
 
 				query.Length -= 2;
 
@@ -123,8 +117,8 @@ namespace EMMA_BE.Generated {
 		#endregion
 		
 		#region Insert
-		public void Insert(FILE_INPUT_BaseRecord record) {
-			Insert(null, null, false, record);
+		public int Insert(FILE_INPUT_BaseRecord record) {
+			return Insert(null, null, false, record);
 		}
 
 		public int Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, FILE_INPUT_BaseRecord record) {
@@ -145,6 +139,9 @@ namespace EMMA_BE.Generated {
 				query.Append("@FILE_TYPE, ");
 				parameters.Add(new SqlParameter("@FILE_TYPE", record.FILE_TYPE));
 
+				query.Append("@FILE_CATEGORY, ");
+				parameters.Add(new SqlParameter("@FILE_CATEGORY", record.FILE_CATEGORY));
+
 				query.Append("@CONTENT, ");
 				parameters.Add(new SqlParameter("@CONTENT", record.CONTENT));
 
@@ -155,16 +152,7 @@ namespace EMMA_BE.Generated {
 				parameters.Add(new SqlParameter("@INS_TIME", DateTime.Now.TimeOfDay));
 
 				query.Append("@INS_INFO, ");
-				parameters.Add(new SqlParameter("@INS_INFO", DateTime.Now.ToString("yyyy-MM-dd;HH:mm:ss")));
-
-				query.Append("@UPD_DATE, ");
-				parameters.Add(new SqlParameter("@UPD_DATE", DateTime.Now.Date));
-
-				query.Append("@UPD_TIME, ");
-				parameters.Add(new SqlParameter("@UPD_TIME", DateTime.Now.TimeOfDay));
-
-				query.Append("@UPD_INFO, ");
-				parameters.Add(new SqlParameter("@UPD_INFO", DateTime.Now.ToString("yyyy-MM-dd;HH:mm:ss")));
+				parameters.Add(new SqlParameter("@INS_INFO", DateTime.Now.ToString("yyyy-MM-dd;HH:mm:ss.fffffff")));
 
 				query.Length -= 2;
 

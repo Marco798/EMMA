@@ -1,0 +1,154 @@
+@page "/BANK_STATEMENT"
+
+@using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.FieldType
+
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<head>
+	<link href="css/Generated/Inquiry.css" rel="stylesheet" />
+</head>
+
+@if (!showNew && !showEdit) {
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in BANK_STATEMENT_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (BANK_STATEMENT_Record record in _BANK_STATEMENT_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
+					<td>@record.ID</td>
+					<td>@record.OPERATION_DATE</td>
+					<td>@record.VALUE_DATE</td>
+					<td>@record.REASON</td>
+					<td>@record.DESCRIPTION</td>
+					<td>@record.OUTCOME</td>
+					<td>@record.INCOME</td>
+					<td>@record.TAG1</td>
+					<td>@record.TAG2</td>
+					<td>@record.TAG3</td>
+					<td>@record.TAG4</td>
+					<td>@record.ID_FILE_INPUT</td>
+					<td>@record.ID_BANK_STATEMENT_DESC_PATTERN</td>
+					<td>@record.INS_DATE</td>
+					<td>@record.INS_TIME</td>
+					<td>@record.INS_INFO</td>
+					<td>@record.UPD_DATE</td>
+					<td>@record.UPD_TIME</td>
+					<td>@record.UPD_INFO</td>
+				</tr>
+			}
+		</table>
+		<input type="button" value="Insert" @onclick="New" />
+	</div>
+}
+
+@if (showNew) {
+	<div>
+		<table>
+			<tr><td Id="New_BANK_STATEMENT" style="border: none; text-align: right; display: block;">OPERATION_DATE</td></tr>
+			<tr><td Id="New_BANK_STATEMENT" style="border: none; text-align: right; display: block;">VALUE_DATE</td></tr>
+			<tr><TextBox Id="New_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_InsertRecord!.REASON" Description="REASON" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="New_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_InsertRecord!.DESCRIPTION" Description="DESCRIPTION" Length="500" Width="500" /></tr>
+			<tr><td Id="New_BANK_STATEMENT" style="border: none; text-align: right; display: block;">OUTCOME</td></tr>
+			<tr><td Id="New_BANK_STATEMENT" style="border: none; text-align: right; display: block;">INCOME</td></tr>
+			<tr><TextBox Id="New_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_InsertRecord!.TAG2" Description="TAG2" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="New_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_InsertRecord!.TAG3" Description="TAG3" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="New_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_InsertRecord!.TAG4" Description="TAG4" Length="50" Width="50" /></tr>
+			<tr><td Id="New_BANK_STATEMENT" style="border: none; text-align: right; display: block;">ID_FILE_INPUT</td></tr>
+			<tr><td Id="New_BANK_STATEMENT" style="border: none; text-align: right; display: block;">ID_BANK_STATEMENT_DESC_PATTERN</td></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromNew" />
+		<input type="button" value="Clean" @onclick="CleanNew" />
+		<input type="button" value="Insert" @onclick="Insert" />
+	</div>
+}
+
+@if (showEdit) {
+	<div>
+		<table>
+			<tr><td Id="Edit_BANK_STATEMENT" style="border: none; text-align: right; display: block;">OPERATION_DATE</td></tr>
+			<tr><td Id="Edit_BANK_STATEMENT" style="border: none; text-align: right; display: block;">VALUE_DATE</td></tr>
+			<tr><TextBox Id="Edit_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_UpdateRecord!.REASON" Description="REASON" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="Edit_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_UpdateRecord!.DESCRIPTION" Description="DESCRIPTION" Length="500" Width="500" /></tr>
+			<tr><td Id="Edit_BANK_STATEMENT" style="border: none; text-align: right; display: block;">OUTCOME</td></tr>
+			<tr><td Id="Edit_BANK_STATEMENT" style="border: none; text-align: right; display: block;">INCOME</td></tr>
+			<tr><TextBox Id="Edit_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_UpdateRecord!.TAG2" Description="TAG2" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="Edit_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_UpdateRecord!.TAG3" Description="TAG3" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="Edit_BANK_STATEMENT" IsTable=true @bind-Value="@_BANK_STATEMENT_UpdateRecord!.TAG4" Description="TAG4" Length="50" Width="50" /></tr>
+			<tr><td Id="Edit_BANK_STATEMENT" style="border: none; text-align: right; display: block;">ID_FILE_INPUT</td></tr>
+			<tr><td Id="Edit_BANK_STATEMENT" style="border: none; text-align: right; display: block;">ID_BANK_STATEMENT_DESC_PATTERN</td></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
+	</div>
+}
+
+@code {
+	private List<BANK_STATEMENT_Record> _BANK_STATEMENT_Record_List = [];
+	bool showEdit = false;
+	bool showNew = false;
+
+	private BANK_STATEMENT_BaseRecord? _BANK_STATEMENT_InsertRecord = null;
+
+	private BANK_STATEMENT_IdRecord? _BANK_STATEMENT_UpdateRecord_Orig = null;
+	private BANK_STATEMENT_IdRecord? _BANK_STATEMENT_UpdateRecord = null;
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/BANK_STATEMENT/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_BANK_STATEMENT_Record_List = await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_Record>>() ?? [];
+		}
+	}
+
+	private void New() {
+		showNew = true;
+		_BANK_STATEMENT_InsertRecord = new();
+	}
+
+	private void BackFromNew() {
+		showNew = false;
+		_BANK_STATEMENT_InsertRecord = null;
+	}
+
+	private void CleanNew() {
+		_BANK_STATEMENT_InsertRecord = new();
+	}
+
+	protected async void Insert() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT/Insert", _BANK_STATEMENT_InsertRecord);
+		if (response.IsSuccessStatusCode) {
+			showNew = false;
+		}
+	}
+
+	private void Edit(BANK_STATEMENT_Record record) {
+		showEdit = true;
+		_BANK_STATEMENT_UpdateRecord_Orig = new(record);
+		_BANK_STATEMENT_UpdateRecord = new(record);
+	}
+
+	private void BackFromEdit() {
+		showEdit = false;
+		_BANK_STATEMENT_UpdateRecord_Orig = null;
+		_BANK_STATEMENT_UpdateRecord = null;
+	}
+
+	private void ResetUpdate() {
+		_BANK_STATEMENT_UpdateRecord = _BANK_STATEMENT_UpdateRecord_Orig!.Clone();
+	}
+
+	protected async void Update() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT/UpdateByKey", _BANK_STATEMENT_UpdateRecord);
+		if (response.IsSuccessStatusCode) {
+			showEdit = false;
+		}
+	}
+
+}
