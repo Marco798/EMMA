@@ -90,8 +90,8 @@ namespace %%NAME_SPACE%% {
 		#endregion
 		
 		#region Insert
-		public void Insert(%%TABLE_NAME%%_BaseRecord record) {
-			Insert(null, null, false, record);
+		public %%ID_TYPE%% Insert(%%TABLE_NAME%%_BaseRecord record) {
+			return Insert(null, null, false, record);
 		}
 
 		public %%ID_TYPE%% Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, %%TABLE_NAME%%_BaseRecord record) {

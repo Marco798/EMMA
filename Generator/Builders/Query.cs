@@ -12,7 +12,8 @@ namespace Generator {
 		private static string pattern_SelectAllField_Nullable = string.Empty;
 		private static string pattern_UpdateByKeyField_UpdateByKey = string.Empty;
 		private static string pattern_UpdateByKeyField_DefaultField = string.Empty;
-		private static string pattern_InsertField_Insert = string.Empty;
+		private static string pattern_InsertField_Insert_Nullable = string.Empty;
+		private static string pattern_InsertField_Insert_NotNullable = string.Empty;
 		private static string pattern_InsertField_DefaultField = string.Empty;
 
 		private static string selectAllField_List = string.Empty;
@@ -37,7 +38,8 @@ namespace Generator {
 			pattern_UpdateByKeyField_UpdateByKey = File.ReadAllText(pattern + @"UpdateByKeyField\UpdateByKey.txt");
 			pattern_UpdateByKeyField_DefaultField = File.ReadAllText(pattern + @"UpdateByKeyField\DefaultField.txt");
 
-			pattern_InsertField_Insert = File.ReadAllText(pattern + @"InsertField\Insert.txt");
+			pattern_InsertField_Insert_Nullable = File.ReadAllText(pattern + @"InsertField\Insert_Nullable.txt");
+			pattern_InsertField_Insert_NotNullable = File.ReadAllText(pattern + @"InsertField\Insert_NotNullable.txt");
 			pattern_InsertField_DefaultField = File.ReadAllText(pattern + @"InsertField\DefaultField.txt");
 			#endregion
 
@@ -115,7 +117,7 @@ namespace Generator {
 					break;
 				case "UPD_INFO":
 					updateByKeyField = pattern_UpdateByKeyField_DefaultField;
-					updateByKeyField = updateByKeyField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.ToString(\"yyyy-MM-dd;HH:mm:ss\")");
+					updateByKeyField = updateByKeyField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.ToString(\"yyyy-MM-dd;HH:mm:ss.fffffff\")");
 					updateByKeyField_List += updateByKeyField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 					break;
 				default:
@@ -145,11 +147,15 @@ namespace Generator {
 				case "INS_INFO":
 				case "UPD_INFO":
 					insertField = pattern_InsertField_DefaultField;
-					insertField = insertField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.ToString(\"yyyy-MM-dd;HH:mm:ss\")");
+					insertField = insertField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.ToString(\"yyyy-MM-dd;HH:mm:ss.fffffff\")");
 					insertField_List += insertField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 					break;
 				default:
-					insertField = pattern_InsertField_Insert;
+					switch (columns_Record.IS_NULLABLE) {
+						case "NO": insertField = pattern_InsertField_Insert_NotNullable; break;
+						case "YES": insertField = pattern_InsertField_Insert_Nullable; break;
+						default: break;
+					}
 					insertField_List += insertField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 					break;
 			}
