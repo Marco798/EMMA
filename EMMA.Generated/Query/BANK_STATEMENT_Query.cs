@@ -36,8 +36,8 @@ namespace EMMA_BE.Generated {
 						record.TAG2 = reader.GetString(i++);
 						record.TAG3 = reader.GetString(i++);
 						record.TAG4 = reader.GetString(i++);
-						record.ID_FILE_INPUT = reader.GetInt32(i++);
-						record.ID_BANK_STATEMENT_DESC_PATTERN = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
+						record.Set_ID_FILE_INPUT(new FILE_INPUT_Id(reader.GetInt32(i++)));
+						if (!reader.IsDBNull(i)) record.Set_ID_BANK_STATEMENT_DESC_PATTERN(new BANK_STATEMENT_DESC_PATTERN_Id(reader.GetInt32(i))); i++;
 						record.INS_DATE = reader.GetDateTime(i++);
 						record.INS_TIME = reader.GetTimeSpan(i++);
 						record.INS_INFO = reader.GetString(i++);
@@ -176,11 +176,11 @@ namespace EMMA_BE.Generated {
 		#endregion
 		
 		#region Insert
-		public int Insert(BANK_STATEMENT_BaseRecord record) {
+		public BANK_STATEMENT_Id Insert(BANK_STATEMENT_BaseRecord record) {
 			return Insert(null, null, false, record);
 		}
 
-		public int Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, BANK_STATEMENT_BaseRecord record) {
+		public BANK_STATEMENT_Id Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, BANK_STATEMENT_BaseRecord record) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -256,7 +256,7 @@ namespace EMMA_BE.Generated {
 
 				if (initialConnectionState != ConnectionState.Open) connection.Open();
 
-				int id = (int)command.ExecuteScalar();
+				BANK_STATEMENT_Id id = new((int)command.ExecuteScalar());
 				if (transaction != null && !keepAlive_transaction)
 					transaction.Commit();
 

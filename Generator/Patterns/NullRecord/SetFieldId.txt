@@ -1,0 +1,1 @@
+﻿		public void Set_ID_%%EXTERNAL_TABLE%%(%%EXTERNAL_TABLE%%_Id value) { %%COLUMN_NAME%% = value.Value; }

@@ -11,10 +11,13 @@ namespace EMMA_BE.Generated {
 		public string TAG2 { get; set; }
 		public string TAG3 { get; set; }
 		public string TAG4 { get; set; }
-		public int ID_FILE_INPUT { get; set; }
-		public int? ID_BANK_STATEMENT_DESC_PATTERN { get; set; }
+		public int ID_FILE_INPUT { get; private set; }
+		public int? ID_BANK_STATEMENT_DESC_PATTERN { get; private set; }
 
 		public void Set_TAG1(BALANCE_DIRECTION_Combo value) { TAG1 = value.Value; }
+
+		public void Set_ID_FILE_INPUT(FILE_INPUT_Id value) { ID_FILE_INPUT = value.Value; }
+		public void Set_ID_BANK_STATEMENT_DESC_PATTERN(BANK_STATEMENT_DESC_PATTERN_Id value) { ID_BANK_STATEMENT_DESC_PATTERN = value.Value; }
 
 		public BANK_STATEMENT_Id GetId() { return new BANK_STATEMENT_Id(ID); }
 

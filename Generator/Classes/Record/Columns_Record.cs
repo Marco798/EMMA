@@ -29,6 +29,7 @@
         public string DESCRIPTION { get; set; }
         public string SHORT_DESCRIPTION { get; set; }
 		public string? COMBO { get; set; }
+		public string? EXTERNAL_TABLE_ID { get; set; }
 
 		public Columns_Record()
         {

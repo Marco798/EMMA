@@ -117,11 +117,11 @@ namespace EMMA_BE.Generated {
 		#endregion
 		
 		#region Insert
-		public int Insert(FILE_INPUT_BaseRecord record) {
+		public FILE_INPUT_Id Insert(FILE_INPUT_BaseRecord record) {
 			return Insert(null, null, false, record);
 		}
 
-		public int Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, FILE_INPUT_BaseRecord record) {
+		public FILE_INPUT_Id Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, FILE_INPUT_BaseRecord record) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -164,7 +164,7 @@ namespace EMMA_BE.Generated {
 
 				if (initialConnectionState != ConnectionState.Open) connection.Open();
 
-				int id = (int)command.ExecuteScalar();
+				FILE_INPUT_Id id = new((int)command.ExecuteScalar());
 				if (transaction != null && !keepAlive_transaction)
 					transaction.Commit();
 

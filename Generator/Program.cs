@@ -117,7 +117,8 @@ namespace Generator {
 			i += 3;
 			columns_Record.DESCRIPTION = reader.GetString(i++);
 			columns_Record.SHORT_DESCRIPTION = reader.GetString(i++);
-			columns_Record.COMBO = ReaderGetNullableString(reader, i);
+			columns_Record.COMBO = ReaderGetNullableString(reader, i++);
+			columns_Record.EXTERNAL_TABLE_ID = ReaderGetNullableString(reader, i);
 
 			return columns_Record;
 		}

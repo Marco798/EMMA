@@ -8,7 +8,8 @@ namespace EMMA_BE.Generated {
 				"COLUMN_NAME",
 				"DESCRIPTION",
 				"SHORT_DESCRIPTION",
-				"COMBO"
+				"COMBO",
+				"EXTERNAL_TABLE_ID"
 			];
 		}
 	}

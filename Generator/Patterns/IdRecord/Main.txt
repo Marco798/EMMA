@@ -1,6 +1,6 @@
 ﻿namespace %%NAME_SPACE%% {
 	public class %%TABLE_NAME%%_IdRecord {
-%%FIELD%%%%SET_FIELD_COMBO%%
+%%FIELD%%%%SET_FIELD_COMBO%%%%SET_FIELD_ID%%
 
 		public %%TABLE_NAME%%_Id GetId() { return new %%TABLE_NAME%%_Id(ID); }
 

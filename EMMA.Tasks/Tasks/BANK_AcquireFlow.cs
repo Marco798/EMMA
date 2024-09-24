@@ -108,7 +108,7 @@ namespace EMMA.Tasks {
 			_FILE_INPUT_BaseRecord.Set_FILE_TYPE(FILE_TYPE_Combo.CSV);
 			_FILE_INPUT_BaseRecord.Set_FILE_CATEGORY(FILE_CATEGORY_Combo.BANK_STATEMENT);
 
-			int _ID_FILE_INPUT = _FILE_INPUT_Query.Insert(_FILE_INPUT_BaseRecord);
+			FILE_INPUT_Id _ID_FILE_INPUT = _FILE_INPUT_Query.Insert(_FILE_INPUT_BaseRecord);
 			#endregion
 
 			#region Insert all BANK_STATEMENT records
@@ -124,10 +124,10 @@ namespace EMMA.Tasks {
 					INCOME = record.Income,
 					TAG2 = record.Tag2,
 					TAG3 = record.Tag3,
-					TAG4 = record.Tag4,
-					ID_FILE_INPUT = _ID_FILE_INPUT
+					TAG4 = record.Tag4
 				};
 				_BANK_MAIN_BaseRecord.Set_TAG1(Get_BALANCE_DIRECTION(record.Tag1));
+				_BANK_MAIN_BaseRecord.Set_ID_FILE_INPUT(_ID_FILE_INPUT);
 
 				_BANK_MAIN_Query.Insert(_BANK_MAIN_BaseRecord);
 			}

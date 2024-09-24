@@ -101,11 +101,11 @@ namespace EMMA_BE.Generated {
 		#endregion
 		
 		#region Insert
-		public int Insert(SYST_COMBO_BaseRecord record) {
+		public SYST_COMBO_Id Insert(SYST_COMBO_BaseRecord record) {
 			return Insert(null, null, false, record);
 		}
 
-		public int Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, SYST_COMBO_BaseRecord record) {
+		public SYST_COMBO_Id Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, SYST_COMBO_BaseRecord record) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -133,7 +133,7 @@ namespace EMMA_BE.Generated {
 
 				if (initialConnectionState != ConnectionState.Open) connection.Open();
 
-				int id = (int)command.ExecuteScalar();
+				SYST_COMBO_Id id = new((int)command.ExecuteScalar());
 				if (transaction != null && !keepAlive_transaction)
 					transaction.Commit();
 

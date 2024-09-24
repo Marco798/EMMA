@@ -11,8 +11,8 @@ namespace EMMA_BE.Generated {
 		public string? TAG2 { get { return _TAG2; } set { _TAG2 = value; IsSet_TAG2 = true; } }
 		public string? TAG3 { get { return _TAG3; } set { _TAG3 = value; IsSet_TAG3 = true; } }
 		public string? TAG4 { get { return _TAG4; } set { _TAG4 = value; IsSet_TAG4 = true; } }
-		public int? ID_FILE_INPUT { get { return _ID_FILE_INPUT; } set { _ID_FILE_INPUT = value; IsSet_ID_FILE_INPUT = true; } }
-		public int? ID_BANK_STATEMENT_DESC_PATTERN { get { return _ID_BANK_STATEMENT_DESC_PATTERN; } set { _ID_BANK_STATEMENT_DESC_PATTERN = value; IsSet_ID_BANK_STATEMENT_DESC_PATTERN = true; } }
+		public int? ID_FILE_INPUT { get { return _ID_FILE_INPUT; } private set { _ID_FILE_INPUT = value; IsSet_ID_FILE_INPUT = true; } }
+		public int? ID_BANK_STATEMENT_DESC_PATTERN { get { return _ID_BANK_STATEMENT_DESC_PATTERN; } private set { _ID_BANK_STATEMENT_DESC_PATTERN = value; IsSet_ID_BANK_STATEMENT_DESC_PATTERN = true; } }
 		public DateTime? INS_DATE { get { return _INS_DATE; } internal set { _INS_DATE = value; IsSet_INS_DATE = true; } }
 		public TimeSpan? INS_TIME { get { return _INS_TIME; } internal set { _INS_TIME = value; IsSet_INS_TIME = true; } }
 		public string? INS_INFO { get { return _INS_INFO; } internal set { _INS_INFO = value; IsSet_INS_INFO = true; } }
@@ -21,6 +21,9 @@ namespace EMMA_BE.Generated {
 		public string? UPD_INFO { get { return _UPD_INFO; } internal set { _UPD_INFO = value; IsSet_UPD_INFO = true; } }
 
 		public void Set_TAG1(BALANCE_DIRECTION_Combo value) { TAG1 = value.Value; }
+
+		public void Set_ID_FILE_INPUT(FILE_INPUT_Id value) { ID_FILE_INPUT = value.Value; }
+		public void Set_ID_BANK_STATEMENT_DESC_PATTERN(BANK_STATEMENT_DESC_PATTERN_Id value) { ID_BANK_STATEMENT_DESC_PATTERN = value.Value; }
 
 		private int? _ID;
 		private DateTime? _OPERATION_DATE;

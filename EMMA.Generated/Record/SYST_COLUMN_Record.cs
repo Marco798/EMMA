@@ -6,6 +6,7 @@ namespace EMMA_BE.Generated {
 		public string DESCRIPTION { get; set; }
 		public string SHORT_DESCRIPTION { get; set; }
 		public string? COMBO { get; set; }
+		public string? EXTERNAL_TABLE_ID { get; set; }
 
 		public SYST_COLUMN_Id GetId() { return new SYST_COLUMN_Id(ID); }
 
@@ -16,7 +17,8 @@ namespace EMMA_BE.Generated {
 				COLUMN_NAME = COLUMN_NAME,
 				DESCRIPTION = DESCRIPTION,
 				SHORT_DESCRIPTION = SHORT_DESCRIPTION,
-				COMBO = COMBO
+				COMBO = COMBO,
+				EXTERNAL_TABLE_ID = EXTERNAL_TABLE_ID
 			};
 			return output;
 		}

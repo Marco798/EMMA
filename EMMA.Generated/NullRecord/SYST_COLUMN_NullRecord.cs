@@ -6,6 +6,7 @@ namespace EMMA_BE.Generated {
 		public string? DESCRIPTION { get { return _DESCRIPTION; } set { _DESCRIPTION = value; IsSet_DESCRIPTION = true; } }
 		public string? SHORT_DESCRIPTION { get { return _SHORT_DESCRIPTION; } set { _SHORT_DESCRIPTION = value; IsSet_SHORT_DESCRIPTION = true; } }
 		public string? COMBO { get { return _COMBO; } set { _COMBO = value; IsSet_COMBO = true; } }
+		public string? EXTERNAL_TABLE_ID { get { return _EXTERNAL_TABLE_ID; } set { _EXTERNAL_TABLE_ID = value; IsSet_EXTERNAL_TABLE_ID = true; } }
 
 		private int? _ID;
 		private string? _TABLE_NAME;
@@ -13,6 +14,7 @@ namespace EMMA_BE.Generated {
 		private string? _DESCRIPTION;
 		private string? _SHORT_DESCRIPTION;
 		private string? _COMBO;
+		private string? _EXTERNAL_TABLE_ID;
 
 		internal bool IsSet_ID { get; private set; }
 		internal bool IsSet_TABLE_NAME { get; private set; }
@@ -20,6 +22,7 @@ namespace EMMA_BE.Generated {
 		internal bool IsSet_DESCRIPTION { get; private set; }
 		internal bool IsSet_SHORT_DESCRIPTION { get; private set; }
 		internal bool IsSet_COMBO { get; private set; }
+		internal bool IsSet_EXTERNAL_TABLE_ID { get; private set; }
 
 		public SYST_COLUMN_NullRecord() { }
 
@@ -30,6 +33,7 @@ namespace EMMA_BE.Generated {
 			DESCRIPTION = record.DESCRIPTION;
 			SHORT_DESCRIPTION = record.SHORT_DESCRIPTION;
 			COMBO = record.COMBO;
+			EXTERNAL_TABLE_ID = record.EXTERNAL_TABLE_ID;
 		}
 
 		public SYST_COLUMN_NullRecord(SYST_COLUMN_IdRecord record) {
@@ -39,6 +43,7 @@ namespace EMMA_BE.Generated {
 			DESCRIPTION = record.DESCRIPTION;
 			SHORT_DESCRIPTION = record.SHORT_DESCRIPTION;
 			COMBO = record.COMBO;
+			EXTERNAL_TABLE_ID = record.EXTERNAL_TABLE_ID;
 		}
 	}
 }

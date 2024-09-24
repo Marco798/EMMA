@@ -89,6 +89,7 @@ namespace EditorDB.Services {
 						columns_Record.DESCRIPTION = reader.GetString(i++);
 						columns_Record.SHORT_DESCRIPTION = reader.GetString(i++);
 						columns_Record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
+						columns_Record.EXTERNAL_TABLE_ID = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
 
 						Columns_RecordList.Add(columns_Record);
 					}

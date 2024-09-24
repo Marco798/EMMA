@@ -31,6 +31,7 @@ namespace EMMA_BE.Generated {
 						record.DESCRIPTION = reader.GetString(i++);
 						record.SHORT_DESCRIPTION = reader.GetString(i++);
 						record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
+						record.EXTERNAL_TABLE_ID = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
 
 						output.Add(record);
 					}
@@ -91,6 +92,11 @@ namespace EMMA_BE.Generated {
 					parameters.Add(new SqlParameter("@COMBO", record.COMBO));
 				}
 
+				if (record.IsSet_EXTERNAL_TABLE_ID) {
+					query.Append("EXTERNAL_TABLE_ID = @EXTERNAL_TABLE_ID, ");
+					parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID));
+				}
+
 				query.Length -= 2;
 
 				query.Append(" WHERE ID = @ID");
@@ -119,11 +125,11 @@ namespace EMMA_BE.Generated {
 		#endregion
 		
 		#region Insert
-		public int Insert(SYST_COLUMN_BaseRecord record) {
+		public SYST_COLUMN_Id Insert(SYST_COLUMN_BaseRecord record) {
 			return Insert(null, null, false, record);
 		}
 
-		public int Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, SYST_COLUMN_BaseRecord record) {
+		public SYST_COLUMN_Id Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, SYST_COLUMN_BaseRecord record) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -148,7 +154,10 @@ namespace EMMA_BE.Generated {
 				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
 
 				query.Append("@COMBO, ");
-				parameters.Add(new SqlParameter("@COMBO", record.COMBO));
+				parameters.Add(new SqlParameter("@COMBO", record.COMBO.HasValue ? record.COMBO : DBNull.Value));
+
+				query.Append("@EXTERNAL_TABLE_ID, ");
+				parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID.HasValue ? record.EXTERNAL_TABLE_ID : DBNull.Value));
 
 				query.Length -= 2;
 
@@ -160,7 +169,7 @@ namespace EMMA_BE.Generated {
 
 				if (initialConnectionState != ConnectionState.Open) connection.Open();
 
-				int id = (int)command.ExecuteScalar();
+				SYST_COLUMN_Id id = new((int)command.ExecuteScalar());
 				if (transaction != null && !keepAlive_transaction)
 					transaction.Commit();
 

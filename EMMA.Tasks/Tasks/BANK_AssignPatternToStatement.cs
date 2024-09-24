@@ -25,7 +25,7 @@ namespace EMMA.Tasks {
 						if (_BANK_STATEMENT_NullRecord.ID_BANK_STATEMENT_DESC_PATTERN != null)
 							throw new Exception();
 						else
-							_BANK_STATEMENT_NullRecord.ID_BANK_STATEMENT_DESC_PATTERN = _BANK_STATEMENT_DESC_PATTERN_Record.ID;
+							_BANK_STATEMENT_NullRecord.Set_ID_BANK_STATEMENT_DESC_PATTERN(_BANK_STATEMENT_DESC_PATTERN_Record.GetId());
 					}
 				}
 

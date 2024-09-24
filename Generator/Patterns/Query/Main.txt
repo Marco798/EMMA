@@ -90,11 +90,11 @@ namespace %%NAME_SPACE%% {
 		#endregion
 		
 		#region Insert
-		public %%ID_TYPE%% Insert(%%TABLE_NAME%%_BaseRecord record) {
+		public %%TABLE_NAME%%_Id Insert(%%TABLE_NAME%%_BaseRecord record) {
 			return Insert(null, null, false, record);
 		}
 
-		public %%ID_TYPE%% Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, %%TABLE_NAME%%_BaseRecord record) {
+		public %%TABLE_NAME%%_Id Insert(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, %%TABLE_NAME%%_BaseRecord record) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -117,7 +117,7 @@ namespace %%NAME_SPACE%% {
 
 				if (initialConnectionState != ConnectionState.Open) connection.Open();
 
-				%%ID_TYPE%% id = (%%ID_TYPE%%)command.ExecuteScalar();
+				%%TABLE_NAME%%_Id id = new((%%ID_TYPE%%)command.ExecuteScalar());
 				if (transaction != null && !keepAlive_transaction)
 					transaction.Commit();
 

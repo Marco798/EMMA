@@ -28,6 +28,7 @@
 					<td>@record.DESCRIPTION</td>
 					<td>@record.SHORT_DESCRIPTION</td>
 					<td>@record.COMBO</td>
+					<td>@record.EXTERNAL_TABLE_ID</td>
 				</tr>
 			}
 		</table>
@@ -43,6 +44,7 @@
 			<tr><TextBox Id="New_SYST_COLUMN" IsTable=true @bind-Value="@_SYST_COLUMN_InsertRecord!.DESCRIPTION" Description="DESCRIPTION" Length="200" Width="200" /></tr>
 			<tr><TextBox Id="New_SYST_COLUMN" IsTable=true @bind-Value="@_SYST_COLUMN_InsertRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="100" Width="100" /></tr>
 			<tr><TextBox Id="New_SYST_COLUMN" IsTable=true @bind-Value="@_SYST_COLUMN_InsertRecord!.COMBO" Description="COMBO" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="New_SYST_COLUMN" IsTable=true @bind-Value="@_SYST_COLUMN_InsertRecord!.EXTERNAL_TABLE_ID" Description="EXTERNAL_TABLE_ID" Length="50" Width="50" /></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromNew" />
 		<input type="button" value="Clean" @onclick="CleanNew" />
@@ -58,6 +60,7 @@
 			<tr><TextBox Id="Edit_SYST_COLUMN" IsTable=true @bind-Value="@_SYST_COLUMN_UpdateRecord!.DESCRIPTION" Description="DESCRIPTION" Length="200" Width="200" /></tr>
 			<tr><TextBox Id="Edit_SYST_COLUMN" IsTable=true @bind-Value="@_SYST_COLUMN_UpdateRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="100" Width="100" /></tr>
 			<tr><TextBox Id="Edit_SYST_COLUMN" IsTable=true @bind-Value="@_SYST_COLUMN_UpdateRecord!.COMBO" Description="COMBO" Length="100" Width="100" /></tr>
+			<tr><TextBox Id="Edit_SYST_COLUMN" IsTable=true @bind-Value="@_SYST_COLUMN_UpdateRecord!.EXTERNAL_TABLE_ID" Description="EXTERNAL_TABLE_ID" Length="50" Width="50" /></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromEdit" />
 		<input type="button" value="Reset" @onclick="ResetUpdate" />
