@@ -4,16 +4,10 @@ using System.Text;
 using EMMA_BE.Generated;
 
 namespace EMMA.Tasks {
-	internal class BANK_AcquireFlow : Program {
-		public InputParams? inputParams;
+	internal partial class BANK_AcquireFlow {
 
-		public class InputParams {
-			public string? FileName { get; set; }
-		}
-
-		public void Run() {
+		public override void Run() {
 			#region InputParams check
-			if (inputParams == null) throw new Exception("InputParams not initialized");
 			if (string.IsNullOrWhiteSpace(inputParams.FileName)) throw new Exception("FileName not initialized");
 			#endregion
 
@@ -61,8 +55,8 @@ namespace EMMA.Tasks {
 			int intMonth = _BMED_record_List.Select(x => x.OperationDate.Month).Distinct().First();
 			int intYear = _BMED_record_List.Select(x => x.OperationDate.Year).Distinct().First();
 			string fileName_DateSection = fileName.Split('_')[2];
-			string fileNameMonth = fileName_DateSection.Substring(0, fileName_DateSection.Length - 8);
-			switch(intMonth) {
+			string fileNameMonth = fileName_DateSection[..^8];
+			switch (intMonth) {
 				case 1: if (fileNameMonth != "Gennaio") throw new Exception(); break;
 				case 2: if (fileNameMonth != "Febbraio") throw new Exception(); break;
 				case 3: if (fileNameMonth != "Marzo") throw new Exception(); break;
@@ -78,7 +72,7 @@ namespace EMMA.Tasks {
 			}
 
 			int fileNameYear = int.Parse(fileName_DateSection.Substring(fileName_DateSection.Length - 8, 4));
-			if(fileNameYear != intYear) throw new Exception();
+			if (fileNameYear != intYear) throw new Exception();
 			#endregion
 
 			//The CSV start with the most recent operations so revert the list order
@@ -153,7 +147,7 @@ namespace EMMA.Tasks {
 
 				if (!institutes.Contains(fileName_Split[1])) return false;
 
-				string month = fileName_Split[2].Substring(0, fileName_Split[2].Length - 8);
+				string month = fileName_Split[2][..^8];
 				if (!months.Contains(month)) return false;
 
 				int year = int.Parse(fileName_Split[2].Substring(fileName_Split[2].Length - 8, 4));

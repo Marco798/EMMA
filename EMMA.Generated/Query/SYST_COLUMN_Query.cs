@@ -154,10 +154,10 @@ namespace EMMA_BE.Generated {
 				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
 
 				query.Append("@COMBO, ");
-				parameters.Add(new SqlParameter("@COMBO", record.COMBO.HasValue ? record.COMBO : DBNull.Value));
+				parameters.Add(new SqlParameter("@COMBO", record.COMBO));
 
 				query.Append("@EXTERNAL_TABLE_ID, ");
-				parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID.HasValue ? record.EXTERNAL_TABLE_ID : DBNull.Value));
+				parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID));
 
 				query.Length -= 2;
 

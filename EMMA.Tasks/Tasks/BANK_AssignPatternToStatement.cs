@@ -4,8 +4,8 @@ using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 
 namespace EMMA.Tasks {
-	internal class BANK_AssignPatternToStatement : Program {
-		public void Run() {
+	internal partial class BANK_AssignPatternToStatement {
+		public override void Run() {
 			QueryBase queryBase = new(configuration);
 			BANK_STATEMENT_Query _BANK_STATEMENT_Query = new(configuration);
 			BANK_STATEMENT_DESC_PATTERN_Query _BANK_STATEMENT_DESC_PATTERN_Query = new(configuration);
