@@ -1,0 +1,26 @@
+﻿<div class="modal">
+	<div class="dialog">
+		<div class="header">
+			<span>@Title</span>
+			<input type="button" @onclick="() => {OnButtonClicked.InvokeAsync(false);}" value="X" />
+		</div>
+		<div class="content">
+			@ChildContent
+		</div>
+		<div class="footer">
+			<input type="button" @onclick="() => {OnButtonClicked.InvokeAsync(true);}" value="Yes" />
+			<input type="button" @onclick="() => {OnButtonClicked.InvokeAsync(false);}" value="No" />
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string Title { get; set; } = string.Empty;
+
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	[Parameter]
+	public EventCallback<bool> OnButtonClicked { get; set; }
+}

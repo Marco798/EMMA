@@ -1,0 +1,36 @@
+﻿.modal {
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    position: fixed;
+}
+
+.dialog {
+    overflow: hidden;
+    background-color: white;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    position: fixed;
+}
+
+.header {
+    padding: 5px;
+}
+
+.header input {
+    margin-left: 30px;
+}
+
+.content {
+    padding: 5px;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+}
+
+.footer {
+    text-align: right;
+    padding: 5px;
+}

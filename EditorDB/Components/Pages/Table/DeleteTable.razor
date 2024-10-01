@@ -1,5 +1,6 @@
 ﻿@page "/deleteTable"
 @using System.Data.SqlClient
+@using EditorDB.Components.Modals
 @rendermode InteractiveServer
 
 @inject Services.MainService mainService
@@ -11,7 +12,7 @@
 	<div class="DIV_Title">
 		<span class="SPN_Title">Delete Table</span>
 	</div>
-	<select @onchange="SelectedTable_OnChange">
+	<select @onchange="SelectedTable_OnChange" value="@selectedValue">
 		<option value="">---</option>
 		@foreach (Tables_Record table in mainService.Tables_RecordList) {
 			<option value="@table.TABLE_NAME">@table.TABLE_NAME</option>
@@ -21,9 +22,25 @@
 	<button @onclick="Save_Click">Save</button>
 </div>
 
+@if (showConfirmModal) {
+	<ConfirmModal Title="Confirm Deletion" OnButtonClicked="SaveConfirmed">
+		<span>Confirm deletion?</span>
+	</ConfirmModal>
+}
+
+@if (showNotifyModal) {
+	<NotifyModal Title="Operation terminated" OnButtonClicked="() => {showNotifyModal = false;}">
+		<span>Table deleted</span>
+	</NotifyModal>
+}
+
 @code {
 	Dictionary<string, Tables_Record> tables_Dictionary = new();
 	Tables_Record tables_Record = new();
+	string selectedValue = string.Empty;
+
+	bool showConfirmModal = false;
+	bool showNotifyModal = false;
 
 	protected override void OnInitialized() {
 		base.OnInitialized();
@@ -31,15 +48,24 @@
 	}
 
 	protected void SelectedTable_OnChange(ChangeEventArgs e) {
-		string value = e.Value?.ToString() ?? string.Empty;
+		selectedValue = e.Value?.ToString() ?? string.Empty;
 
-		if (tables_Dictionary.ContainsKey(value))
-			tables_Dictionary.TryGetValue(value, out tables_Record!);
+		if (tables_Dictionary.ContainsKey(selectedValue))
+			tables_Dictionary.TryGetValue(selectedValue, out tables_Record!);
 		else
 			tables_Record = new();
 	}
 
 	protected void Save_Click() {
+		showConfirmModal = true;
+	}
+
+	protected void SaveConfirmed(bool yesClicked) {
+		if (!yesClicked) {
+			showConfirmModal = false;
+			return;
+		}
+
 		SqlConnection connection = mainService.connection;
 		connection.Open();
 
@@ -48,12 +74,12 @@
 			using (SqlCommand command = connection.CreateCommand()) {
 				command.Transaction = transaction;
 
-				string query = $"DROP TABLE {tables_Record.TABLE_NAME};\n";
-				query += $"DELETE SYST_TABLE WHERE TABLE_NAME = '{tables_Record.TABLE_NAME}';\n";
-				query += $"DELETE SYST_COLUMN WHERE TABLE_NAME = '{tables_Record.TABLE_NAME}';";
+				// string query = $"DROP TABLE {tables_Record.TABLE_NAME};\n";
+				// query += $"DELETE SYST_TABLE WHERE TABLE_NAME = '{tables_Record.TABLE_NAME}';\n";
+				// query += $"DELETE SYST_COLUMN WHERE TABLE_NAME = '{tables_Record.TABLE_NAME}';";
 
-				command.CommandText = query;
-				command.ExecuteNonQuery();
+				// command.CommandText = query;
+				// command.ExecuteNonQuery();
 			}
 
 			transaction.Commit();
@@ -66,5 +92,8 @@
 		}
 
 		mainService.Update();
+		selectedValue = string.Empty;
+		showConfirmModal = false;
+		showNotifyModal = true;
 	}
 }
