@@ -23,15 +23,11 @@
 </div>
 
 @if (showConfirmModal) {
-	<ConfirmModal Title="Confirm Deletion" OnButtonClicked="SaveConfirmed">
-		<span>Confirm deletion?</span>
-	</ConfirmModal>
+	<ConfirmModal Title="Confirm Deletion" Content="Confirm deletion?" OnButtonClicked="SaveConfirmed" />
 }
 
 @if (showNotifyModal) {
-	<NotifyModal Title="Operation terminated" OnButtonClicked="() => {showNotifyModal = false;}">
-		<span>Table deleted</span>
-	</NotifyModal>
+	<NotifyModal Title="Operation terminated" Content="Confirm deletion?" OnButtonClicked="() => {showNotifyModal = false;}" />
 }
 
 @code {

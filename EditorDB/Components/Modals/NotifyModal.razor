@@ -5,7 +5,7 @@
 			<input type="button" @onclick="() => {OnButtonClicked.InvokeAsync(false);}" value="X" />
 		</div>
 		<div class="content">
-			@ChildContent
+			<span>@Content</span>
 		</div>
 		<div class="footer">
 			<input type="button" @onclick="() => {OnButtonClicked.InvokeAsync(true);}" value="Ok" />
@@ -19,7 +19,7 @@
 	public string Title { get; set; } = string.Empty;
 
 	[Parameter]
-	public RenderFragment? ChildContent { get; set; }
+	public string Content { get; set; } = string.Empty;
 
 	[Parameter]
 	public EventCallback OnButtonClicked { get; set; }
