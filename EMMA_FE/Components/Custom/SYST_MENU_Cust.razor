@@ -1,0 +1,49 @@
+﻿@page "/SYST_MENU_Cust"
+
+@using EMMA_BE.Generated
+
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<div>
+	@foreach (SYST_MENU_Record mainMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == 0).OrderBy(x => x.INDEX)) {
+		<div class="DIV_MainVoice" id="@mainMenuVoice.ID" @onclick="() => { MainVoice_OnClick(mainMenuVoice.NAME);}">@GetText(mainMenuVoice)</div>
+		@if (shownSections[mainMenuVoice.NAME]) {
+			<div class="DIV_MainVoice_Section">
+				@foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == mainMenuVoice.ID).OrderBy(x => x.INDEX)) {
+					<div class="DIV_MainVoice" style="margin-left:20px" id="@menuVoice.ID" @onclick="() => { MainVoice_OnClick(menuVoice.NAME);}">@GetText(menuVoice)</div>
+					@if (shownSections[menuVoice.NAME]) {
+						<div class="DIV_MainVoice_Section">
+							@foreach (SYST_MENU_Record subMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == menuVoice.ID).OrderBy(x => x.INDEX)) {
+								<div class="DIV_MainVoice_Section" style="margin-left:20px">@GetText(subMenuVoice)</div>
+							}
+						</div>
+					}
+				}
+			</div>
+		}
+	}
+</div>
+
+@code {
+	private List<SYST_MENU_Record> _SYST_MENU_Record_List = [];
+	Dictionary<string, bool> shownSections = [];
+
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_SYST_MENU_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_MENU_Record>>() ?? [];
+			foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List) {
+				shownSections.Add(menuVoice.NAME, false);
+			}
+		}
+	}
+
+	private void MainVoice_OnClick(string name) {
+		shownSections[name] = !shownSections[name];
+	}
+
+	private string GetText(SYST_MENU_Record record) {
+		return $"{record.ID.ToString().PadLeft(2, '0')}. {record.SHORT_DESCRIPTION} | {record.NAME} | {record.INDEX.ToString().PadLeft(2, '0')} | {record.DESCRIPTION}";
+	}
+}

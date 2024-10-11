@@ -6,7 +6,12 @@
     height: 40px;
 }
 
-.DIV_MenuVoice {
+.DIV_MenuMainVoice {
+    position: relative;
+    margin-left: 5px;
+}
+
+.Div_MenuVoice {
     position: relative;
     margin-left: 5px;
 }
@@ -14,6 +19,14 @@
 .BTN_MenuMainVoice {
     height: 30px;
 }
+
+.BTN_MenuVoice {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 99;
+}
+
 
 .BTN_MenuSubVoice {
     display: flex;

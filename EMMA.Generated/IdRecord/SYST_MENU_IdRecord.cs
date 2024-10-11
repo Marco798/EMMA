@@ -2,9 +2,10 @@ namespace EMMA_BE.Generated {
 	public class SYST_MENU_IdRecord {
 		public int ID { get; set; }
 		public string NAME { get; set; }
-		public string PARENT { get; set; }
+		public int PARENT { get; set; }
 		public string DESCRIPTION { get; set; }
 		public string SHORT_DESCRIPTION { get; set; }
+		public int? INDEX { get; set; }
 
 		public SYST_MENU_Id GetId() { return new SYST_MENU_Id(ID); }
 
@@ -16,6 +17,7 @@ namespace EMMA_BE.Generated {
 			PARENT = record.PARENT;
 			DESCRIPTION = record.DESCRIPTION;
 			SHORT_DESCRIPTION = record.SHORT_DESCRIPTION;
+			INDEX = record.INDEX;
 		}
 
 		public SYST_MENU_IdRecord Clone() {
@@ -24,7 +26,8 @@ namespace EMMA_BE.Generated {
 				NAME = NAME,
 				PARENT = PARENT,
 				DESCRIPTION = DESCRIPTION,
-				SHORT_DESCRIPTION = SHORT_DESCRIPTION
+				SHORT_DESCRIPTION = SHORT_DESCRIPTION,
+				INDEX = INDEX
 			};
 			return output;
 		}

@@ -4,24 +4,47 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
+@inject IJSRuntime JS
 
 <div class="DIV_Main">
-	@foreach (SYST_MENU_Record record in _SYST_MENU_Record_List.Where(x => string.IsNullOrWhiteSpace(x.PARENT))) {
-		<div @onmouseover="() => ShowChildren(record.NAME)" @onmouseleave="HideChildren" class="DIV_MenuVoice">
-			<input type="button" value="@record.NAME" class="BTN_MenuMainVoice" />
-			@if (selectedVoice == record.NAME) {
-				@foreach (SYST_MENU_Record child in _SYST_MENU_Record_List.Where(x => x.PARENT == record.NAME)) {
-					<input type="button" value="@child.NAME" class="BTN_MenuSubVoice" @onclick="() => Redirect(child.NAME)" />
+	@foreach (SYST_MENU_Record record in _SYST_MENU_Record_List.Where(x => x.PARENT == 0).OrderBy(x => x.INDEX)) {
+		<div @onmouseover="() => ShowChildren(record.ID)" @onmouseleave="HideChildren" class="DIV_MenuMainVoice">
+			<input type="button" value="@record.SHORT_DESCRIPTION" class="BTN_MenuMainVoice" />
+			@if (selectedVoice == record.ID) {
+				menuIndex = 0;
+				@foreach (SYST_MENU_Record child in _SYST_MENU_Record_List.Where(x => x.PARENT == record.ID).OrderBy(x => x.INDEX)) {
+					menuIndex++;
+					<div @onmouseover="() => ShowSubChildren(child.ID)" @onmouseleave="HideSubChildren" class="DIV_MenuVoice">
+						<input type="button" id="@child.ID" value="@child.SHORT_DESCRIPTION" class="BTN_MenuVoice" style="top:@(menuIndex*30)px" @onclick="() => Redirect(child.NAME, child.ID)" />
+						@if (selectedVoice == record.ID && selectedSubVoice == child.ID) {
+							subMenuIndex = 0;
+							@foreach (SYST_MENU_Record subChild in _SYST_MENU_Record_List.Where(x => x.PARENT == child.ID).OrderBy(x => x.INDEX)) {
+								subMenuIndex++;
+								<input type="button" value="@subChild.NAME" class="BTN_MenuSubVoice" style="left:@(buttonWidth)px; top:@((menuIndex + subMenuIndex - 1)*30)px" @onclick="() => Redirect(subChild.NAME, subChild.ID)" />
+							}
+						}
+					</div>
 				}
 			}
 		</div>
 	}
 </div>
 
+<script>
+	function getButtonWidth(buttonId) {
+		var button = document.getElementById(buttonId);
+		return button ? button.offsetWidth : 0;
+	}
+</script>
 
 @code {
 	private List<SYST_MENU_Record> _SYST_MENU_Record_List = [];
-	private string selectedVoice = string.Empty;
+	private int selectedVoice = 0;
+	private int selectedSubVoice = 0;
+	private int buttonWidth;
+
+	int menuIndex = 0;
+	int subMenuIndex = 0;
 
 	protected override async Task OnInitializedAsync() {
 		var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
@@ -30,15 +53,26 @@
 		}
 	}
 
-	private void Redirect(string page) {
+	private void Redirect(string page, int pageIndex) {
+		if (_SYST_MENU_Record_List.Where(x => x.PARENT == pageIndex).Count() > 0) return;
+
 		NavigationManager.NavigateTo($"/{page}");
 	}
 
-	private void ShowChildren(string parent) {
+	private void ShowChildren(int parent) {
 		selectedVoice = parent;
 	}
 
 	private void HideChildren() {
-		selectedVoice = string.Empty;
+		selectedVoice = 0;
+	}
+
+	private async Task ShowSubChildren(int parent) {
+		selectedSubVoice = parent;
+		buttonWidth = await JS.InvokeAsync<int>("getButtonWidth", parent);
+	}
+
+	private void HideSubChildren() {
+		selectedSubVoice = 0;
 	}
 }

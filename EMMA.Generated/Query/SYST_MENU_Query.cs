@@ -27,9 +27,10 @@ namespace EMMA_BE.Generated {
 
 						record.ID = reader.GetInt32(i++);
 						record.NAME = reader.GetString(i++);
-						record.PARENT = reader.GetString(i++);
+						record.PARENT = reader.GetInt32(i++);
 						record.DESCRIPTION = reader.GetString(i++);
 						record.SHORT_DESCRIPTION = reader.GetString(i++);
+						record.INDEX = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++;
 
 						output.Add(record);
 					}
@@ -83,6 +84,11 @@ namespace EMMA_BE.Generated {
 				if (record.IsSet_SHORT_DESCRIPTION) {
 					query.Append("SHORT_DESCRIPTION = @SHORT_DESCRIPTION, ");
 					parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
+				}
+
+				if (record.IsSet_INDEX) {
+					query.Append("INDEX = @INDEX, ");
+					parameters.Add(new SqlParameter("@INDEX", record.INDEX));
 				}
 
 				query.Length -= 2;
@@ -140,6 +146,9 @@ namespace EMMA_BE.Generated {
 
 				query.Append("@SHORT_DESCRIPTION, ");
 				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
+
+				query.Append("@INDEX, ");
+				parameters.Add(new SqlParameter("@INDEX", record.INDEX.HasValue ? record.INDEX : DBNull.Value));
 
 				query.Length -= 2;
 

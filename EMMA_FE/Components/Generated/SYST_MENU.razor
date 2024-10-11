@@ -27,6 +27,7 @@
 					<td>@record.PARENT</td>
 					<td>@record.DESCRIPTION</td>
 					<td>@record.SHORT_DESCRIPTION</td>
+					<td>@record.INDEX</td>
 				</tr>
 			}
 		</table>
@@ -38,9 +39,10 @@
 	<div>
 		<table>
 			<tr><TextBox Id="New_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_InsertRecord!.NAME" Description="NAME" Length="50" Width="50" /></tr>
-			<tr><TextBox Id="New_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_InsertRecord!.PARENT" Description="PARENT" Length="50" Width="50" /></tr>
+			<tr><td Id="New_SYST_MENU" style="border: none; text-align: right; display: block;">PARENT</td></tr>
 			<tr><TextBox Id="New_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_InsertRecord!.DESCRIPTION" Description="DESCRIPTION" Length="200" Width="200" /></tr>
 			<tr><TextBox Id="New_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_InsertRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="100" Width="100" /></tr>
+			<tr><td Id="New_SYST_MENU" style="border: none; text-align: right; display: block;">INDEX</td></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromNew" />
 		<input type="button" value="Clean" @onclick="CleanNew" />
@@ -52,9 +54,10 @@
 	<div>
 		<table>
 			<tr><TextBox Id="Edit_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_UpdateRecord!.NAME" Description="NAME" Length="50" Width="50" /></tr>
-			<tr><TextBox Id="Edit_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_UpdateRecord!.PARENT" Description="PARENT" Length="50" Width="50" /></tr>
+			<tr><td Id="Edit_SYST_MENU" style="border: none; text-align: right; display: block;">PARENT</td></tr>
 			<tr><TextBox Id="Edit_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_UpdateRecord!.DESCRIPTION" Description="DESCRIPTION" Length="200" Width="200" /></tr>
 			<tr><TextBox Id="Edit_SYST_MENU" IsTable=true @bind-Value="@_SYST_MENU_UpdateRecord!.SHORT_DESCRIPTION" Description="SHORT_DESCRIPTION" Length="100" Width="100" /></tr>
+			<tr><td Id="Edit_SYST_MENU" style="border: none; text-align: right; display: block;">INDEX</td></tr>
 		</table>
 		<input type="button" value="Back" @onclick="BackFromEdit" />
 		<input type="button" value="Reset" @onclick="ResetUpdate" />

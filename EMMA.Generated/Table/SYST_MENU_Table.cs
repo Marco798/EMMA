@@ -7,7 +7,8 @@ namespace EMMA_BE.Generated {
 				"NAME",
 				"PARENT",
 				"DESCRIPTION",
-				"SHORT_DESCRIPTION"
+				"SHORT_DESCRIPTION",
+				"INDEX"
 			];
 		}
 	}
