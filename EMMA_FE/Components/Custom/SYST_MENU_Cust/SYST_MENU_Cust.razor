@@ -16,10 +16,10 @@
         </tr>
         @foreach (SYST_MENU_Record mainMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == 0).OrderBy(x => x.INDEX)) {
             <tr id="@mainMenuVoice.ID" @onclick="() => { MainVoice_OnClick(mainMenuVoice.NAME);}">
-                <td>@mainMenuVoice.ID.ToString().PadLeft(2, '0')</td>
-                <td></td>
-                <td></td>
-                <td>@mainMenuVoice.SHORT_DESCRIPTION</td>
+                <td style="border-right:none">@mainMenuVoice.ID.ToString().PadLeft(2, '0')</td>
+                <td style="border: none"></td>
+                <td style="border-left:none"></td>
+                <td><div style="display:flex"><span>@mainMenuVoice.SHORT_DESCRIPTION</span><input type="button" style="width:5px;" /></div></td>
                 <td>@mainMenuVoice.NAME</td>
                 <td>@mainMenuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
                 <td>@mainMenuVoice.DESCRIPTION</td>
@@ -27,9 +27,9 @@
             @if (shownSections[mainMenuVoice.NAME]) {
                 @foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == mainMenuVoice.ID).OrderBy(x => x.INDEX)) {
                     <tr id="@menuVoice.ID" @ondblclick="() => EditValue()" @onclick="() => { MainVoice_OnClick(menuVoice.NAME);}">
-                        <td></td>
-                        <td>@menuVoice.ID.ToString().PadLeft(2, '0')</td>
-                        <td></td>
+                        <td style="border-right:none"></td>
+                        <td style="border: none">@menuVoice.ID.ToString().PadLeft(2, '0')</td>
+                        <td style="border-left:none"></td>
                         <td>@menuVoice.SHORT_DESCRIPTION</td>
                         <td>@menuVoice.NAME</td>
                         <td>@menuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
@@ -38,9 +38,9 @@
                     @if (shownSections[menuVoice.NAME]) {
                         @foreach (SYST_MENU_Record subMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == menuVoice.ID).OrderBy(x => x.INDEX)) {
                             <tr id="@subMenuVoice.ID">
-                                <td></td>
-                                <td></td>
-                                <td>@subMenuVoice.ID.ToString().PadLeft(2, '0')</td>
+                                <td style="border-right:none"></td>
+                                <td style="border: none"></td>
+                                <td style="border-left:none">@subMenuVoice.ID.ToString().PadLeft(2, '0')</td>
                                 <td>@subMenuVoice.SHORT_DESCRIPTION</td>
                                 <td>@subMenuVoice.NAME</td>
                                 <td>@subMenuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
