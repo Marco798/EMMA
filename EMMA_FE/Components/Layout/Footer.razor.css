@@ -1,1 +1,8 @@
-﻿
+﻿.DIV_Main {
+    padding: 5px 10px 5px 5px;
+    display: flex;
+    list-style: none;
+    background-color: rgb(32, 32, 32);
+    height: 50px;
+
+}
