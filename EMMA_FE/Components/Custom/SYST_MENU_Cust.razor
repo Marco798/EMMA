@@ -6,44 +6,73 @@
 @rendermode InteractiveServer
 
 <div>
-	@foreach (SYST_MENU_Record mainMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == 0).OrderBy(x => x.INDEX)) {
-		<div class="DIV_MainVoice" id="@mainMenuVoice.ID" @onclick="() => { MainVoice_OnClick(mainMenuVoice.NAME);}">@GetText(mainMenuVoice)</div>
-		@if (shownSections[mainMenuVoice.NAME]) {
-			<div class="DIV_MainVoice_Section">
-				@foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == mainMenuVoice.ID).OrderBy(x => x.INDEX)) {
-					<div class="DIV_MainVoice" style="margin-left:20px" id="@menuVoice.ID" @onclick="() => { MainVoice_OnClick(menuVoice.NAME);}">@GetText(menuVoice)</div>
-					@if (shownSections[menuVoice.NAME]) {
-						<div class="DIV_MainVoice_Section">
-							@foreach (SYST_MENU_Record subMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == menuVoice.ID).OrderBy(x => x.INDEX)) {
-								<div class="DIV_MainVoice_Section" style="margin-left:20px">@GetText(subMenuVoice)</div>
-							}
-						</div>
-					}
-				}
-			</div>
-		}
-	}
+    <table>
+        <tr>
+            <th colspan="3"></th>
+            <th>Short description</th>
+            <th>Name</th>
+            <th>Index</th>
+            <th>Description</th>
+        </tr>
+        @foreach (SYST_MENU_Record mainMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == 0).OrderBy(x => x.INDEX)) {
+            <tr id="@mainMenuVoice.ID" @onclick="() => { MainVoice_OnClick(mainMenuVoice.NAME);}">
+                <td>@mainMenuVoice.ID.ToString().PadLeft(2, '0')</td>
+                <td></td>
+                <td></td>
+                <td>@mainMenuVoice.SHORT_DESCRIPTION</td>
+                <td>@mainMenuVoice.NAME</td>
+                <td>@mainMenuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
+                <td>@mainMenuVoice.DESCRIPTION</td>
+            </tr>
+            @if (shownSections[mainMenuVoice.NAME]) {
+                @foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == mainMenuVoice.ID).OrderBy(x => x.INDEX)) {
+                    <tr id="@menuVoice.ID" @ondblclick="() => EditValue()" @onclick="() => { MainVoice_OnClick(menuVoice.NAME);}">
+                        <td></td>
+                        <td>@menuVoice.ID.ToString().PadLeft(2, '0')</td>
+                        <td></td>
+                        <td>@menuVoice.SHORT_DESCRIPTION</td>
+                        <td>@menuVoice.NAME</td>
+                        <td>@menuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
+                        <td>@menuVoice.DESCRIPTION</td>
+                    </tr>
+                    @if (shownSections[menuVoice.NAME]) {
+                        @foreach (SYST_MENU_Record subMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == menuVoice.ID).OrderBy(x => x.INDEX)) {
+                            <tr id="@subMenuVoice.ID">
+                                <td></td>
+                                <td></td>
+                                <td>@subMenuVoice.ID.ToString().PadLeft(2, '0')</td>
+                                <td>@subMenuVoice.SHORT_DESCRIPTION</td>
+                                <td>@subMenuVoice.NAME</td>
+                                <td>@subMenuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
+                                <td>@subMenuVoice.DESCRIPTION</td>
+                            </tr>
+                        }
+                    }
+                }
+            }
+        }
+    </table>
 </div>
 
 @code {
-	private List<SYST_MENU_Record> _SYST_MENU_Record_List = [];
-	Dictionary<string, bool> shownSections = [];
+    private List<SYST_MENU_Record> _SYST_MENU_Record_List = [];
+    Dictionary<string, bool> shownSections = [];
 
-	protected override async Task OnInitializedAsync() {
-		var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
-		if (response.IsSuccessStatusCode) {
-			_SYST_MENU_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_MENU_Record>>() ?? [];
-			foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List) {
-				shownSections.Add(menuVoice.NAME, false);
-			}
-		}
-	}
+    protected override async Task OnInitializedAsync() {
+        var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
+        if (response.IsSuccessStatusCode) {
+            _SYST_MENU_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_MENU_Record>>() ?? [];
+            foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List) {
+                shownSections.Add(menuVoice.NAME, false);
+            }
+        }
+    }
 
-	private void MainVoice_OnClick(string name) {
-		shownSections[name] = !shownSections[name];
-	}
+    private void MainVoice_OnClick(string name) {
+        shownSections[name] = !shownSections[name];
+    }
 
-	private string GetText(SYST_MENU_Record record) {
-		return $"{record.ID.ToString().PadLeft(2, '0')}. {record.SHORT_DESCRIPTION} | {record.NAME} | {record.INDEX.ToString().PadLeft(2, '0')} | {record.DESCRIPTION}";
-	}
+    private void EditValue() {
+        Console.WriteLine("test");
+    }
 }

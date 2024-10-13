@@ -1,7 +1,17 @@
 ﻿.DIV_MainVoice {
-	border: 1px solid;
+    border: 1px solid;
 }
 
 .DIV_MainVoice_Section {
     border: 1px solid;
+}
+
+td, th {
+    border-left: 1px solid;
+    border-right: 1px solid;
+    padding: 0px 5px 0px 5px;
+}
+
+tr:hover {
+    background-color: rgb(112, 112, 112);
 }
