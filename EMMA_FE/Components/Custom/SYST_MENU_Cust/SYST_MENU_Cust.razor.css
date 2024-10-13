@@ -12,17 +12,10 @@ td, th {
     padding: 0px 5px 0px 5px;
 }
 
-span {
-    width:100%;
-}
-
 tr:hover {
     background-color: rgb(112, 112, 112);
 }
 
-input[type=button] {
-    height: 20px;
-    padding:0;
-    min-width: 5px;
-    border:none;
+table {
+    font-size: 20px;
 }

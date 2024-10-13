@@ -1,0 +1,36 @@
+﻿@rendermode InteractiveServer
+
+@if (Editing) {
+    <div class="EditDiv">
+        <input type="text" @bind=Value>
+        <input type="button" value="S" title="Save" class="EditButton Save">
+        <input type="button" value="R" title="Reset" class="EditButton Reset" @onclick="() => {Value = originalValue;}">
+        <input type="button" value="C" title="Cancel" class="EditButton Cancel" @onclick="() => {Editing = false; EditButton = string.Empty; Value = originalValue;}">
+    </div>
+}
+else {
+    <div class="ReadDiv">
+        <span>@Value</span>
+        <input type="button" class="ReadButton"
+               @onclick="ActiveEditing"
+               @bind=EditButton
+               @onmouseover='() => {EditButton = "Edit";}'
+               @onmouseout='() => {EditButton = string.Empty;}' />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+    [Parameter]
+    public bool Editing { get; set; } = false;
+
+    private string EditButton = string.Empty;
+
+    private string originalValue = string.Empty;
+
+    private void ActiveEditing() {
+        Editing = true;
+        originalValue = Value;
+    }
+}

@@ -1,0 +1,32 @@
+<div class="container">
+    <span class="label">Testo dello span</span>
+    <input type="button" class="button" value="" />
+</div>
+
+<style>
+    .container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .label {
+        display: inline-block;
+        padding-right: 10px;
+        /* Eventuale stile aggiuntivo */
+    }
+
+    .button {
+        position: absolute;
+        right: 0;
+        width: 5px;
+        transition: width 0.3s ease;
+        overflow: hidden;
+        z-index: 1;
+        /* Porta il bottone sopra lo span */
+    }
+
+    .button:hover {
+        width: 80px;
+        /* Larghezza desiderata quando si espande */
+    }
+</style>

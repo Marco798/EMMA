@@ -1,0 +1,61 @@
+﻿span {
+    flex-shrink: 0;
+    padding-right: 10px;
+}
+
+.ReadDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.EditDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.EditButton {
+    background-color: rgb(96, 96, 96);
+    border-color: rgb(96, 96, 96);
+}
+
+.ReadButton {
+    height: 20px;
+    padding: 0;
+    min-width: 5px;
+    border: none;
+    background-color: rgb(98, 98, 98);
+    margin-left: 5px;
+    transition: width 0.3s ease;
+    position: absolute;
+    right: 0;
+    overflow: hidden;
+    font-size: 15px;
+    border-radius: 2.5px;
+}
+
+    .ReadButton:hover {
+        width: 40px;
+        background-color: rgb(48, 48, 48);
+        border: 1px solid;
+        border-color: rgb(0, 128, 255);
+    }
+
+    .ReadButton:active {
+        background-color: rgb(32, 32, 32);
+        border-color: rgb(0, 128, 255);
+    }
+
+.Save {
+    border-radius: 0px !important;
+}
+
+.Reset {
+    border-radius: 0px !important;
+}
+
+.Cancel {
+    border-radius: 0px 10px 10px 0px !important;
+}

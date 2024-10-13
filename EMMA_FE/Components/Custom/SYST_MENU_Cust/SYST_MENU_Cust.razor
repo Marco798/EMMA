@@ -1,6 +1,7 @@
 ﻿@page "/SYST_MENU_Cust"
 
 @using EMMA_BE.Generated
+@using EMMA_FE.Components.Common.EditableFields
 
 @inject HttpClient Http
 @rendermode InteractiveServer
@@ -8,27 +9,27 @@
 <div>
     <table>
         <tr>
-            <th colspan="3"></th>
+            <th colspan="3">ID</th>
             <th>Short description</th>
             <th>Name</th>
             <th>Index</th>
             <th>Description</th>
         </tr>
         @foreach (SYST_MENU_Record mainMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == 0).OrderBy(x => x.INDEX)) {
-            <tr id="@mainMenuVoice.ID" @onclick="() => { MainVoice_OnClick(mainMenuVoice.NAME);}">
-                <td style="border-right:none">@mainMenuVoice.ID.ToString().PadLeft(2, '0')</td>
+            <tr id="@mainMenuVoice.ID">
+                <td style="border-right:none" @onclick="() => { MainVoice_OnClick(mainMenuVoice.NAME);}">@mainMenuVoice.ID.ToString().PadLeft(2, '0')</td>
                 <td style="border: none"></td>
                 <td style="border-left:none"></td>
-                <td><div style="display:flex"><span>@mainMenuVoice.SHORT_DESCRIPTION</span><input type="button" style="width:5px;" /></div></td>
-                <td>@mainMenuVoice.NAME</td>
+                <td><EditableTextBox Value="@mainMenuVoice.SHORT_DESCRIPTION" /></td>
+                <td><EditableTextBox Value="@mainMenuVoice.NAME" /></td>
                 <td>@mainMenuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
-                <td>@mainMenuVoice.DESCRIPTION</td>
+                <td><EditableTextBox Value="@mainMenuVoice.DESCRIPTION" /></td>
             </tr>
             @if (shownSections[mainMenuVoice.NAME]) {
                 @foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == mainMenuVoice.ID).OrderBy(x => x.INDEX)) {
-                    <tr id="@menuVoice.ID" @ondblclick="() => EditValue()" @onclick="() => { MainVoice_OnClick(menuVoice.NAME);}">
+                    <tr id="@menuVoice.ID">
                         <td style="border-right:none"></td>
-                        <td style="border: none">@menuVoice.ID.ToString().PadLeft(2, '0')</td>
+                        <td style="border: none" @onclick="() => { MainVoice_OnClick(menuVoice.NAME);}">@menuVoice.ID.ToString().PadLeft(2, '0')</td>
                         <td style="border-left:none"></td>
                         <td>@menuVoice.SHORT_DESCRIPTION</td>
                         <td>@menuVoice.NAME</td>
