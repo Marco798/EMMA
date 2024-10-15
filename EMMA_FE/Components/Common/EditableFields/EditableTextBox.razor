@@ -1,14 +1,18 @@
-﻿@rendermode InteractiveServer
+﻿@using EMMA.Commons.UpdateSingleField
+@inject HttpClient Http
+@rendermode InteractiveServer
 
-@if (Editing) {
+@if (Editing)
+{
     <div class="EditDiv">
         <input type="text" @bind=Value>
-        <input type="button" value="S" title="Save" class="EditButton Save">
+        <input type="button" value="S" title="Save" class="EditButton Save" @onclick="Save">
         <input type="button" value="R" title="Reset" class="EditButton Reset" @onclick="() => {Value = originalValue;}">
         <input type="button" value="C" title="Cancel" class="EditButton Cancel" @onclick="() => {Editing = false; EditButton = string.Empty; Value = originalValue;}">
     </div>
 }
-else {
+else
+{
     <div class="ReadDiv">
         <span>@Value</span>
         <input type="button" class="ReadButton"
@@ -25,12 +29,39 @@ else {
     [Parameter]
     public bool Editing { get; set; } = false;
 
+    [Parameter]
+    public string TableName { get; set; } = string.Empty;
+    [Parameter]
+    public string FieldName { get; set; } = string.Empty;
+    [Parameter]
+    public long Id { get; set; }
+
+
     private string EditButton = string.Empty;
 
     private string originalValue = string.Empty;
 
-    private void ActiveEditing() {
+    private void ActiveEditing()
+    {
         Editing = true;
         originalValue = Value;
+    }
+
+    private async Task Save()
+    {
+        UpdateStringFieldData updateStringFieldData = new UpdateStringFieldData()
+            {
+                FieldName = FieldName,
+                FieldValue = Value,
+                TableName = TableName,
+                Id = Id
+            };
+
+        var response = await Http.PostAsJsonAsync(@"https://localhost:7062/UpdateSingleField/UpdateStringField", updateStringFieldData);
+        if (response.IsSuccessStatusCode)
+        {
+            Editing = false;
+            EditButton = string.Empty;
+        }
     }
 }

@@ -4,28 +4,33 @@
     list-style: none;
     background-color: rgb(32, 32, 32);
     height: 40px;
+    position: relative;
+    z-index: 100;
 }
 
 .DIV_MenuMainVoice {
     position: relative;
     margin-left: 5px;
+    z-index: 101;
 }
 
 .Div_MenuVoice {
     position: relative;
     margin-left: 5px;
+    z-index: 101;
 }
 
 .BTN_MenuMainVoice {
     height: 30px;
+    position: relative;
+    z-index: 102;
 }
 
 .BTN_MenuVoice {
     display: flex;
     flex-direction: column;
     position: absolute;
-    z-index: 99;
-    /*width:100%;*/
+    z-index: 102;
 }
 
 
@@ -33,6 +38,5 @@
     display: flex;
     flex-direction: column;
     position: absolute;
-    z-index: 99;
-    /*width: 100%;*/
+    z-index: 102;
 }
