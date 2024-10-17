@@ -1,0 +1,17 @@
+﻿:root {
+    --color-gray16: rgb(16, 16, 16);
+    --color-gray32: rgb(32, 32, 32);
+    --color-gray48: rgb(48, 48, 48);
+    --color-gray64: rgb(64, 64, 64);
+    --color-gray80: rgb(80, 80, 80);
+    --color-gray96: rgb(96, 96, 96);
+    --color-gray112: rgb(112, 112, 112);
+    --color-gray128: rgb(128, 128, 128);
+    --color-gray144: rgb(144, 144, 144);
+    --color-gray160: rgb(160, 160, 160);
+    --color-gray176: rgb(176, 176, 176);
+    --color-gray192: rgb(192, 192, 192);
+    --color-gray208: rgb(208, 208, 208);
+    --color-gray224: rgb(224, 224, 224);
+    --color-gray240: rgb(240, 240, 240);
+}

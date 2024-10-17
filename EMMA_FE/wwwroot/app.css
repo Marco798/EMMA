@@ -3,12 +3,11 @@
 }
 
 main {
-    background-color: rgb(64, 64, 64);
+    background-color: var(--color-gray16);
     color: rgb(192, 192, 192);
 }
 
 input[type=button] {
-    font-family: "Roboto", sans-serif;
     font-size: 20px;
     border-radius: 10px;
     border: 1px solid;

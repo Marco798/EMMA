@@ -20,10 +20,10 @@
                 <td style="border-right:none" @onclick="() => { MainVoice_OnClick(mainMenuVoice.NAME);}">@mainMenuVoice.ID.ToString().PadLeft(2, '0')</td>
                 <td style="border: none"></td>
                 <td style="border-left:none"></td>
-                <td><EditableTextBox Value="@mainMenuVoice.SHORT_DESCRIPTION" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.SHORT_DESCRIPTION)" Id="mainMenuVoice.ID"/></td>
-                <td><EditableTextBox Value="@mainMenuVoice.NAME" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.NAME)" Id="mainMenuVoice.ID" /></td>
-                <td>@mainMenuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
-                <td><EditableTextBox Value="@mainMenuVoice.DESCRIPTION" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.DESCRIPTION)" Id="mainMenuVoice.ID" /></td>
+                <td><EditableString Value="@mainMenuVoice.SHORT_DESCRIPTION" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.SHORT_DESCRIPTION)" Id="mainMenuVoice.ID"/></td>
+                <td><EditableString Value="@mainMenuVoice.NAME" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.NAME)" Id="mainMenuVoice.ID" /></td>
+                <td><EditableInt Value="@mainMenuVoice.INDEX!.Value" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.INDEX)" Id="mainMenuVoice.ID" /></td>
+                <td><EditableString Value="@mainMenuVoice.DESCRIPTION" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.DESCRIPTION)" Id="mainMenuVoice.ID" /></td>
             </tr>
             @if (shownSections[mainMenuVoice.NAME]) {
                 @foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == mainMenuVoice.ID).OrderBy(x => x.INDEX)) {

@@ -1,0 +1,66 @@
+﻿@using EMMA.Commons.UpdateSingleField
+
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inherits EMMA_FE.Classes.Common.EditableFields<int>
+
+@rendermode InteractiveServer
+
+<head>
+    <link href="css/Common/EditableFields.css" rel="stylesheet" />
+</head>
+
+@if (Editing) {
+    <div class="EditDiv">
+        <input type="text" title="value" inputmode="numeric" pattern="[0-9]*" @ref=element @bind-value="Value" @bind-value:event="oninput" @onkeydown=OnKeyDown>
+        <input type="button" value="S" title="Save" class="EditButton Save" @onclick="Save">
+        <input type="button" value="R" title="Reset" class="EditButton Reset" @onclick="() => {Value = originalValue;}">
+        <input type="button" value="C" title="Cancel" class="EditButton Cancel" @onclick="Cancel">
+    </div>
+}
+else {
+    <div class="ReadDiv">
+        <span>@Value</span>
+        <input type="button" class="ReadButton"
+               @onclick="ActiveEditing"
+               @bind=EditButton
+               @onmouseover='() => {EditButton = "Edit";}'
+               @onmouseout='() => {EditButton = string.Empty;}' />
+    </div>
+}
+
+<script>
+    maxIntValue = 2147483647;
+    previousValidValue = '';
+
+    function onInput(event) {
+        let input = event.target;
+        let value = input.value;
+
+        value = value.replace(/\D/g, '');
+        console.log(value)
+
+        if (value === '') {
+            previousValidValue = '';
+            input.value = '';
+        }
+        else if (parseInt(value) > maxIntValue) {
+            input.value = previousValidValue;
+        } else {
+            previousValidValue = value;
+            input.value = value;
+        }
+    }
+
+</script>
+
+@code {
+    protected override async Task Save() {
+        UpdateIntFieldData updateIntFieldData = new UpdateIntFieldData(TableName, FieldName, Value, Id);
+        var response = await Http.PostAsJsonAsync(@"https://localhost:7062/UpdateSingleField/UpdateIntField", updateIntFieldData);
+        if (response.IsSuccessStatusCode) {
+            Editing = false;
+            EditButton = string.Empty;
+        }
+    }
+}

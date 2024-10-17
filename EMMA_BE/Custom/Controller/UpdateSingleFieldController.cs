@@ -20,7 +20,25 @@ namespace EMMA_BE.Custom.Controller {
         [HttpPost("UpdateStringField")]
         public IActionResult UpdateStringField(UpdateStringFieldData data) {
             try {
-                StringBuilder query = new($"UPDATE {data.TableName} SET {data.FieldName} = @FIELD_VALUE WHERE ID = @ID");
+                StringBuilder query = new($"UPDATE [{data.TableName}] SET [{data.FieldName}] = @FIELD_VALUE WHERE [ID] = @ID");
+                List<SqlParameter> parameters = [];
+
+                parameters.Add(new SqlParameter("@FIELD_VALUE", data.FieldValue));
+                parameters.Add(new SqlParameter("@ID", data.Id));
+
+                _query.UpdateSingleField(query, parameters);
+
+                return Ok();
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("UpdateIntField")]
+        public IActionResult UpdateIntField(UpdateIntFieldData data) {
+            try {
+                StringBuilder query = new($"UPDATE [{data.TableName}] SET [{data.FieldName}] = @FIELD_VALUE WHERE [ID] = @ID");
                 List<SqlParameter> parameters = [];
 
                 parameters.Add(new SqlParameter("@FIELD_VALUE", data.FieldValue));
