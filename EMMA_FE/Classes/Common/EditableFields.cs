@@ -21,6 +21,15 @@ namespace EMMA_FE.Classes.Common {
         protected bool firstRenderAfterActiveEditing = false;
         protected ElementReference element;
 
+        public EditableFields() {
+            if (typeof(T) == typeof(string)) {
+                Value = (T)(object)string.Empty; // Inizializza una stringa a string.Empty
+            } else {
+                Value = (T)(object)0;
+            }
+            originalValue = Value;
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender) {
             if (Editing && firstRenderAfterActiveEditing) {
                 firstRenderAfterActiveEditing = false;
