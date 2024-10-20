@@ -2,8 +2,8 @@
 	public class Program {
 
 		static void Main() {
-			BANK_AssignPatternToStatement.InputParams inputParams = new();
-			BANK_AssignPatternToStatement.RunTask(inputParams);
+            BANK_AssignDefaultTags.InputParams inputParams = new();
+            BANK_AssignDefaultTags.RunTask(inputParams);
 		}
 	}
 }
