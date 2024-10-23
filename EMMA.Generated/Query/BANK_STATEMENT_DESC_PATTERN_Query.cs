@@ -22,17 +22,7 @@ namespace EMMA_BE.Generated {
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
-						BANK_STATEMENT_DESC_PATTERN_Record record = new();
-						int i = 0;
-
-						record.ID = reader.GetInt32(i++);
-						record.PATTERN = reader.GetString(i++);
-						record.DESCRIPTION = reader.GetString(i++);
-						record.INS_DATE = reader.GetDateTime(i++);
-						record.INS_TIME = reader.GetTimeSpan(i++);
-						record.INS_INFO = reader.GetString(i++);
-
-						output.Add(record);
+                        output.Add(ReadRecord(reader));
 					}
 				}
 
@@ -46,6 +36,39 @@ namespace EMMA_BE.Generated {
 			return output;
 		}
 		#endregion
+
+        #region SelectWithSimpleCriteria
+        public List<BANK_STATEMENT_DESC_PATTERN_Record> SelectWithSimpleCriteria(BANK_STATEMENT_DESC_PATTERN_NullRecord nullRecord) {
+            using SqlConnection connection = new(connectionString);
+
+            List<BANK_STATEMENT_DESC_PATTERN_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM BANK_STATEMENT_DESC_PATTERN WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+        #endregion
 		#endregion
 		
 		#region Update
@@ -54,7 +77,7 @@ namespace EMMA_BE.Generated {
 			UpdateByKey(null, null, false, id, record);
 		}
 
-		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, BANK_STATEMENT_DESC_PATTERN_NullRecord record) {
+		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, BANK_STATEMENT_DESC_PATTERN_NullRecord nullRecord) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -66,17 +89,7 @@ namespace EMMA_BE.Generated {
 				StringBuilder query = new($"UPDATE BANK_STATEMENT_DESC_PATTERN SET ");
 				List<SqlParameter> parameters = [];
 
-				if (record.IsSet_PATTERN) {
-					query.Append("PATTERN = @PATTERN, ");
-					parameters.Add(new SqlParameter("@PATTERN", record.PATTERN));
-				}
-
-				if (record.IsSet_DESCRIPTION) {
-					query.Append("DESCRIPTION = @DESCRIPTION, ");
-					parameters.Add(new SqlParameter("@DESCRIPTION", record.DESCRIPTION));
-				}
-
-				query.Length -= 2;
+                CheckNullRecord(nullRecord, query, parameters);
 
 				query.Append(" WHERE ID = @ID");
 				parameters.Add(new SqlParameter("@ID", id));
@@ -161,5 +174,35 @@ namespace EMMA_BE.Generated {
 			}
 		}
 		#endregion
+
+        #region Common
+        private static void CheckNullRecord(BANK_STATEMENT_DESC_PATTERN_NullRecord nullRecord, StringBuilder query, List<SqlParameter> parameters) {
+			if (nullRecord.IsSet_PATTERN) {
+				query.Append("PATTERN = @PATTERN, ");
+				parameters.Add(new SqlParameter("@PATTERN", nullRecord.PATTERN));
+			}
+
+			if (nullRecord.IsSet_DESCRIPTION) {
+				query.Append("DESCRIPTION = @DESCRIPTION, ");
+				parameters.Add(new SqlParameter("@DESCRIPTION", nullRecord.DESCRIPTION));
+			}
+
+            query.Length -= 2;
+        }
+
+        private static BANK_STATEMENT_DESC_PATTERN_Record ReadRecord(SqlDataReader reader) {
+			BANK_STATEMENT_DESC_PATTERN_Record record = new();
+			int i = 0;
+
+			record.ID = reader.GetInt32(i++);
+			record.PATTERN = reader.GetString(i++);
+			record.DESCRIPTION = reader.GetString(i++);
+			record.INS_DATE = reader.GetDateTime(i++);
+			record.INS_TIME = reader.GetTimeSpan(i++);
+			record.INS_INFO = reader.GetString(i++);
+
+            return record;
+        }
+        #endregion
 	}
 }

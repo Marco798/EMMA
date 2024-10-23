@@ -1,1 +1,0 @@
-﻿						record.%%COLUMN_NAME%% = reader.IsDBNull(i) ? null : reader.Get%%DATA_TYPE%%(i); i++;

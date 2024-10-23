@@ -22,12 +22,7 @@ namespace %%NAME_SPACE%% {
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
-						%%TABLE_NAME%%_Record record = new();
-						int i = 0;
-
-%%SELECT_ALL_FIELD%%
-
-						output.Add(record);
+                        output.Add(ReadRecord(reader));
 					}
 				}
 
@@ -41,6 +36,39 @@ namespace %%NAME_SPACE%% {
 			return output;
 		}
 		#endregion
+
+        #region SelectWithSimpleCriteria
+        public List<%%TABLE_NAME%%_Record> SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord) {
+            using SqlConnection connection = new(connectionString);
+
+            List<%%TABLE_NAME%%_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM %%TABLE_NAME%% WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+        #endregion
 		#endregion
 		
 		#region Update
@@ -49,7 +77,7 @@ namespace %%NAME_SPACE%% {
 			UpdateByKey(null, null, false, id, record);
 		}
 
-		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, %%ID_TYPE%% id, %%TABLE_NAME%%_NullRecord record) {
+		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, %%ID_TYPE%% id, %%TABLE_NAME%%_NullRecord nullRecord) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -61,8 +89,7 @@ namespace %%NAME_SPACE%% {
 				StringBuilder query = new($"UPDATE %%TABLE_NAME%% SET ");
 				List<SqlParameter> parameters = [];
 
-%%UPDATE_BY_KEY_FIELD%%
-				query.Length -= 2;
+                CheckNullRecord(nullRecord, query, parameters);
 
 				query.Append(" WHERE ID = @ID");
 				parameters.Add(new SqlParameter("@ID", id));
@@ -133,5 +160,21 @@ namespace %%NAME_SPACE%% {
 			}
 		}
 		#endregion
+
+        #region Common
+        private static void CheckNullRecord(%%TABLE_NAME%%_NullRecord nullRecord, StringBuilder query, List<SqlParameter> parameters) {
+%%CHECK_NULL_RECORD%%
+            query.Length -= 2;
+        }
+
+        private static %%TABLE_NAME%%_Record ReadRecord(SqlDataReader reader) {
+			%%TABLE_NAME%%_Record record = new();
+			int i = 0;
+
+%%READ_RECORD%%
+
+            return record;
+        }
+        #endregion
 	}
 }

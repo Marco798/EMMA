@@ -22,16 +22,7 @@ namespace EMMA_BE.Generated {
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
-						BANK_STATEMENT_PATTERN_Record record = new();
-						int i = 0;
-
-						record.ID = reader.GetInt32(i++);
-						record.Set_FIELD(new BANK_STATEMENT_FIELD_Combo(reader.GetString(i++)));
-						record.ORIGINAL_VALUE = reader.GetString(i++);
-						record.PATTERN = reader.GetString(i++);
-						record.Set_POSITION(new PATTERN_POSITION_Combo(reader.GetString(i++)));
-
-						output.Add(record);
+                        output.Add(ReadRecord(reader));
 					}
 				}
 
@@ -45,6 +36,39 @@ namespace EMMA_BE.Generated {
 			return output;
 		}
 		#endregion
+
+        #region SelectWithSimpleCriteria
+        public List<BANK_STATEMENT_PATTERN_Record> SelectWithSimpleCriteria(BANK_STATEMENT_PATTERN_NullRecord nullRecord) {
+            using SqlConnection connection = new(connectionString);
+
+            List<BANK_STATEMENT_PATTERN_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM BANK_STATEMENT_PATTERN WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+        #endregion
 		#endregion
 		
 		#region Update
@@ -53,7 +77,7 @@ namespace EMMA_BE.Generated {
 			UpdateByKey(null, null, false, id, record);
 		}
 
-		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, BANK_STATEMENT_PATTERN_NullRecord record) {
+		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, BANK_STATEMENT_PATTERN_NullRecord nullRecord) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -65,27 +89,7 @@ namespace EMMA_BE.Generated {
 				StringBuilder query = new($"UPDATE BANK_STATEMENT_PATTERN SET ");
 				List<SqlParameter> parameters = [];
 
-				if (record.IsSet_FIELD) {
-					query.Append("FIELD = @FIELD, ");
-					parameters.Add(new SqlParameter("@FIELD", record.FIELD));
-				}
-
-				if (record.IsSet_ORIGINAL_VALUE) {
-					query.Append("ORIGINAL_VALUE = @ORIGINAL_VALUE, ");
-					parameters.Add(new SqlParameter("@ORIGINAL_VALUE", record.ORIGINAL_VALUE));
-				}
-
-				if (record.IsSet_PATTERN) {
-					query.Append("PATTERN = @PATTERN, ");
-					parameters.Add(new SqlParameter("@PATTERN", record.PATTERN));
-				}
-
-				if (record.IsSet_POSITION) {
-					query.Append("POSITION = @POSITION, ");
-					parameters.Add(new SqlParameter("@POSITION", record.POSITION));
-				}
-
-				query.Length -= 2;
+                CheckNullRecord(nullRecord, query, parameters);
 
 				query.Append(" WHERE ID = @ID");
 				parameters.Add(new SqlParameter("@ID", id));
@@ -167,5 +171,44 @@ namespace EMMA_BE.Generated {
 			}
 		}
 		#endregion
+
+        #region Common
+        private static void CheckNullRecord(BANK_STATEMENT_PATTERN_NullRecord nullRecord, StringBuilder query, List<SqlParameter> parameters) {
+			if (nullRecord.IsSet_FIELD) {
+				query.Append("FIELD = @FIELD, ");
+				parameters.Add(new SqlParameter("@FIELD", nullRecord.FIELD));
+			}
+
+			if (nullRecord.IsSet_ORIGINAL_VALUE) {
+				query.Append("ORIGINAL_VALUE = @ORIGINAL_VALUE, ");
+				parameters.Add(new SqlParameter("@ORIGINAL_VALUE", nullRecord.ORIGINAL_VALUE));
+			}
+
+			if (nullRecord.IsSet_PATTERN) {
+				query.Append("PATTERN = @PATTERN, ");
+				parameters.Add(new SqlParameter("@PATTERN", nullRecord.PATTERN));
+			}
+
+			if (nullRecord.IsSet_POSITION) {
+				query.Append("POSITION = @POSITION, ");
+				parameters.Add(new SqlParameter("@POSITION", nullRecord.POSITION));
+			}
+
+            query.Length -= 2;
+        }
+
+        private static BANK_STATEMENT_PATTERN_Record ReadRecord(SqlDataReader reader) {
+			BANK_STATEMENT_PATTERN_Record record = new();
+			int i = 0;
+
+			record.ID = reader.GetInt32(i++);
+			record.Set_FIELD(new BANK_STATEMENT_FIELD_Combo(reader.GetString(i++)));
+			record.ORIGINAL_VALUE = reader.GetString(i++);
+			record.PATTERN = reader.GetString(i++);
+			record.Set_POSITION(new PATTERN_POSITION_Combo(reader.GetString(i++)));
+
+            return record;
+        }
+        #endregion
 	}
 }

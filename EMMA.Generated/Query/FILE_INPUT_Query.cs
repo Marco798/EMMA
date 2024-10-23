@@ -22,20 +22,7 @@ namespace EMMA_BE.Generated {
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
-						FILE_INPUT_Record record = new();
-						int i = 0;
-
-						record.ID = reader.GetInt32(i++);
-						record.FILE_NAME = reader.GetString(i++);
-						record.Set_FILE_TYPE(new FILE_TYPE_Combo(reader.GetString(i++)));
-						record.Set_FILE_CATEGORY(new FILE_CATEGORY_Combo(reader.GetString(i++)));
-						record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
-						reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);
-						record.INS_DATE = reader.GetDateTime(i++);
-						record.INS_TIME = reader.GetTimeSpan(i++);
-						record.INS_INFO = reader.GetString(i++);
-
-						output.Add(record);
+                        output.Add(ReadRecord(reader));
 					}
 				}
 
@@ -49,6 +36,39 @@ namespace EMMA_BE.Generated {
 			return output;
 		}
 		#endregion
+
+        #region SelectWithSimpleCriteria
+        public List<FILE_INPUT_Record> SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord) {
+            using SqlConnection connection = new(connectionString);
+
+            List<FILE_INPUT_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM FILE_INPUT WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+        #endregion
 		#endregion
 		
 		#region Update
@@ -57,7 +77,7 @@ namespace EMMA_BE.Generated {
 			UpdateByKey(null, null, false, id, record);
 		}
 
-		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, FILE_INPUT_NullRecord record) {
+		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, FILE_INPUT_NullRecord nullRecord) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -69,27 +89,7 @@ namespace EMMA_BE.Generated {
 				StringBuilder query = new($"UPDATE FILE_INPUT SET ");
 				List<SqlParameter> parameters = [];
 
-				if (record.IsSet_FILE_NAME) {
-					query.Append("FILE_NAME = @FILE_NAME, ");
-					parameters.Add(new SqlParameter("@FILE_NAME", record.FILE_NAME));
-				}
-
-				if (record.IsSet_FILE_TYPE) {
-					query.Append("FILE_TYPE = @FILE_TYPE, ");
-					parameters.Add(new SqlParameter("@FILE_TYPE", record.FILE_TYPE));
-				}
-
-				if (record.IsSet_FILE_CATEGORY) {
-					query.Append("FILE_CATEGORY = @FILE_CATEGORY, ");
-					parameters.Add(new SqlParameter("@FILE_CATEGORY", record.FILE_CATEGORY));
-				}
-
-				if (record.IsSet_CONTENT) {
-					query.Append("CONTENT = @CONTENT, ");
-					parameters.Add(new SqlParameter("@CONTENT", record.CONTENT));
-				}
-
-				query.Length -= 2;
+                CheckNullRecord(nullRecord, query, parameters);
 
 				query.Append(" WHERE ID = @ID");
 				parameters.Add(new SqlParameter("@ID", id));
@@ -180,5 +180,48 @@ namespace EMMA_BE.Generated {
 			}
 		}
 		#endregion
+
+        #region Common
+        private static void CheckNullRecord(FILE_INPUT_NullRecord nullRecord, StringBuilder query, List<SqlParameter> parameters) {
+			if (nullRecord.IsSet_FILE_NAME) {
+				query.Append("FILE_NAME = @FILE_NAME, ");
+				parameters.Add(new SqlParameter("@FILE_NAME", nullRecord.FILE_NAME));
+			}
+
+			if (nullRecord.IsSet_FILE_TYPE) {
+				query.Append("FILE_TYPE = @FILE_TYPE, ");
+				parameters.Add(new SqlParameter("@FILE_TYPE", nullRecord.FILE_TYPE));
+			}
+
+			if (nullRecord.IsSet_FILE_CATEGORY) {
+				query.Append("FILE_CATEGORY = @FILE_CATEGORY, ");
+				parameters.Add(new SqlParameter("@FILE_CATEGORY", nullRecord.FILE_CATEGORY));
+			}
+
+			if (nullRecord.IsSet_CONTENT) {
+				query.Append("CONTENT = @CONTENT, ");
+				parameters.Add(new SqlParameter("@CONTENT", nullRecord.CONTENT));
+			}
+
+            query.Length -= 2;
+        }
+
+        private static FILE_INPUT_Record ReadRecord(SqlDataReader reader) {
+			FILE_INPUT_Record record = new();
+			int i = 0;
+
+			record.ID = reader.GetInt32(i++);
+			record.FILE_NAME = reader.GetString(i++);
+			record.Set_FILE_TYPE(new FILE_TYPE_Combo(reader.GetString(i++)));
+			record.Set_FILE_CATEGORY(new FILE_CATEGORY_Combo(reader.GetString(i++)));
+			record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
+			reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);
+			record.INS_DATE = reader.GetDateTime(i++);
+			record.INS_TIME = reader.GetTimeSpan(i++);
+			record.INS_INFO = reader.GetString(i++);
+
+            return record;
+        }
+        #endregion
 	}
 }

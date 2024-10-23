@@ -6,20 +6,20 @@ namespace Generator {
 		private static string directory = string.Empty;
 
 		private static string pattern_Main = string.Empty;
-		private static string pattern_SelectAllField_Binary = string.Empty;
-		private static string pattern_SelectAllField_NotNullable = string.Empty;
-		private static string pattern_SelectAllField_NotNullableCombo = string.Empty;
-		private static string pattern_SelectAllField_NotNullableId = string.Empty;
-		private static string pattern_SelectAllField_Nullable = string.Empty;
-		private static string pattern_SelectAllField_NullableId = string.Empty;
-		private static string pattern_UpdateByKeyField_UpdateByKey = string.Empty;
-		private static string pattern_UpdateByKeyField_DefaultField = string.Empty;
+		private static string pattern_ReadRecord_Binary = string.Empty;
+		private static string pattern_ReadRecord_NotNullable = string.Empty;
+		private static string pattern_ReadRecord_NotNullableCombo = string.Empty;
+		private static string pattern_ReadRecord_NotNullableId = string.Empty;
+		private static string pattern_ReadRecord_Nullable = string.Empty;
+		private static string pattern_ReadRecord_NullableId = string.Empty;
+		private static string pattern_CheckNullRecord_CheckNullRecord = string.Empty;
+		private static string pattern_CheckNullRecord_DefaultField = string.Empty;
 		private static string pattern_InsertField_Insert_Nullable = string.Empty;
 		private static string pattern_InsertField_Insert_NotNullable = string.Empty;
 		private static string pattern_InsertField_DefaultField = string.Empty;
 
-		private static string selectAllField_List = string.Empty;
-		private static string updateByKeyField_List = string.Empty;
+		private static string readRecordField_List = string.Empty;
+		private static string checkNullRecordField_List = string.Empty;
 		private static string insertField_List = string.Empty;
 
 		public static void Generate() {
@@ -32,15 +32,15 @@ namespace Generator {
 			#region Pattern
 			pattern_Main = File.ReadAllText(pattern + "Main.txt");
 
-			pattern_SelectAllField_Binary = File.ReadAllText(pattern + @"SelectAllField\Binary.txt");
-			pattern_SelectAllField_NotNullable = File.ReadAllText(pattern + @"SelectAllField\NotNullable.txt");
-			pattern_SelectAllField_NotNullableCombo = File.ReadAllText(pattern + @"SelectAllField\NotNullableCombo.txt");
-			pattern_SelectAllField_NotNullableId = File.ReadAllText(pattern + @"SelectAllField\NotNullableId.txt");
-			pattern_SelectAllField_Nullable = File.ReadAllText(pattern + @"SelectAllField\Nullable.txt");
-			pattern_SelectAllField_NullableId = File.ReadAllText(pattern + @"SelectAllField\NullableId.txt");
+			pattern_ReadRecord_Binary = File.ReadAllText(pattern + @"ReadRecord\Binary.txt");
+			pattern_ReadRecord_NotNullable = File.ReadAllText(pattern + @"ReadRecord\NotNullable.txt");
+			pattern_ReadRecord_NotNullableCombo = File.ReadAllText(pattern + @"ReadRecord\NotNullableCombo.txt");
+			pattern_ReadRecord_NotNullableId = File.ReadAllText(pattern + @"ReadRecord\NotNullableId.txt");
+			pattern_ReadRecord_Nullable = File.ReadAllText(pattern + @"ReadRecord\Nullable.txt");
+            pattern_ReadRecord_NullableId = File.ReadAllText(pattern + @"ReadRecord\NullableId.txt");
 
-			pattern_UpdateByKeyField_UpdateByKey = File.ReadAllText(pattern + @"UpdateByKeyField\UpdateByKey.txt");
-			pattern_UpdateByKeyField_DefaultField = File.ReadAllText(pattern + @"UpdateByKeyField\DefaultField.txt");
+            pattern_CheckNullRecord_CheckNullRecord = File.ReadAllText(pattern + @"CheckNullRecord\CheckNullRecord.txt");
+            pattern_CheckNullRecord_DefaultField = File.ReadAllText(pattern + @"CheckNullRecord\DefaultField.txt");
 
 			pattern_InsertField_Insert_Nullable = File.ReadAllText(pattern + @"InsertField\Insert_Nullable.txt");
 			pattern_InsertField_Insert_NotNullable = File.ReadAllText(pattern + @"InsertField\Insert_NotNullable.txt");
@@ -60,8 +60,8 @@ namespace Generator {
 			string tableName = ToPascalCase(tables_Record.TABLE_NAME);
 
 			#region Sections declaration
-			selectAllField_List = string.Empty;
-			updateByKeyField_List = string.Empty;
+			readRecordField_List = string.Empty;
+            checkNullRecordField_List = string.Empty;
 			insertField_List = string.Empty;
 			#endregion
 
@@ -69,8 +69,8 @@ namespace Generator {
 				ColumnElaboration(columns_Record);
 			}
 
-			_Main = _Main.Replace("%%SELECT_ALL_FIELD%%", selectAllField_List[..^2]);
-			_Main = _Main.Replace("%%UPDATE_BY_KEY_FIELD%%", updateByKeyField_List[..^2]);
+			_Main = _Main.Replace("%%READ_RECORD%%", readRecordField_List[..^2]);
+			_Main = _Main.Replace("%%CHECK_NULL_RECORD%%", checkNullRecordField_List[..^2]);
 			_Main = _Main.Replace("%%INSERT_FIELD%%", insertField_List[..^2]);
 
 			_Main = _Main.Replace("%%NAME_SPACE%%", "EMMA_BE.Generated");
@@ -84,44 +84,44 @@ namespace Generator {
 		private static void ColumnElaboration(Columns_Record columns_Record) {
 			string dataType = GetDataType_FromDB_ToReader(columns_Record.DATA_TYPE);
 
-			#region SelectAllField
-			string selectAllField = string.Empty;
+			#region ReadRecordField
+			string readRecordField = string.Empty;
 			if (columns_Record.DATA_TYPE == "varbinary") {
-				selectAllField = pattern_SelectAllField_Binary;
+                readRecordField = pattern_ReadRecord_Binary;
 			}
 			else {
 				switch (columns_Record.IS_NULLABLE) {
 					case "NO":
 						if (columns_Record.COMBO == null && columns_Record.EXTERNAL_TABLE_ID != null)
-							selectAllField = pattern_SelectAllField_NotNullableId;
+                            readRecordField = pattern_ReadRecord_NotNullableId;
 						else if (columns_Record.COMBO != null && columns_Record.EXTERNAL_TABLE_ID == null)
-							selectAllField = pattern_SelectAllField_NotNullableCombo;
+                            readRecordField = pattern_ReadRecord_NotNullableCombo;
 						else if (columns_Record.COMBO != null && columns_Record.EXTERNAL_TABLE_ID != null)
 							throw new Exception();
 						else
-							selectAllField = pattern_SelectAllField_NotNullable;
+                            readRecordField = pattern_ReadRecord_NotNullable;
 						break;
 					case "YES":
 						if (columns_Record.COMBO == null && columns_Record.EXTERNAL_TABLE_ID != null)
-							selectAllField = pattern_SelectAllField_NullableId;
+                            readRecordField = pattern_ReadRecord_NullableId;
 						//else if (columns_Record.COMBO != null && columns_Record.EXTERNAL_TABLE_ID == null)
 						//	selectAllField = pattern_SelectAllField_NullableCombo;
 						else if (columns_Record.COMBO != null && columns_Record.EXTERNAL_TABLE_ID != null)
 							throw new Exception();
 						else
-							selectAllField = pattern_SelectAllField_Nullable;
+                            readRecordField = pattern_ReadRecord_Nullable;
 						break;
 					default: break;
 				}
 			}
-			selectAllField = selectAllField.Replace("%%DATA_TYPE%%", dataType);
-			selectAllField = selectAllField.Replace("%%COMBO_NAME%%", columns_Record.COMBO);
-			selectAllField = selectAllField.Replace("%%EXTERNAL_TABLE%%", columns_Record.EXTERNAL_TABLE_ID);
-			selectAllField_List += selectAllField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+			readRecordField = readRecordField.Replace("%%DATA_TYPE%%", dataType);
+			readRecordField = readRecordField.Replace("%%COMBO_NAME%%", columns_Record.COMBO);
+			readRecordField = readRecordField.Replace("%%EXTERNAL_TABLE%%", columns_Record.EXTERNAL_TABLE_ID);
+            readRecordField_List += readRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 			#endregion
 
-			#region UpdateByKeyField
-			string updateByKeyField = string.Empty;
+			#region CheckNullRecordField
+			string checkNullRecordField = string.Empty;
 			switch (columns_Record.COLUMN_NAME) {
 				case "ID":
 				case "INS_DATE":
@@ -129,23 +129,23 @@ namespace Generator {
 				case "INS_INFO":
 					break;
 				case "UPD_DATE":
-					updateByKeyField = pattern_UpdateByKeyField_DefaultField;
-					updateByKeyField = updateByKeyField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.Date");
-					updateByKeyField_List += updateByKeyField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+					checkNullRecordField = pattern_CheckNullRecord_DefaultField;
+					checkNullRecordField = checkNullRecordField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.Date");
+					checkNullRecordField_List += checkNullRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 					break;
 				case "UPD_TIME":
-					updateByKeyField = pattern_UpdateByKeyField_DefaultField;
-					updateByKeyField = updateByKeyField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.TimeOfDay");
-					updateByKeyField_List += updateByKeyField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+					checkNullRecordField = pattern_CheckNullRecord_DefaultField;
+					checkNullRecordField = checkNullRecordField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.TimeOfDay");
+					checkNullRecordField_List += checkNullRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 					break;
 				case "UPD_INFO":
-					updateByKeyField = pattern_UpdateByKeyField_DefaultField;
-					updateByKeyField = updateByKeyField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.ToString(\"yyyy-MM-dd;HH:mm:ss.fffffff\")");
-					updateByKeyField_List += updateByKeyField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+					checkNullRecordField = pattern_CheckNullRecord_DefaultField;
+					checkNullRecordField = checkNullRecordField.Replace("%%DEFAULT_DATA_TYPE%%", "DateTime.Now.ToString(\"yyyy-MM-dd;HH:mm:ss.fffffff\")");
+					checkNullRecordField_List += checkNullRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 					break;
 				default:
-					updateByKeyField = pattern_UpdateByKeyField_UpdateByKey;
-					updateByKeyField_List += updateByKeyField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+					checkNullRecordField = pattern_CheckNullRecord_CheckNullRecord;
+					checkNullRecordField_List += checkNullRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 					break;
 			}
 			#endregion

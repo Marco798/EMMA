@@ -1,1 +1,0 @@
-﻿						record.Set_ID_%%EXTERNAL_TABLE%%(new %%EXTERNAL_TABLE%%_Id(reader.Get%%DATA_TYPE%%(i++)));

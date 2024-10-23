@@ -22,18 +22,7 @@ namespace EMMA_BE.Generated {
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
-						SYST_COLUMN_Record record = new();
-						int i = 0;
-
-						record.ID = reader.GetInt32(i++);
-						record.TABLE_NAME = reader.GetString(i++);
-						record.COLUMN_NAME = reader.GetString(i++);
-						record.DESCRIPTION = reader.GetString(i++);
-						record.SHORT_DESCRIPTION = reader.GetString(i++);
-						record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-						record.EXTERNAL_TABLE_ID = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
-
-						output.Add(record);
+                        output.Add(ReadRecord(reader));
 					}
 				}
 
@@ -47,6 +36,39 @@ namespace EMMA_BE.Generated {
 			return output;
 		}
 		#endregion
+
+        #region SelectWithSimpleCriteria
+        public List<SYST_COLUMN_Record> SelectWithSimpleCriteria(SYST_COLUMN_NullRecord nullRecord) {
+            using SqlConnection connection = new(connectionString);
+
+            List<SYST_COLUMN_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM SYST_COLUMN WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+        #endregion
 		#endregion
 		
 		#region Update
@@ -55,7 +77,7 @@ namespace EMMA_BE.Generated {
 			UpdateByKey(null, null, false, id, record);
 		}
 
-		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, SYST_COLUMN_NullRecord record) {
+		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, SYST_COLUMN_NullRecord nullRecord) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -67,37 +89,7 @@ namespace EMMA_BE.Generated {
 				StringBuilder query = new($"UPDATE SYST_COLUMN SET ");
 				List<SqlParameter> parameters = [];
 
-				if (record.IsSet_TABLE_NAME) {
-					query.Append("TABLE_NAME = @TABLE_NAME, ");
-					parameters.Add(new SqlParameter("@TABLE_NAME", record.TABLE_NAME));
-				}
-
-				if (record.IsSet_COLUMN_NAME) {
-					query.Append("COLUMN_NAME = @COLUMN_NAME, ");
-					parameters.Add(new SqlParameter("@COLUMN_NAME", record.COLUMN_NAME));
-				}
-
-				if (record.IsSet_DESCRIPTION) {
-					query.Append("DESCRIPTION = @DESCRIPTION, ");
-					parameters.Add(new SqlParameter("@DESCRIPTION", record.DESCRIPTION));
-				}
-
-				if (record.IsSet_SHORT_DESCRIPTION) {
-					query.Append("SHORT_DESCRIPTION = @SHORT_DESCRIPTION, ");
-					parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
-				}
-
-				if (record.IsSet_COMBO) {
-					query.Append("COMBO = @COMBO, ");
-					parameters.Add(new SqlParameter("@COMBO", record.COMBO));
-				}
-
-				if (record.IsSet_EXTERNAL_TABLE_ID) {
-					query.Append("EXTERNAL_TABLE_ID = @EXTERNAL_TABLE_ID, ");
-					parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID));
-				}
-
-				query.Length -= 2;
+                CheckNullRecord(nullRecord, query, parameters);
 
 				query.Append(" WHERE ID = @ID");
 				parameters.Add(new SqlParameter("@ID", id));
@@ -154,12 +146,12 @@ namespace EMMA_BE.Generated {
 				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
 
 				query.Append("@COMBO, ");
-				parameters.Add(new SqlParameter("@COMBO", record.COMBO));
+                parameters.Add(new SqlParameter("@COMBO", record.COMBO));
 
 				query.Append("@EXTERNAL_TABLE_ID, ");
-				parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID));
+                parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID));
 
-				query.Length -= 2;
+                query.Length -= 2;
 
 				query.Append(")");
 
@@ -185,5 +177,56 @@ namespace EMMA_BE.Generated {
 			}
 		}
 		#endregion
+
+        #region Common
+        private static void CheckNullRecord(SYST_COLUMN_NullRecord nullRecord, StringBuilder query, List<SqlParameter> parameters) {
+			if (nullRecord.IsSet_TABLE_NAME) {
+				query.Append("TABLE_NAME = @TABLE_NAME, ");
+				parameters.Add(new SqlParameter("@TABLE_NAME", nullRecord.TABLE_NAME));
+			}
+
+			if (nullRecord.IsSet_COLUMN_NAME) {
+				query.Append("COLUMN_NAME = @COLUMN_NAME, ");
+				parameters.Add(new SqlParameter("@COLUMN_NAME", nullRecord.COLUMN_NAME));
+			}
+
+			if (nullRecord.IsSet_DESCRIPTION) {
+				query.Append("DESCRIPTION = @DESCRIPTION, ");
+				parameters.Add(new SqlParameter("@DESCRIPTION", nullRecord.DESCRIPTION));
+			}
+
+			if (nullRecord.IsSet_SHORT_DESCRIPTION) {
+				query.Append("SHORT_DESCRIPTION = @SHORT_DESCRIPTION, ");
+				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", nullRecord.SHORT_DESCRIPTION));
+			}
+
+			if (nullRecord.IsSet_COMBO) {
+				query.Append("COMBO = @COMBO, ");
+				parameters.Add(new SqlParameter("@COMBO", nullRecord.COMBO));
+			}
+
+			if (nullRecord.IsSet_EXTERNAL_TABLE_ID) {
+				query.Append("EXTERNAL_TABLE_ID = @EXTERNAL_TABLE_ID, ");
+				parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", nullRecord.EXTERNAL_TABLE_ID));
+			}
+
+            query.Length -= 2;
+        }
+
+        private static SYST_COLUMN_Record ReadRecord(SqlDataReader reader) {
+			SYST_COLUMN_Record record = new();
+			int i = 0;
+
+			record.ID = reader.GetInt32(i++);
+			record.TABLE_NAME = reader.GetString(i++);
+			record.COLUMN_NAME = reader.GetString(i++);
+			record.DESCRIPTION = reader.GetString(i++);
+			record.SHORT_DESCRIPTION = reader.GetString(i++);
+			record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
+			record.EXTERNAL_TABLE_ID = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
+
+            return record;
+        }
+        #endregion
 	}
 }

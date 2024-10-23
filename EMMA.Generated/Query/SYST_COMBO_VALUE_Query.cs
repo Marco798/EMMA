@@ -22,15 +22,7 @@ namespace EMMA_BE.Generated {
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
-						SYST_COMBO_VALUE_Record record = new();
-						int i = 0;
-
-						record.ID = reader.GetInt32(i++);
-						record.NAME = reader.GetString(i++);
-						record.VALUE = reader.GetString(i++);
-						record.COMBO = reader.GetString(i++);
-
-						output.Add(record);
+                        output.Add(ReadRecord(reader));
 					}
 				}
 
@@ -44,6 +36,39 @@ namespace EMMA_BE.Generated {
 			return output;
 		}
 		#endregion
+
+        #region SelectWithSimpleCriteria
+        public List<SYST_COMBO_VALUE_Record> SelectWithSimpleCriteria(SYST_COMBO_VALUE_NullRecord nullRecord) {
+            using SqlConnection connection = new(connectionString);
+
+            List<SYST_COMBO_VALUE_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM SYST_COMBO_VALUE WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+        #endregion
 		#endregion
 		
 		#region Update
@@ -52,7 +77,7 @@ namespace EMMA_BE.Generated {
 			UpdateByKey(null, null, false, id, record);
 		}
 
-		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, SYST_COMBO_VALUE_NullRecord record) {
+		public void UpdateByKey(SqlConnection? connection, SqlTransaction? transaction, bool keepAlive_transaction, int id, SYST_COMBO_VALUE_NullRecord nullRecord) {
 			if (transaction != null && (connection == null || connection.State != ConnectionState.Open)) {
 				throw new Exception();
 			}
@@ -64,22 +89,7 @@ namespace EMMA_BE.Generated {
 				StringBuilder query = new($"UPDATE SYST_COMBO_VALUE SET ");
 				List<SqlParameter> parameters = [];
 
-				if (record.IsSet_NAME) {
-					query.Append("NAME = @NAME, ");
-					parameters.Add(new SqlParameter("@NAME", record.NAME));
-				}
-
-				if (record.IsSet_VALUE) {
-					query.Append("VALUE = @VALUE, ");
-					parameters.Add(new SqlParameter("@VALUE", record.VALUE));
-				}
-
-				if (record.IsSet_COMBO) {
-					query.Append("COMBO = @COMBO, ");
-					parameters.Add(new SqlParameter("@COMBO", record.COMBO));
-				}
-
-				query.Length -= 2;
+                CheckNullRecord(nullRecord, query, parameters);
 
 				query.Append(" WHERE ID = @ID");
 				parameters.Add(new SqlParameter("@ID", id));
@@ -158,5 +168,38 @@ namespace EMMA_BE.Generated {
 			}
 		}
 		#endregion
+
+        #region Common
+        private static void CheckNullRecord(SYST_COMBO_VALUE_NullRecord nullRecord, StringBuilder query, List<SqlParameter> parameters) {
+			if (nullRecord.IsSet_NAME) {
+				query.Append("NAME = @NAME, ");
+				parameters.Add(new SqlParameter("@NAME", nullRecord.NAME));
+			}
+
+			if (nullRecord.IsSet_VALUE) {
+				query.Append("VALUE = @VALUE, ");
+				parameters.Add(new SqlParameter("@VALUE", nullRecord.VALUE));
+			}
+
+			if (nullRecord.IsSet_COMBO) {
+				query.Append("COMBO = @COMBO, ");
+				parameters.Add(new SqlParameter("@COMBO", nullRecord.COMBO));
+			}
+
+            query.Length -= 2;
+        }
+
+        private static SYST_COMBO_VALUE_Record ReadRecord(SqlDataReader reader) {
+			SYST_COMBO_VALUE_Record record = new();
+			int i = 0;
+
+			record.ID = reader.GetInt32(i++);
+			record.NAME = reader.GetString(i++);
+			record.VALUE = reader.GetString(i++);
+			record.COMBO = reader.GetString(i++);
+
+            return record;
+        }
+        #endregion
 	}
 }
