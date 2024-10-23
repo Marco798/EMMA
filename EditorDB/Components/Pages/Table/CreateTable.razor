@@ -233,7 +233,7 @@
 				query += $"\nINSERT INTO SYST_TABLE VALUES ('{tableName}', '{tableDescription}', '{tableShortDescription}');\n\n";
 
 				foreach (FieldData field in fields.OrderBy(x => x.Index)) {
-					query += $"INSERT INTO SYST_COLUMN VALUES ('{tableName}', '{field.Name}', '', '', null);\n";
+					query += $"INSERT INTO SYST_COLUMN VALUES ('{tableName}', '{field.Name}', '', '', null, null);\n";
 				}
 
 				command.CommandText = query;
