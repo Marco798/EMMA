@@ -26,6 +26,17 @@ namespace %%NAME_SPACE%% {
 			}
 		}
 
+		[HttpGet("SelectWithSimpleCriteria")]
+		public IActionResult SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord) {
+			try {
+				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
+				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
 		[HttpPost("UpdateByKey")]
 		public IActionResult UpdateByKey(%%TABLE_NAME%%_IdRecord record) {
 			try {

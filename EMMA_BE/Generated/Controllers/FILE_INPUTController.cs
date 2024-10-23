@@ -26,6 +26,17 @@ namespace EMMA_BE.Generated.Controller {
 			}
 		}
 
+		[HttpGet("SelectWithSimpleCriteria")]
+		public IActionResult SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord) {
+			try {
+				List<FILE_INPUT_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
+				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
 		[HttpPost("UpdateByKey")]
 		public IActionResult UpdateByKey(FILE_INPUT_IdRecord record) {
 			try {

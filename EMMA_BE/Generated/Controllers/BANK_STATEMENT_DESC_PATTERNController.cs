@@ -26,6 +26,17 @@ namespace EMMA_BE.Generated.Controller {
 			}
 		}
 
+		[HttpGet("SelectWithSimpleCriteria")]
+		public IActionResult SelectWithSimpleCriteria(BANK_STATEMENT_DESC_PATTERN_NullRecord nullRecord) {
+			try {
+				List<BANK_STATEMENT_DESC_PATTERN_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
+				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
 		[HttpPost("UpdateByKey")]
 		public IActionResult UpdateByKey(BANK_STATEMENT_DESC_PATTERN_IdRecord record) {
 			try {
