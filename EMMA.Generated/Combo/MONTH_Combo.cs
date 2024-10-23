@@ -1,4 +1,5 @@
 using EMMA.Commons;
+using System.Reflection;
 
 namespace EMMA_BE.Generated {
 	public class MONTH_Combo : ComboBase {
@@ -27,6 +28,27 @@ namespace EMMA_BE.Generated {
 		public static readonly MONTH_Combo NOVEMBRE = new("Novembre");
 
 		public static readonly MONTH_Combo DICEMBRE = new("Dicembre");
+
+        public static string[] GetNames() {
+            return typeof(MONTH_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
+        }
+
+        public static List<MONTH_Combo> GetValues() {
+            return [
+                GENNAIO,
+                FEBBRAIO,
+                MARZO,
+                APRILE,
+                MAGGIO,
+                GIUGNO,
+                LUGLIO,
+                AGOSTO,
+                SETTEMBRE,
+                OTTOBRE,
+                NOVEMBRE,
+                DICEMBRE
+            ];
+        }
 	}
 
 }
