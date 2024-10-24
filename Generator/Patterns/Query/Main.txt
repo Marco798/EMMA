@@ -11,14 +11,20 @@ namespace %%NAME_SPACE%% {
 
 		#region Select
 		#region SelectAll
-		public List<%%TABLE_NAME%%_Record> SelectAll() {
+		public List<%%TABLE_NAME%%_Record> SelectAll(List<%%TABLE_NAME%%_Field>? fields = null) {
 			using SqlConnection connection = new(connectionString);
 
 			List<%%TABLE_NAME%%_Record> output = [];
 			try {
 				connection.Open();
 
-				string query = "SELECT * FROM %%TABLE_NAME%%";
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = %%TABLE_NAME%%_Field.GetAllFields();
+                foreach (%%TABLE_NAME%%_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM %%TABLE_NAME%%";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -38,14 +44,20 @@ namespace %%NAME_SPACE%% {
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<%%TABLE_NAME%%_Record> SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord) {
+        public List<%%TABLE_NAME%%_Record> SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord, List<%%TABLE_NAME%%_Field>? fields = null) {
             using SqlConnection connection = new(connectionString);
 
             List<%%TABLE_NAME%%_Record> output = [];
             try {
                 connection.Open();
 
-                StringBuilder query = new($"SELECT * FROM %%TABLE_NAME%% WHERE ");
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = %%TABLE_NAME%%_Field.GetAllFields();
+                foreach (%%TABLE_NAME%%_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+                StringBuilder query = new($"SELECT {selectFields.ToString()[..^2]} FROM %%TABLE_NAME%% WHERE ");
                 List<SqlParameter> parameters = [];
 
                 CheckNullRecord(nullRecord, query, parameters);

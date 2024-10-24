@@ -16,9 +16,9 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpGet("SelectAll")]
-		public IActionResult SelectAll() {
+		public IActionResult SelectAll(List<FILE_INPUT_Field>? fields = null) {
 			try {
-				List<FILE_INPUT_Record> _Record_List = _query.SelectAll();
+				List<FILE_INPUT_Record> _Record_List = _query.SelectAll(fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {
@@ -27,9 +27,9 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpGet("SelectWithSimpleCriteria")]
-		public IActionResult SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord) {
+		public IActionResult SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord, List<FILE_INPUT_Field>? fields = null) {
 			try {
-				List<FILE_INPUT_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
+				List<FILE_INPUT_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {

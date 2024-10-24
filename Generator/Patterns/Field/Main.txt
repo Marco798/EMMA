@@ -1,0 +1,15 @@
+﻿using EMMA.Commons;
+
+namespace %%NAME_SPACE%% {
+    public class %%TABLE_NAME%%_Field : FieldBase, IField {
+        internal %%TABLE_NAME%%_Field(string value) : base(value) { }
+
+%%VALUE_FIELD%%
+
+        public static List<%%TABLE_NAME%%_Field> GetAllFields() {
+            return [
+%%GET_VALUE_FIELD%%
+            ];
+        }
+    }
+}

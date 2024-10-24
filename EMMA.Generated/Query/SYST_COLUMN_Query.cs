@@ -11,14 +11,20 @@ namespace EMMA_BE.Generated {
 
 		#region Select
 		#region SelectAll
-		public List<SYST_COLUMN_Record> SelectAll() {
+		public List<SYST_COLUMN_Record> SelectAll(List<SYST_COLUMN_Field>? fields = null) {
 			using SqlConnection connection = new(connectionString);
 
 			List<SYST_COLUMN_Record> output = [];
 			try {
 				connection.Open();
 
-				string query = "SELECT * FROM SYST_COLUMN";
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = SYST_COLUMN_Field.GetAllFields();
+                foreach (SYST_COLUMN_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM SYST_COLUMN";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -38,14 +44,20 @@ namespace EMMA_BE.Generated {
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<SYST_COLUMN_Record> SelectWithSimpleCriteria(SYST_COLUMN_NullRecord nullRecord) {
+        public List<SYST_COLUMN_Record> SelectWithSimpleCriteria(SYST_COLUMN_NullRecord nullRecord, List<SYST_COLUMN_Field>? fields = null) {
             using SqlConnection connection = new(connectionString);
 
             List<SYST_COLUMN_Record> output = [];
             try {
                 connection.Open();
 
-                StringBuilder query = new($"SELECT * FROM SYST_COLUMN WHERE ");
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = SYST_COLUMN_Field.GetAllFields();
+                foreach (SYST_COLUMN_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+                StringBuilder query = new($"SELECT {selectFields.ToString()[..^2]} FROM SYST_COLUMN WHERE ");
                 List<SqlParameter> parameters = [];
 
                 CheckNullRecord(nullRecord, query, parameters);
@@ -146,12 +158,12 @@ namespace EMMA_BE.Generated {
 				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
 
 				query.Append("@COMBO, ");
-                parameters.Add(new SqlParameter("@COMBO", record.COMBO));
+				parameters.Add(new SqlParameter("@COMBO", record.COMBO));
 
 				query.Append("@EXTERNAL_TABLE_ID, ");
-                parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID));
+				parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID));
 
-                query.Length -= 2;
+				query.Length -= 2;
 
 				query.Append(")");
 

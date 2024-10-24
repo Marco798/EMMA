@@ -11,14 +11,20 @@ namespace EMMA_BE.Generated {
 
 		#region Select
 		#region SelectAll
-		public List<BANK_STATEMENT_PATTERN_Record> SelectAll() {
+		public List<BANK_STATEMENT_PATTERN_Record> SelectAll(List<BANK_STATEMENT_PATTERN_Field>? fields = null) {
 			using SqlConnection connection = new(connectionString);
 
 			List<BANK_STATEMENT_PATTERN_Record> output = [];
 			try {
 				connection.Open();
 
-				string query = "SELECT * FROM BANK_STATEMENT_PATTERN";
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_PATTERN_Field.GetAllFields();
+                foreach (BANK_STATEMENT_PATTERN_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM BANK_STATEMENT_PATTERN";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -38,14 +44,20 @@ namespace EMMA_BE.Generated {
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<BANK_STATEMENT_PATTERN_Record> SelectWithSimpleCriteria(BANK_STATEMENT_PATTERN_NullRecord nullRecord) {
+        public List<BANK_STATEMENT_PATTERN_Record> SelectWithSimpleCriteria(BANK_STATEMENT_PATTERN_NullRecord nullRecord, List<BANK_STATEMENT_PATTERN_Field>? fields = null) {
             using SqlConnection connection = new(connectionString);
 
             List<BANK_STATEMENT_PATTERN_Record> output = [];
             try {
                 connection.Open();
 
-                StringBuilder query = new($"SELECT * FROM BANK_STATEMENT_PATTERN WHERE ");
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_PATTERN_Field.GetAllFields();
+                foreach (BANK_STATEMENT_PATTERN_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+                StringBuilder query = new($"SELECT {selectFields.ToString()[..^2]} FROM BANK_STATEMENT_PATTERN WHERE ");
                 List<SqlParameter> parameters = [];
 
                 CheckNullRecord(nullRecord, query, parameters);

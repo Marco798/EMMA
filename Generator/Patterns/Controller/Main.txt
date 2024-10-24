@@ -16,9 +16,9 @@ namespace %%NAME_SPACE%% {
 		}
 
 		[HttpGet("SelectAll")]
-		public IActionResult SelectAll() {
+		public IActionResult SelectAll(List<%%TABLE_NAME%%_Field>? fields = null) {
 			try {
-				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectAll();
+				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectAll(fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {
@@ -27,9 +27,9 @@ namespace %%NAME_SPACE%% {
 		}
 
 		[HttpGet("SelectWithSimpleCriteria")]
-		public IActionResult SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord) {
+		public IActionResult SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord, List<%%TABLE_NAME%%_Field>? fields = null) {
 			try {
-				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
+				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {

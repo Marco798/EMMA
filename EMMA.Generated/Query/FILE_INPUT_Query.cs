@@ -11,14 +11,20 @@ namespace EMMA_BE.Generated {
 
 		#region Select
 		#region SelectAll
-		public List<FILE_INPUT_Record> SelectAll() {
+		public List<FILE_INPUT_Record> SelectAll(List<FILE_INPUT_Field>? fields = null) {
 			using SqlConnection connection = new(connectionString);
 
 			List<FILE_INPUT_Record> output = [];
 			try {
 				connection.Open();
 
-				string query = "SELECT * FROM FILE_INPUT";
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = FILE_INPUT_Field.GetAllFields();
+                foreach (FILE_INPUT_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM FILE_INPUT";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -38,14 +44,20 @@ namespace EMMA_BE.Generated {
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<FILE_INPUT_Record> SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord) {
+        public List<FILE_INPUT_Record> SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord, List<FILE_INPUT_Field>? fields = null) {
             using SqlConnection connection = new(connectionString);
 
             List<FILE_INPUT_Record> output = [];
             try {
                 connection.Open();
 
-                StringBuilder query = new($"SELECT * FROM FILE_INPUT WHERE ");
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = FILE_INPUT_Field.GetAllFields();
+                foreach (FILE_INPUT_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+                StringBuilder query = new($"SELECT {selectFields.ToString()[..^2]} FROM FILE_INPUT WHERE ");
                 List<SqlParameter> parameters = [];
 
                 CheckNullRecord(nullRecord, query, parameters);

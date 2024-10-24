@@ -11,14 +11,20 @@ namespace EMMA_BE.Generated {
 
 		#region Select
 		#region SelectAll
-		public List<SYST_COMBO_VALUE_Record> SelectAll() {
+		public List<SYST_COMBO_VALUE_Record> SelectAll(List<SYST_COMBO_VALUE_Field>? fields = null) {
 			using SqlConnection connection = new(connectionString);
 
 			List<SYST_COMBO_VALUE_Record> output = [];
 			try {
 				connection.Open();
 
-				string query = "SELECT * FROM SYST_COMBO_VALUE";
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = SYST_COMBO_VALUE_Field.GetAllFields();
+                foreach (SYST_COMBO_VALUE_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM SYST_COMBO_VALUE";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -38,14 +44,20 @@ namespace EMMA_BE.Generated {
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<SYST_COMBO_VALUE_Record> SelectWithSimpleCriteria(SYST_COMBO_VALUE_NullRecord nullRecord) {
+        public List<SYST_COMBO_VALUE_Record> SelectWithSimpleCriteria(SYST_COMBO_VALUE_NullRecord nullRecord, List<SYST_COMBO_VALUE_Field>? fields = null) {
             using SqlConnection connection = new(connectionString);
 
             List<SYST_COMBO_VALUE_Record> output = [];
             try {
                 connection.Open();
 
-                StringBuilder query = new($"SELECT * FROM SYST_COMBO_VALUE WHERE ");
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = SYST_COMBO_VALUE_Field.GetAllFields();
+                foreach (SYST_COMBO_VALUE_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+                StringBuilder query = new($"SELECT {selectFields.ToString()[..^2]} FROM SYST_COMBO_VALUE WHERE ");
                 List<SqlParameter> parameters = [];
 
                 CheckNullRecord(nullRecord, query, parameters);

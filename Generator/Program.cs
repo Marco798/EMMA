@@ -39,7 +39,8 @@ namespace Generator {
 
 			Combo.Generate();
 			Id.Generate();
-		}
+            Field.Generate();
+        }
 
 		static void GetData(string query, Action<SqlDataReader> addToList) {
 			SqlCommand command = new(query, connection);

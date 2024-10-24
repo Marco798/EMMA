@@ -16,9 +16,9 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpGet("SelectAll")]
-		public IActionResult SelectAll() {
+		public IActionResult SelectAll(List<BANK_STATEMENT_DESC_PATTERN_Field>? fields = null) {
 			try {
-				List<BANK_STATEMENT_DESC_PATTERN_Record> _Record_List = _query.SelectAll();
+				List<BANK_STATEMENT_DESC_PATTERN_Record> _Record_List = _query.SelectAll(fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {
@@ -27,9 +27,9 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpGet("SelectWithSimpleCriteria")]
-		public IActionResult SelectWithSimpleCriteria(BANK_STATEMENT_DESC_PATTERN_NullRecord nullRecord) {
+		public IActionResult SelectWithSimpleCriteria(BANK_STATEMENT_DESC_PATTERN_NullRecord nullRecord, List<BANK_STATEMENT_DESC_PATTERN_Field>? fields = null) {
 			try {
-				List<BANK_STATEMENT_DESC_PATTERN_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
+				List<BANK_STATEMENT_DESC_PATTERN_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {
