@@ -1,0 +1,1 @@
+﻿			if (fields.Contains(%%TABLE_NAME%%_Field.%%COLUMN_NAME%%)) { record.%%COLUMN_NAME%% = reader.Get%%DATA_TYPE%%(i++); }

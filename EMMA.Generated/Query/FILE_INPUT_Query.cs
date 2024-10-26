@@ -11,20 +11,14 @@ namespace EMMA_BE.Generated {
 
 		#region Select
 		#region SelectAll
-		public List<FILE_INPUT_Record> SelectAll(List<FILE_INPUT_Field>? fields = null) {
+		public List<FILE_INPUT_Record> SelectAll() {
 			using SqlConnection connection = new(connectionString);
 
 			List<FILE_INPUT_Record> output = [];
 			try {
 				connection.Open();
 
-                StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = FILE_INPUT_Field.GetAllFields();
-                foreach (FILE_INPUT_Field field in fields) {
-                    selectFields.Append($"{field.Value}, ");
-                }
-
-				string query = $"SELECT {selectFields.ToString()[..^2]} FROM FILE_INPUT";
+				string query = $"SELECT * FROM FILE_INPUT";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -41,13 +35,75 @@ namespace EMMA_BE.Generated {
 
 			return output;
 		}
+
+		public List<FILE_INPUT_NullRecord> SelectAll(List<FILE_INPUT_Field>? fields = null) {
+			using SqlConnection connection = new(connectionString);
+
+			List<FILE_INPUT_NullRecord> output = [];
+			try {
+				connection.Open();
+
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = FILE_INPUT_Field.GetAllFields();
+                foreach (FILE_INPUT_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM FILE_INPUT";
+				using (SqlCommand command = new(query, connection)) {
+					SqlDataReader reader = command.ExecuteReader();
+					while (reader.Read()) {
+                        output.Add(ReadNullRecord(reader, fields));
+					}
+				}
+
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+
+			return output;
+		}
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<FILE_INPUT_Record> SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord, List<FILE_INPUT_Field>? fields = null) {
+        public List<FILE_INPUT_Record> SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord) {
             using SqlConnection connection = new(connectionString);
 
             List<FILE_INPUT_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM FILE_INPUT WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+
+        public List<FILE_INPUT_NullRecord> SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord, List<FILE_INPUT_Field>? fields = null) {
+            using SqlConnection connection = new(connectionString);
+
+            List<FILE_INPUT_NullRecord> output = [];
             try {
                 connection.Open();
 
@@ -62,12 +118,12 @@ namespace EMMA_BE.Generated {
 
                 CheckNullRecord(nullRecord, query, parameters);
 
-                if (parameters.Count == 0) return SelectAll();
+                if (parameters.Count == 0) return SelectAll(fields);
 
                 using (SqlCommand command = new(query.ToString(), connection)) {
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) {
-                        output.Add(ReadRecord(reader));
+                        output.Add(ReadNullRecord(reader, fields));
                     }
                 }
 
@@ -231,6 +287,25 @@ namespace EMMA_BE.Generated {
 			record.INS_DATE = reader.GetDateTime(i++);
 			record.INS_TIME = reader.GetTimeSpan(i++);
 			record.INS_INFO = reader.GetString(i++);
+
+            return record;
+        }
+
+        private static FILE_INPUT_NullRecord ReadNullRecord(SqlDataReader reader, List<FILE_INPUT_Field> fields) {
+			FILE_INPUT_NullRecord record = new();
+			int i = 0;
+
+			if (fields.Contains(FILE_INPUT_Field.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(FILE_INPUT_Field.FILE_NAME)) { record.FILE_NAME = reader.GetString(i++); }
+			if (fields.Contains(FILE_INPUT_Field.FILE_TYPE)) { record.Set_FILE_TYPE(new FILE_TYPE_Combo(reader.GetString(i++))); }
+			if (fields.Contains(FILE_INPUT_Field.FILE_CATEGORY)) { record.Set_FILE_CATEGORY(new FILE_CATEGORY_Combo(reader.GetString(i++))); }
+			if (fields.Contains(FILE_INPUT_Field.CONTENT)) { 
+				record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
+				reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);
+			}
+			if (fields.Contains(FILE_INPUT_Field.INS_DATE)) { record.INS_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(FILE_INPUT_Field.INS_TIME)) { record.INS_TIME = reader.GetTimeSpan(i++); }
+			if (fields.Contains(FILE_INPUT_Field.INS_INFO)) { record.INS_INFO = reader.GetString(i++); }
 
             return record;
         }

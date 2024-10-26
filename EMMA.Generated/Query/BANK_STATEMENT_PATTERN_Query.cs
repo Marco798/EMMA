@@ -11,20 +11,14 @@ namespace EMMA_BE.Generated {
 
 		#region Select
 		#region SelectAll
-		public List<BANK_STATEMENT_PATTERN_Record> SelectAll(List<BANK_STATEMENT_PATTERN_Field>? fields = null) {
+		public List<BANK_STATEMENT_PATTERN_Record> SelectAll() {
 			using SqlConnection connection = new(connectionString);
 
 			List<BANK_STATEMENT_PATTERN_Record> output = [];
 			try {
 				connection.Open();
 
-                StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_PATTERN_Field.GetAllFields();
-                foreach (BANK_STATEMENT_PATTERN_Field field in fields) {
-                    selectFields.Append($"{field.Value}, ");
-                }
-
-				string query = $"SELECT {selectFields.ToString()[..^2]} FROM BANK_STATEMENT_PATTERN";
+				string query = $"SELECT * FROM BANK_STATEMENT_PATTERN";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -41,13 +35,75 @@ namespace EMMA_BE.Generated {
 
 			return output;
 		}
+
+		public List<BANK_STATEMENT_PATTERN_NullRecord> SelectAll(List<BANK_STATEMENT_PATTERN_Field>? fields = null) {
+			using SqlConnection connection = new(connectionString);
+
+			List<BANK_STATEMENT_PATTERN_NullRecord> output = [];
+			try {
+				connection.Open();
+
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_PATTERN_Field.GetAllFields();
+                foreach (BANK_STATEMENT_PATTERN_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM BANK_STATEMENT_PATTERN";
+				using (SqlCommand command = new(query, connection)) {
+					SqlDataReader reader = command.ExecuteReader();
+					while (reader.Read()) {
+                        output.Add(ReadNullRecord(reader, fields));
+					}
+				}
+
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+
+			return output;
+		}
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<BANK_STATEMENT_PATTERN_Record> SelectWithSimpleCriteria(BANK_STATEMENT_PATTERN_NullRecord nullRecord, List<BANK_STATEMENT_PATTERN_Field>? fields = null) {
+        public List<BANK_STATEMENT_PATTERN_Record> SelectWithSimpleCriteria(BANK_STATEMENT_PATTERN_NullRecord nullRecord) {
             using SqlConnection connection = new(connectionString);
 
             List<BANK_STATEMENT_PATTERN_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM BANK_STATEMENT_PATTERN WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+
+        public List<BANK_STATEMENT_PATTERN_NullRecord> SelectWithSimpleCriteria(BANK_STATEMENT_PATTERN_NullRecord nullRecord, List<BANK_STATEMENT_PATTERN_Field>? fields = null) {
+            using SqlConnection connection = new(connectionString);
+
+            List<BANK_STATEMENT_PATTERN_NullRecord> output = [];
             try {
                 connection.Open();
 
@@ -62,12 +118,12 @@ namespace EMMA_BE.Generated {
 
                 CheckNullRecord(nullRecord, query, parameters);
 
-                if (parameters.Count == 0) return SelectAll();
+                if (parameters.Count == 0) return SelectAll(fields);
 
                 using (SqlCommand command = new(query.ToString(), connection)) {
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) {
-                        output.Add(ReadRecord(reader));
+                        output.Add(ReadNullRecord(reader, fields));
                     }
                 }
 
@@ -218,6 +274,19 @@ namespace EMMA_BE.Generated {
 			record.ORIGINAL_VALUE = reader.GetString(i++);
 			record.PATTERN = reader.GetString(i++);
 			record.Set_POSITION(new PATTERN_POSITION_Combo(reader.GetString(i++)));
+
+            return record;
+        }
+
+        private static BANK_STATEMENT_PATTERN_NullRecord ReadNullRecord(SqlDataReader reader, List<BANK_STATEMENT_PATTERN_Field> fields) {
+			BANK_STATEMENT_PATTERN_NullRecord record = new();
+			int i = 0;
+
+			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.FIELD)) { record.Set_FIELD(new BANK_STATEMENT_FIELD_Combo(reader.GetString(i++))); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.ORIGINAL_VALUE)) { record.ORIGINAL_VALUE = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.PATTERN)) { record.PATTERN = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.POSITION)) { record.Set_POSITION(new PATTERN_POSITION_Combo(reader.GetString(i++))); }
 
             return record;
         }

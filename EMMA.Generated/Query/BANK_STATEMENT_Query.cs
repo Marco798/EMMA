@@ -11,20 +11,14 @@ namespace EMMA_BE.Generated {
 
 		#region Select
 		#region SelectAll
-		public List<BANK_STATEMENT_Record> SelectAll(List<BANK_STATEMENT_Field>? fields = null) {
+		public List<BANK_STATEMENT_Record> SelectAll() {
 			using SqlConnection connection = new(connectionString);
 
 			List<BANK_STATEMENT_Record> output = [];
 			try {
 				connection.Open();
 
-                StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_Field.GetAllFields();
-                foreach (BANK_STATEMENT_Field field in fields) {
-                    selectFields.Append($"{field.Value}, ");
-                }
-
-				string query = $"SELECT {selectFields.ToString()[..^2]} FROM BANK_STATEMENT";
+				string query = $"SELECT * FROM BANK_STATEMENT";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -41,13 +35,75 @@ namespace EMMA_BE.Generated {
 
 			return output;
 		}
+
+		public List<BANK_STATEMENT_NullRecord> SelectAll(List<BANK_STATEMENT_Field>? fields = null) {
+			using SqlConnection connection = new(connectionString);
+
+			List<BANK_STATEMENT_NullRecord> output = [];
+			try {
+				connection.Open();
+
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_Field.GetAllFields();
+                foreach (BANK_STATEMENT_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM BANK_STATEMENT";
+				using (SqlCommand command = new(query, connection)) {
+					SqlDataReader reader = command.ExecuteReader();
+					while (reader.Read()) {
+                        output.Add(ReadNullRecord(reader, fields));
+					}
+				}
+
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+
+			return output;
+		}
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<BANK_STATEMENT_Record> SelectWithSimpleCriteria(BANK_STATEMENT_NullRecord nullRecord, List<BANK_STATEMENT_Field>? fields = null) {
+        public List<BANK_STATEMENT_Record> SelectWithSimpleCriteria(BANK_STATEMENT_NullRecord nullRecord) {
             using SqlConnection connection = new(connectionString);
 
             List<BANK_STATEMENT_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM BANK_STATEMENT WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+
+        public List<BANK_STATEMENT_NullRecord> SelectWithSimpleCriteria(BANK_STATEMENT_NullRecord nullRecord, List<BANK_STATEMENT_Field>? fields = null) {
+            using SqlConnection connection = new(connectionString);
+
+            List<BANK_STATEMENT_NullRecord> output = [];
             try {
                 connection.Open();
 
@@ -62,12 +118,12 @@ namespace EMMA_BE.Generated {
 
                 CheckNullRecord(nullRecord, query, parameters);
 
-                if (parameters.Count == 0) return SelectAll();
+                if (parameters.Count == 0) return SelectAll(fields);
 
                 using (SqlCommand command = new(query.ToString(), connection)) {
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) {
-                        output.Add(ReadRecord(reader));
+                        output.Add(ReadNullRecord(reader, fields));
                     }
                 }
 
@@ -323,6 +379,33 @@ namespace EMMA_BE.Generated {
 			record.UPD_DATE = reader.GetDateTime(i++);
 			record.UPD_TIME = reader.GetTimeSpan(i++);
 			record.UPD_INFO = reader.GetString(i++);
+
+            return record;
+        }
+
+        private static BANK_STATEMENT_NullRecord ReadNullRecord(SqlDataReader reader, List<BANK_STATEMENT_Field> fields) {
+			BANK_STATEMENT_NullRecord record = new();
+			int i = 0;
+
+			if (fields.Contains(BANK_STATEMENT_Field.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.OPERATION_DATE)) { record.OPERATION_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.VALUE_DATE)) { record.VALUE_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.REASON)) { record.REASON = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.OUTCOME)) { record.OUTCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++; }
+			if (fields.Contains(BANK_STATEMENT_Field.INCOME)) { record.INCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++; }
+			if (fields.Contains(BANK_STATEMENT_Field.TAG1)) { record.Set_TAG1(new BALANCE_DIRECTION_Combo(reader.GetString(i++))); }
+			if (fields.Contains(BANK_STATEMENT_Field.TAG2)) { record.TAG2 = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.TAG3)) { record.TAG3 = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.TAG4)) { record.TAG4 = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.ID_FILE_INPUT)) { record.Set_ID_FILE_INPUT(new FILE_INPUT_Id(reader.GetInt32(i++))); }
+			if (fields.Contains(BANK_STATEMENT_Field.ID_BANK_STATEMENT_DESC_PATTERN)) { if (!reader.IsDBNull(i)) record.Set_ID_BANK_STATEMENT_DESC_PATTERN(new BANK_STATEMENT_DESC_PATTERN_Id(reader.GetInt32(i))); i++; }
+			if (fields.Contains(BANK_STATEMENT_Field.INS_DATE)) { record.INS_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.INS_TIME)) { record.INS_TIME = reader.GetTimeSpan(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.INS_INFO)) { record.INS_INFO = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.UPD_DATE)) { record.UPD_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.UPD_TIME)) { record.UPD_TIME = reader.GetTimeSpan(i++); }
+			if (fields.Contains(BANK_STATEMENT_Field.UPD_INFO)) { record.UPD_INFO = reader.GetString(i++); }
 
             return record;
         }

@@ -16,9 +16,20 @@ namespace %%NAME_SPACE%% {
 		}
 
 		[HttpGet("SelectAll")]
-		public IActionResult SelectAll(List<%%TABLE_NAME%%_Field>? fields = null) {
+		public IActionResult SelectAll() {
 			try {
-				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectAll(fields);
+				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectAll();
+				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpGet("SelectAll_CustomRecord")]
+		public IActionResult SelectAll_CustomRecord(List<%%TABLE_NAME%%_Field>? fields = null) {
+			try {
+				List<%%TABLE_NAME%%_NullRecord> _Record_List = _query.SelectAll(fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {
@@ -27,9 +38,20 @@ namespace %%NAME_SPACE%% {
 		}
 
 		[HttpGet("SelectWithSimpleCriteria")]
-		public IActionResult SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord, List<%%TABLE_NAME%%_Field>? fields = null) {
+		public IActionResult SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord) {
 			try {
-				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
+				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
+				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpGet("SelectWithSimpleCriteria_CustomRecord")]
+		public IActionResult SelectWithSimpleCriteria_CustomRecord(%%TABLE_NAME%%_NullRecord nullRecord, List<%%TABLE_NAME%%_Field>? fields = null) {
+			try {
+				List<%%TABLE_NAME%%_NullRecord> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {

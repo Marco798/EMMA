@@ -16,9 +16,20 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpGet("SelectAll")]
-		public IActionResult SelectAll(List<SYST_COLUMN_Field>? fields = null) {
+		public IActionResult SelectAll() {
 			try {
-				List<SYST_COLUMN_Record> _Record_List = _query.SelectAll(fields);
+				List<SYST_COLUMN_Record> _Record_List = _query.SelectAll();
+				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpGet("SelectAll_CustomRecord")]
+		public IActionResult SelectAll_CustomRecord(List<SYST_COLUMN_Field>? fields = null) {
+			try {
+				List<SYST_COLUMN_NullRecord> _Record_List = _query.SelectAll(fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {
@@ -27,9 +38,20 @@ namespace EMMA_BE.Generated.Controller {
 		}
 
 		[HttpGet("SelectWithSimpleCriteria")]
-		public IActionResult SelectWithSimpleCriteria(SYST_COLUMN_NullRecord nullRecord, List<SYST_COLUMN_Field>? fields = null) {
+		public IActionResult SelectWithSimpleCriteria(SYST_COLUMN_NullRecord nullRecord) {
 			try {
-				List<SYST_COLUMN_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
+				List<SYST_COLUMN_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
+				return Ok(_Record_List);
+			}
+			catch (Exception ex) {
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpGet("SelectWithSimpleCriteria_CustomRecord")]
+		public IActionResult SelectWithSimpleCriteria_CustomRecord(SYST_COLUMN_NullRecord nullRecord, List<SYST_COLUMN_Field>? fields = null) {
+			try {
+				List<SYST_COLUMN_NullRecord> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
 				return Ok(_Record_List);
 			}
 			catch (Exception ex) {

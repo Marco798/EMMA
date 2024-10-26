@@ -11,20 +11,14 @@ namespace EMMA_BE.Generated {
 
 		#region Select
 		#region SelectAll
-		public List<SYST_COLUMN_Record> SelectAll(List<SYST_COLUMN_Field>? fields = null) {
+		public List<SYST_COLUMN_Record> SelectAll() {
 			using SqlConnection connection = new(connectionString);
 
 			List<SYST_COLUMN_Record> output = [];
 			try {
 				connection.Open();
 
-                StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = SYST_COLUMN_Field.GetAllFields();
-                foreach (SYST_COLUMN_Field field in fields) {
-                    selectFields.Append($"{field.Value}, ");
-                }
-
-				string query = $"SELECT {selectFields.ToString()[..^2]} FROM SYST_COLUMN";
+				string query = $"SELECT * FROM SYST_COLUMN";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -41,13 +35,75 @@ namespace EMMA_BE.Generated {
 
 			return output;
 		}
+
+		public List<SYST_COLUMN_NullRecord> SelectAll(List<SYST_COLUMN_Field>? fields = null) {
+			using SqlConnection connection = new(connectionString);
+
+			List<SYST_COLUMN_NullRecord> output = [];
+			try {
+				connection.Open();
+
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = SYST_COLUMN_Field.GetAllFields();
+                foreach (SYST_COLUMN_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM SYST_COLUMN";
+				using (SqlCommand command = new(query, connection)) {
+					SqlDataReader reader = command.ExecuteReader();
+					while (reader.Read()) {
+                        output.Add(ReadNullRecord(reader, fields));
+					}
+				}
+
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+
+			return output;
+		}
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<SYST_COLUMN_Record> SelectWithSimpleCriteria(SYST_COLUMN_NullRecord nullRecord, List<SYST_COLUMN_Field>? fields = null) {
+        public List<SYST_COLUMN_Record> SelectWithSimpleCriteria(SYST_COLUMN_NullRecord nullRecord) {
             using SqlConnection connection = new(connectionString);
 
             List<SYST_COLUMN_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM SYST_COLUMN WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+
+        public List<SYST_COLUMN_NullRecord> SelectWithSimpleCriteria(SYST_COLUMN_NullRecord nullRecord, List<SYST_COLUMN_Field>? fields = null) {
+            using SqlConnection connection = new(connectionString);
+
+            List<SYST_COLUMN_NullRecord> output = [];
             try {
                 connection.Open();
 
@@ -62,12 +118,12 @@ namespace EMMA_BE.Generated {
 
                 CheckNullRecord(nullRecord, query, parameters);
 
-                if (parameters.Count == 0) return SelectAll();
+                if (parameters.Count == 0) return SelectAll(fields);
 
                 using (SqlCommand command = new(query.ToString(), connection)) {
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) {
-                        output.Add(ReadRecord(reader));
+                        output.Add(ReadNullRecord(reader, fields));
                     }
                 }
 
@@ -236,6 +292,21 @@ namespace EMMA_BE.Generated {
 			record.SHORT_DESCRIPTION = reader.GetString(i++);
 			record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
 			record.EXTERNAL_TABLE_ID = reader.IsDBNull(i) ? null : reader.GetString(i); i++;
+
+            return record;
+        }
+
+        private static SYST_COLUMN_NullRecord ReadNullRecord(SqlDataReader reader, List<SYST_COLUMN_Field> fields) {
+			SYST_COLUMN_NullRecord record = new();
+			int i = 0;
+
+			if (fields.Contains(SYST_COLUMN_Field.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(SYST_COLUMN_Field.TABLE_NAME)) { record.TABLE_NAME = reader.GetString(i++); }
+			if (fields.Contains(SYST_COLUMN_Field.COLUMN_NAME)) { record.COLUMN_NAME = reader.GetString(i++); }
+			if (fields.Contains(SYST_COLUMN_Field.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(SYST_COLUMN_Field.SHORT_DESCRIPTION)) { record.SHORT_DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(SYST_COLUMN_Field.COMBO)) { record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++; }
+			if (fields.Contains(SYST_COLUMN_Field.EXTERNAL_TABLE_ID)) { record.EXTERNAL_TABLE_ID = reader.IsDBNull(i) ? null : reader.GetString(i); i++; }
 
             return record;
         }

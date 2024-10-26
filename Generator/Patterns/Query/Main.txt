@@ -11,20 +11,14 @@ namespace %%NAME_SPACE%% {
 
 		#region Select
 		#region SelectAll
-		public List<%%TABLE_NAME%%_Record> SelectAll(List<%%TABLE_NAME%%_Field>? fields = null) {
+		public List<%%TABLE_NAME%%_Record> SelectAll() {
 			using SqlConnection connection = new(connectionString);
 
 			List<%%TABLE_NAME%%_Record> output = [];
 			try {
 				connection.Open();
 
-                StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = %%TABLE_NAME%%_Field.GetAllFields();
-                foreach (%%TABLE_NAME%%_Field field in fields) {
-                    selectFields.Append($"{field.Value}, ");
-                }
-
-				string query = $"SELECT {selectFields.ToString()[..^2]} FROM %%TABLE_NAME%%";
+				string query = $"SELECT * FROM %%TABLE_NAME%%";
 				using (SqlCommand command = new(query, connection)) {
 					SqlDataReader reader = command.ExecuteReader();
 					while (reader.Read()) {
@@ -41,13 +35,75 @@ namespace %%NAME_SPACE%% {
 
 			return output;
 		}
+
+		public List<%%TABLE_NAME%%_NullRecord> SelectAll(List<%%TABLE_NAME%%_Field>? fields = null) {
+			using SqlConnection connection = new(connectionString);
+
+			List<%%TABLE_NAME%%_NullRecord> output = [];
+			try {
+				connection.Open();
+
+                StringBuilder selectFields = new(string.Empty);
+                if (fields == null || fields.Count == 0) fields = %%TABLE_NAME%%_Field.GetAllFields();
+                foreach (%%TABLE_NAME%%_Field field in fields) {
+                    selectFields.Append($"{field.Value}, ");
+                }
+
+				string query = $"SELECT {selectFields.ToString()[..^2]} FROM %%TABLE_NAME%%";
+				using (SqlCommand command = new(query, connection)) {
+					SqlDataReader reader = command.ExecuteReader();
+					while (reader.Read()) {
+                        output.Add(ReadNullRecord(reader, fields));
+					}
+				}
+
+				connection.Close();
+			}
+			catch (Exception ex) {
+				connection.Close();
+				throw new Exception(ex.Message);
+			}
+
+			return output;
+		}
 		#endregion
 
         #region SelectWithSimpleCriteria
-        public List<%%TABLE_NAME%%_Record> SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord, List<%%TABLE_NAME%%_Field>? fields = null) {
+        public List<%%TABLE_NAME%%_Record> SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord) {
             using SqlConnection connection = new(connectionString);
 
             List<%%TABLE_NAME%%_Record> output = [];
+            try {
+                connection.Open();
+
+                StringBuilder query = new($"SELECT * FROM %%TABLE_NAME%% WHERE ");
+                List<SqlParameter> parameters = [];
+
+                CheckNullRecord(nullRecord, query, parameters);
+
+                if (parameters.Count == 0) return SelectAll();
+
+                using (SqlCommand command = new(query.ToString(), connection)) {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        output.Add(ReadRecord(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex) {
+                connection.Close();
+                throw new Exception(ex.Message);
+            }
+
+            return output;
+        }
+
+        public List<%%TABLE_NAME%%_NullRecord> SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord, List<%%TABLE_NAME%%_Field>? fields = null) {
+            using SqlConnection connection = new(connectionString);
+
+            List<%%TABLE_NAME%%_NullRecord> output = [];
             try {
                 connection.Open();
 
@@ -62,12 +118,12 @@ namespace %%NAME_SPACE%% {
 
                 CheckNullRecord(nullRecord, query, parameters);
 
-                if (parameters.Count == 0) return SelectAll();
+                if (parameters.Count == 0) return SelectAll(fields);
 
                 using (SqlCommand command = new(query.ToString(), connection)) {
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) {
-                        output.Add(ReadRecord(reader));
+                        output.Add(ReadNullRecord(reader, fields));
                     }
                 }
 
@@ -184,6 +240,15 @@ namespace %%NAME_SPACE%% {
 			int i = 0;
 
 %%READ_RECORD%%
+
+            return record;
+        }
+
+        private static %%TABLE_NAME%%_NullRecord ReadNullRecord(SqlDataReader reader, List<%%TABLE_NAME%%_Field> fields) {
+			%%TABLE_NAME%%_NullRecord record = new();
+			int i = 0;
+
+%%READ_NULL_RECORD%%
 
             return record;
         }

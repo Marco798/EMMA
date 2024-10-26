@@ -12,14 +12,21 @@ namespace Generator {
 		private static string pattern_ReadRecord_NotNullableId = string.Empty;
 		private static string pattern_ReadRecord_Nullable = string.Empty;
 		private static string pattern_ReadRecord_NullableId = string.Empty;
-		private static string pattern_CheckNullRecord_CheckNullRecord = string.Empty;
+        private static string pattern_ReadNullRecord_Binary = string.Empty;
+        private static string pattern_ReadNullRecord_NotNullable = string.Empty;
+        private static string pattern_ReadNullRecord_NotNullableCombo = string.Empty;
+        private static string pattern_ReadNullRecord_NotNullableId = string.Empty;
+        private static string pattern_ReadNullRecord_Nullable = string.Empty;
+        private static string pattern_ReadNullRecord_NullableId = string.Empty;
+        private static string pattern_CheckNullRecord_CheckNullRecord = string.Empty;
 		private static string pattern_CheckNullRecord_DefaultField = string.Empty;
 		private static string pattern_InsertField_Insert_Nullable = string.Empty;
 		private static string pattern_InsertField_Insert_NotNullable = string.Empty;
 		private static string pattern_InsertField_DefaultField = string.Empty;
 
 		private static string readRecordField_List = string.Empty;
-		private static string checkNullRecordField_List = string.Empty;
+        private static string readNullRecordField_List = string.Empty;
+        private static string checkNullRecordField_List = string.Empty;
 		private static string insertField_List = string.Empty;
 
 		public static void Generate() {
@@ -38,6 +45,13 @@ namespace Generator {
 			pattern_ReadRecord_NotNullableId = File.ReadAllText(pattern + @"ReadRecord\NotNullableId.txt");
 			pattern_ReadRecord_Nullable = File.ReadAllText(pattern + @"ReadRecord\Nullable.txt");
             pattern_ReadRecord_NullableId = File.ReadAllText(pattern + @"ReadRecord\NullableId.txt");
+
+            pattern_ReadNullRecord_Binary = File.ReadAllText(pattern + @"ReadNullRecord\Binary.txt");
+            pattern_ReadNullRecord_NotNullable = File.ReadAllText(pattern + @"ReadNullRecord\NotNullable.txt");
+            pattern_ReadNullRecord_NotNullableCombo = File.ReadAllText(pattern + @"ReadNullRecord\NotNullableCombo.txt");
+            pattern_ReadNullRecord_NotNullableId = File.ReadAllText(pattern + @"ReadNullRecord\NotNullableId.txt");
+            pattern_ReadNullRecord_Nullable = File.ReadAllText(pattern + @"ReadNullRecord\Nullable.txt");
+            pattern_ReadNullRecord_NullableId = File.ReadAllText(pattern + @"ReadNullRecord\NullableId.txt");
 
             pattern_CheckNullRecord_CheckNullRecord = File.ReadAllText(pattern + @"CheckNullRecord\CheckNullRecord.txt");
             pattern_CheckNullRecord_DefaultField = File.ReadAllText(pattern + @"CheckNullRecord\DefaultField.txt");
@@ -61,6 +75,7 @@ namespace Generator {
 
 			#region Sections declaration
 			readRecordField_List = string.Empty;
+            readNullRecordField_List = string.Empty;
             checkNullRecordField_List = string.Empty;
 			insertField_List = string.Empty;
 			#endregion
@@ -70,7 +85,8 @@ namespace Generator {
 			}
 
 			_Main = _Main.Replace("%%READ_RECORD%%", readRecordField_List[..^2]);
-			_Main = _Main.Replace("%%CHECK_NULL_RECORD%%", checkNullRecordField_List[..^2]);
+            _Main = _Main.Replace("%%READ_NULL_RECORD%%", readNullRecordField_List[..^2]);
+            _Main = _Main.Replace("%%CHECK_NULL_RECORD%%", checkNullRecordField_List[..^2]);
 			_Main = _Main.Replace("%%INSERT_FIELD%%", insertField_List[..^2]);
 
 			_Main = _Main.Replace("%%NAME_SPACE%%", "EMMA_BE.Generated");
@@ -118,10 +134,46 @@ namespace Generator {
 			readRecordField = readRecordField.Replace("%%COMBO_NAME%%", columns_Record.COMBO);
 			readRecordField = readRecordField.Replace("%%EXTERNAL_TABLE%%", columns_Record.EXTERNAL_TABLE_ID);
             readRecordField_List += readRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
-			#endregion
+            #endregion
 
-			#region CheckNullRecordField
-			string checkNullRecordField = string.Empty;
+            #region ReadNullRecordField
+            string readNullRecordField = string.Empty;
+            if (columns_Record.DATA_TYPE == "varbinary") {
+                readNullRecordField = pattern_ReadNullRecord_Binary;
+            }
+            else {
+                switch (columns_Record.IS_NULLABLE) {
+                    case "NO":
+                        if (columns_Record.COMBO == null && columns_Record.EXTERNAL_TABLE_ID != null)
+                            readNullRecordField = pattern_ReadNullRecord_NotNullableId;
+                        else if (columns_Record.COMBO != null && columns_Record.EXTERNAL_TABLE_ID == null)
+                            readNullRecordField = pattern_ReadNullRecord_NotNullableCombo;
+                        else if (columns_Record.COMBO != null && columns_Record.EXTERNAL_TABLE_ID != null)
+                            throw new Exception();
+                        else
+                            readNullRecordField = pattern_ReadNullRecord_NotNullable;
+                        break;
+                    case "YES":
+                        if (columns_Record.COMBO == null && columns_Record.EXTERNAL_TABLE_ID != null)
+                            readNullRecordField = pattern_ReadNullRecord_NullableId;
+                        //else if (columns_Record.COMBO != null && columns_Record.EXTERNAL_TABLE_ID == null)
+                        //	selectAllField = pattern_SelectAllField_NullableCombo;
+                        else if (columns_Record.COMBO != null && columns_Record.EXTERNAL_TABLE_ID != null)
+                            throw new Exception();
+                        else
+                            readNullRecordField = pattern_ReadNullRecord_Nullable;
+                        break;
+                    default: break;
+                }
+            }
+            readNullRecordField = readNullRecordField.Replace("%%DATA_TYPE%%", dataType);
+            readNullRecordField = readNullRecordField.Replace("%%COMBO_NAME%%", columns_Record.COMBO);
+            readNullRecordField = readNullRecordField.Replace("%%EXTERNAL_TABLE%%", columns_Record.EXTERNAL_TABLE_ID);
+            readNullRecordField_List += readNullRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
+            #endregion
+
+            #region CheckNullRecordField
+            string checkNullRecordField = string.Empty;
 			switch (columns_Record.COLUMN_NAME) {
 				case "ID":
 				case "INS_DATE":
