@@ -11,8 +11,9 @@ namespace EditorDB.Services {
 		public SqlConnection connection = new();
 		public MainService() {
 			//connectionString = "Server=localhost\\SQLEXPRESS;Database=EMMA;Integrated Security=True;";
-			connectionString = "Server=localhost,1433;Database=EMMA;User Id=sa;Password=<YourStrong!Passw0rd>;";
-			connection = new(connectionString);
+			//connectionString = "Server=localhost,1433;Database=EMMA;User Id=sa;Password=<YourStrong!Passw0rd>;";
+            connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\EMMA\\EMMA_DB\\EMMA_DB.mdf;Integrated Security=True;Connect Timeout=30";
+            connection = new(connectionString);
 
 			Tables_RecordList = [];
 			Columns_RecordList = [];

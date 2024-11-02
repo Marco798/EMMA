@@ -52,8 +52,9 @@ namespace Generator {
 		}
 
 		private static void GetTableData() {
-			const string connectionString = "Server=localhost,1433;Database=EMMA;User Id=sa;Password=<YourStrong!Passw0rd>;";
-			connection = new(connectionString);
+			//const string connectionString = "Server=localhost,1433;Database=EMMA;User Id=sa;Password=<YourStrong!Passw0rd>;";
+            const string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\EMMA\\EMMA_DB\\EMMA_DB.mdf;Integrated Security=True;Connect Timeout=30";
+            connection = new(connectionString);
 
 			try {
 				connection.Open();
