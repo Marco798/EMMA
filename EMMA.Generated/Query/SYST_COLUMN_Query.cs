@@ -84,6 +84,7 @@ namespace EMMA_BE.Generated {
                 if (parameters.Count == 0) return SelectAll();
 
                 using (SqlCommand command = new(query.ToString(), connection)) {
+					command.Parameters.AddRange([.. parameters]);
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) {
                         output.Add(ReadRecord(reader));
@@ -121,6 +122,7 @@ namespace EMMA_BE.Generated {
                 if (parameters.Count == 0) return SelectAll(fields);
 
                 using (SqlCommand command = new(query.ToString(), connection)) {
+					command.Parameters.AddRange([.. parameters]);
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) {
                         output.Add(ReadNullRecord(reader, fields));
@@ -214,10 +216,10 @@ namespace EMMA_BE.Generated {
 				parameters.Add(new SqlParameter("@SHORT_DESCRIPTION", record.SHORT_DESCRIPTION));
 
 				query.Append("@COMBO, ");
-				parameters.Add(new SqlParameter("@COMBO", record.COMBO));
+				parameters.Add(new SqlParameter("@COMBO", string.IsNullOrWhiteSpace(record.COMBO) ? DBNull.Value : record.COMBO));
 
 				query.Append("@EXTERNAL_TABLE_ID, ");
-				parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", record.EXTERNAL_TABLE_ID));
+				parameters.Add(new SqlParameter("@EXTERNAL_TABLE_ID", string.IsNullOrWhiteSpace(record.EXTERNAL_TABLE_ID) ? DBNull.Value : record.EXTERNAL_TABLE_ID));
 
 				query.Length -= 2;
 

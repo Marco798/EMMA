@@ -26,7 +26,7 @@ namespace %%NAME_SPACE%% {
 			}
 		}
 
-		[HttpGet("SelectAll_CustomRecord")]
+		[HttpPost("SelectAll_CustomRecord")]
 		public IActionResult SelectAll_CustomRecord(List<%%TABLE_NAME%%_Field>? fields = null) {
 			try {
 				List<%%TABLE_NAME%%_NullRecord> _Record_List = _query.SelectAll(fields);
@@ -37,7 +37,7 @@ namespace %%NAME_SPACE%% {
 			}
 		}
 
-		[HttpGet("SelectWithSimpleCriteria")]
+		[HttpPost("SelectWithSimpleCriteria")]
 		public IActionResult SelectWithSimpleCriteria(%%TABLE_NAME%%_NullRecord nullRecord) {
 			try {
 				List<%%TABLE_NAME%%_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
@@ -48,8 +48,8 @@ namespace %%NAME_SPACE%% {
 			}
 		}
 
-		[HttpGet("SelectWithSimpleCriteria_CustomRecord")]
-		public IActionResult SelectWithSimpleCriteria_CustomRecord(%%TABLE_NAME%%_NullRecord nullRecord, List<%%TABLE_NAME%%_Field>? fields = null) {
+		[HttpPost("SelectWithSimpleCriteria_CustomRecord")]
+		public IActionResult SelectWithSimpleCriteria_CustomRecord([FromQuery] %%TABLE_NAME%%_NullRecord nullRecord, [FromQuery] List<%%TABLE_NAME%%_Field>? fields = null) {
 			try {
 				List<%%TABLE_NAME%%_NullRecord> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
 				return Ok(_Record_List);

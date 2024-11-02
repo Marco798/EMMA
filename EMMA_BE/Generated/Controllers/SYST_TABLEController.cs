@@ -26,7 +26,7 @@ namespace EMMA_BE.Generated.Controller {
 			}
 		}
 
-		[HttpGet("SelectAll_CustomRecord")]
+		[HttpPost("SelectAll_CustomRecord")]
 		public IActionResult SelectAll_CustomRecord(List<SYST_TABLE_Field>? fields = null) {
 			try {
 				List<SYST_TABLE_NullRecord> _Record_List = _query.SelectAll(fields);
@@ -37,7 +37,7 @@ namespace EMMA_BE.Generated.Controller {
 			}
 		}
 
-		[HttpGet("SelectWithSimpleCriteria")]
+		[HttpPost("SelectWithSimpleCriteria")]
 		public IActionResult SelectWithSimpleCriteria(SYST_TABLE_NullRecord nullRecord) {
 			try {
 				List<SYST_TABLE_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
@@ -48,8 +48,8 @@ namespace EMMA_BE.Generated.Controller {
 			}
 		}
 
-		[HttpGet("SelectWithSimpleCriteria_CustomRecord")]
-		public IActionResult SelectWithSimpleCriteria_CustomRecord(SYST_TABLE_NullRecord nullRecord, List<SYST_TABLE_Field>? fields = null) {
+		[HttpPost("SelectWithSimpleCriteria_CustomRecord")]
+		public IActionResult SelectWithSimpleCriteria_CustomRecord([FromQuery] SYST_TABLE_NullRecord nullRecord, [FromQuery] List<SYST_TABLE_Field>? fields = null) {
 			try {
 				List<SYST_TABLE_NullRecord> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
 				return Ok(_Record_List);

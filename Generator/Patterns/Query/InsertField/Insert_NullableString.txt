@@ -1,0 +1,2 @@
+﻿				query.Append("@%%COLUMN_NAME%%, ");
+				parameters.Add(new SqlParameter("@%%COLUMN_NAME%%", string.IsNullOrWhiteSpace(record.%%COLUMN_NAME%%) ? DBNull.Value : record.%%COLUMN_NAME%%));

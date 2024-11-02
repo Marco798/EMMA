@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace EMMA_BE.Generated {
 	public class SYST_TABLE_NullRecord {
 		public int? ID { get { return _ID; } internal set { _ID = value; IsSet_ID = true; } }
@@ -10,12 +12,24 @@ namespace EMMA_BE.Generated {
 		private string? _DESCRIPTION;
 		private string? _SHORT_DESCRIPTION;
 
-		internal bool IsSet_ID { get; private set; }
-		internal bool IsSet_TABLE_NAME { get; private set; }
-		internal bool IsSet_DESCRIPTION { get; private set; }
-		internal bool IsSet_SHORT_DESCRIPTION { get; private set; }
+		public bool IsSet_ID { get; private set; }
+		public bool IsSet_TABLE_NAME { get; private set; }
+		public bool IsSet_DESCRIPTION { get; private set; }
+		public bool IsSet_SHORT_DESCRIPTION { get; private set; }
 
 		public SYST_TABLE_NullRecord() { }
+
+        [JsonConstructor]
+        public SYST_TABLE_NullRecord(
+			int? id, bool isSet_id,
+			string? table_name, bool isSet_table_name,
+			string? description, bool isSet_description,
+			string? short_description, bool isSet_short_description) {
+			if (isSet_id) ID = id;
+			if (isSet_table_name) TABLE_NAME = table_name;
+			if (isSet_description) DESCRIPTION = description;
+			if (isSet_short_description) SHORT_DESCRIPTION = short_description;
+        }
 
 		public SYST_TABLE_NullRecord(SYST_TABLE_Record record) {
 			ID = record.ID;

@@ -84,6 +84,7 @@ namespace EMMA_BE.Generated {
                 if (parameters.Count == 0) return SelectAll();
 
                 using (SqlCommand command = new(query.ToString(), connection)) {
+					command.Parameters.AddRange([.. parameters]);
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) {
                         output.Add(ReadRecord(reader));
@@ -121,6 +122,7 @@ namespace EMMA_BE.Generated {
                 if (parameters.Count == 0) return SelectAll(fields);
 
                 using (SqlCommand command = new(query.ToString(), connection)) {
+					command.Parameters.AddRange([.. parameters]);
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) {
                         output.Add(ReadNullRecord(reader, fields));

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace EMMA_BE.Generated {
 	public class BANK_STATEMENT_NullRecord {
 		public int? ID { get { return _ID; } internal set { _ID = value; IsSet_ID = true; } }
@@ -45,27 +47,69 @@ namespace EMMA_BE.Generated {
 		private TimeSpan? _UPD_TIME;
 		private string? _UPD_INFO;
 
-		internal bool IsSet_ID { get; private set; }
-		internal bool IsSet_OPERATION_DATE { get; private set; }
-		internal bool IsSet_VALUE_DATE { get; private set; }
-		internal bool IsSet_REASON { get; private set; }
-		internal bool IsSet_DESCRIPTION { get; private set; }
-		internal bool IsSet_OUTCOME { get; private set; }
-		internal bool IsSet_INCOME { get; private set; }
-		internal bool IsSet_TAG1 { get; private set; }
-		internal bool IsSet_TAG2 { get; private set; }
-		internal bool IsSet_TAG3 { get; private set; }
-		internal bool IsSet_TAG4 { get; private set; }
-		internal bool IsSet_ID_FILE_INPUT { get; private set; }
-		internal bool IsSet_ID_BANK_STATEMENT_DESC_PATTERN { get; private set; }
-		internal bool IsSet_INS_DATE { get; private set; }
-		internal bool IsSet_INS_TIME { get; private set; }
-		internal bool IsSet_INS_INFO { get; private set; }
-		internal bool IsSet_UPD_DATE { get; private set; }
-		internal bool IsSet_UPD_TIME { get; private set; }
-		internal bool IsSet_UPD_INFO { get; private set; }
+		public bool IsSet_ID { get; private set; }
+		public bool IsSet_OPERATION_DATE { get; private set; }
+		public bool IsSet_VALUE_DATE { get; private set; }
+		public bool IsSet_REASON { get; private set; }
+		public bool IsSet_DESCRIPTION { get; private set; }
+		public bool IsSet_OUTCOME { get; private set; }
+		public bool IsSet_INCOME { get; private set; }
+		public bool IsSet_TAG1 { get; private set; }
+		public bool IsSet_TAG2 { get; private set; }
+		public bool IsSet_TAG3 { get; private set; }
+		public bool IsSet_TAG4 { get; private set; }
+		public bool IsSet_ID_FILE_INPUT { get; private set; }
+		public bool IsSet_ID_BANK_STATEMENT_DESC_PATTERN { get; private set; }
+		public bool IsSet_INS_DATE { get; private set; }
+		public bool IsSet_INS_TIME { get; private set; }
+		public bool IsSet_INS_INFO { get; private set; }
+		public bool IsSet_UPD_DATE { get; private set; }
+		public bool IsSet_UPD_TIME { get; private set; }
+		public bool IsSet_UPD_INFO { get; private set; }
 
 		public BANK_STATEMENT_NullRecord() { }
+
+        [JsonConstructor]
+        public BANK_STATEMENT_NullRecord(
+			int? id, bool isSet_id,
+			DateTime? operation_date, bool isSet_operation_date,
+			DateTime? value_date, bool isSet_value_date,
+			string? reason, bool isSet_reason,
+			string? description, bool isSet_description,
+			decimal? outcome, bool isSet_outcome,
+			decimal? income, bool isSet_income,
+			string? tag1, bool isSet_tag1,
+			string? tag2, bool isSet_tag2,
+			string? tag3, bool isSet_tag3,
+			string? tag4, bool isSet_tag4,
+			int? id_file_input, bool isSet_id_file_input,
+			int? id_bank_statement_desc_pattern, bool isSet_id_bank_statement_desc_pattern,
+			DateTime? ins_date, bool isSet_ins_date,
+			TimeSpan? ins_time, bool isSet_ins_time,
+			string? ins_info, bool isSet_ins_info,
+			DateTime? upd_date, bool isSet_upd_date,
+			TimeSpan? upd_time, bool isSet_upd_time,
+			string? upd_info, bool isSet_upd_info) {
+			if (isSet_id) ID = id;
+			if (isSet_operation_date) OPERATION_DATE = operation_date;
+			if (isSet_value_date) VALUE_DATE = value_date;
+			if (isSet_reason) REASON = reason;
+			if (isSet_description) DESCRIPTION = description;
+			if (isSet_outcome) OUTCOME = outcome;
+			if (isSet_income) INCOME = income;
+			if (isSet_tag1) TAG1 = tag1;
+			if (isSet_tag2) TAG2 = tag2;
+			if (isSet_tag3) TAG3 = tag3;
+			if (isSet_tag4) TAG4 = tag4;
+			if (isSet_id_file_input) ID_FILE_INPUT = id_file_input;
+			if (isSet_id_bank_statement_desc_pattern) ID_BANK_STATEMENT_DESC_PATTERN = id_bank_statement_desc_pattern;
+			if (isSet_ins_date) INS_DATE = ins_date;
+			if (isSet_ins_time) INS_TIME = ins_time;
+			if (isSet_ins_info) INS_INFO = ins_info;
+			if (isSet_upd_date) UPD_DATE = upd_date;
+			if (isSet_upd_time) UPD_TIME = upd_time;
+			if (isSet_upd_info) UPD_INFO = upd_info;
+        }
 
 		public BANK_STATEMENT_NullRecord(BANK_STATEMENT_Record record) {
 			ID = record.ID;

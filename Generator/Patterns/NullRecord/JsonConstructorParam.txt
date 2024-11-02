@@ -1,0 +1,1 @@
+			%%DATA_TYPE%%? %%LOWER_COLUMN_NAME%%, bool isSet_%%LOWER_COLUMN_NAME%%,

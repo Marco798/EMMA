@@ -1,4 +1,6 @@
-﻿namespace %%NAME_SPACE%% {
+﻿using System.Text.Json.Serialization;
+
+namespace %%NAME_SPACE%% {
 	public class %%TABLE_NAME%%_NullRecord {
 %%FIELD%%%%SET_FIELD_COMBO%%%%SET_FIELD_ID%%
 
@@ -7,6 +9,12 @@
 %%IS_SET_FIELD%%
 
 		public %%TABLE_NAME%%_NullRecord() { }
+
+        [JsonConstructor]
+        public %%TABLE_NAME%%_NullRecord(
+%%JSON_CONSTRUCTOR_PARAM%%) {
+%%JSON_CONSTRUCTOR_IF_IS_SET%%
+        }
 
 		public %%TABLE_NAME%%_NullRecord(%%TABLE_NAME%%_Record record) {
 %%FROM_RECORD_FIELD%%

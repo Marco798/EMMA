@@ -26,7 +26,7 @@ namespace EMMA_BE.Generated.Controller {
 			}
 		}
 
-		[HttpGet("SelectAll_CustomRecord")]
+		[HttpPost("SelectAll_CustomRecord")]
 		public IActionResult SelectAll_CustomRecord(List<FILE_INPUT_Field>? fields = null) {
 			try {
 				List<FILE_INPUT_NullRecord> _Record_List = _query.SelectAll(fields);
@@ -37,7 +37,7 @@ namespace EMMA_BE.Generated.Controller {
 			}
 		}
 
-		[HttpGet("SelectWithSimpleCriteria")]
+		[HttpPost("SelectWithSimpleCriteria")]
 		public IActionResult SelectWithSimpleCriteria(FILE_INPUT_NullRecord nullRecord) {
 			try {
 				List<FILE_INPUT_Record> _Record_List = _query.SelectWithSimpleCriteria(nullRecord);
@@ -48,8 +48,8 @@ namespace EMMA_BE.Generated.Controller {
 			}
 		}
 
-		[HttpGet("SelectWithSimpleCriteria_CustomRecord")]
-		public IActionResult SelectWithSimpleCriteria_CustomRecord(FILE_INPUT_NullRecord nullRecord, List<FILE_INPUT_Field>? fields = null) {
+		[HttpPost("SelectWithSimpleCriteria_CustomRecord")]
+		public IActionResult SelectWithSimpleCriteria_CustomRecord([FromQuery] FILE_INPUT_NullRecord nullRecord, [FromQuery] List<FILE_INPUT_Field>? fields = null) {
 			try {
 				List<FILE_INPUT_NullRecord> _Record_List = _query.SelectWithSimpleCriteria(nullRecord, fields);
 				return Ok(_Record_List);
