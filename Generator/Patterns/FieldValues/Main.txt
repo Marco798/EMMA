@@ -1,0 +1,13 @@
+﻿using EMMA.Commons;
+
+namespace %%NAME_SPACE%% {
+    public static class %%TABLE_NAME%%_FieldValues {
+%%VALUE_FIELD%%
+
+        public static List<%%TABLE_NAME%%_Field> GetAllFields() {
+            return [
+%%GET_VALUE_FIELD%%
+            ];
+        }
+    }
+}

@@ -17,63 +17,130 @@
         </tr>
         @foreach (SYST_MENU_Record mainMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == 0).OrderBy(x => x.INDEX)) {
             <tr id="@mainMenuVoice.ID">
-                <td style="border-right:none" @onclick="() => { MainVoice_OnClick(mainMenuVoice.NAME);}">@mainMenuVoice.ID.ToString().PadLeft(2, '0')</td>
-                <td style="border: none"></td>
-                <td style="border-left:none"></td>
-                <td><EditableString Value="@mainMenuVoice.SHORT_DESCRIPTION" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.SHORT_DESCRIPTION)" Id="mainMenuVoice.ID"/></td>
+                <td class="TD_TopLeft_Bordered" @onclick="() => { MainVoice_OnClick(mainMenuVoice.ID);}">@mainMenuVoice.ID.ToString().PadLeft(2, '0')</td>
+                <td class="TD_Top_Bordered"></td>
+                <td class="TD_Top_Bordered"></td>
+                <td class="TD_No_Border"><EditableString Value="@mainMenuVoice.SHORT_DESCRIPTION" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.SHORT_DESCRIPTION)" Id="mainMenuVoice.ID" /></td>
                 <td><EditableString Value="@mainMenuVoice.NAME" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.NAME)" Id="mainMenuVoice.ID" /></td>
                 <td><EditableInt Value="@mainMenuVoice.INDEX!.Value" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.INDEX)" Id="mainMenuVoice.ID" /></td>
                 <td><EditableString Value="@mainMenuVoice.DESCRIPTION" TableName="SYST_MENU" FieldName="@nameof(SYST_MENU_Record.DESCRIPTION)" Id="mainMenuVoice.ID" /></td>
             </tr>
-            @if (shownSections[mainMenuVoice.NAME]) {
+            @if (shownSections[mainMenuVoice.ID]) {
                 @foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == mainMenuVoice.ID).OrderBy(x => x.INDEX)) {
                     <tr id="@menuVoice.ID">
-                        <td style="border-right:none"></td>
-                        <td style="border: none" @onclick="() => { MainVoice_OnClick(menuVoice.NAME);}">@menuVoice.ID.ToString().PadLeft(2, '0')</td>
-                        <td style="border-left:none"></td>
-                        <td>@menuVoice.SHORT_DESCRIPTION</td>
+                        <td></td>
+                        <td class="TD_TopLeft_Bordered" @onclick="() => { MainVoice_OnClick(menuVoice.ID);}">@menuVoice.ID.ToString().PadLeft(2, '0')</td>
+                        <td class="TD_Top_Bordered"></td>
+                        <td class="TD_No_Border">@menuVoice.SHORT_DESCRIPTION</td>
                         <td>@menuVoice.NAME</td>
                         <td>@menuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
                         <td>@menuVoice.DESCRIPTION</td>
                     </tr>
-                    @if (shownSections[menuVoice.NAME]) {
+                    @if (shownSections[menuVoice.ID]) {
                         @foreach (SYST_MENU_Record subMenuVoice in _SYST_MENU_Record_List.Where(x => x.PARENT == menuVoice.ID).OrderBy(x => x.INDEX)) {
                             <tr id="@subMenuVoice.ID">
-                                <td style="border-right:none"></td>
-                                <td style="border: none"></td>
-                                <td style="border-left:none">@subMenuVoice.ID.ToString().PadLeft(2, '0')</td>
-                                <td>@subMenuVoice.SHORT_DESCRIPTION</td>
+                                <td></td>
+                                <td></td>
+                                <td class="TD_TopLeft_Bordered">@subMenuVoice.ID.ToString().PadLeft(2, '0')</td>
+                                <td class="TD_No_Border">@subMenuVoice.SHORT_DESCRIPTION</td>
                                 <td>@subMenuVoice.NAME</td>
                                 <td>@subMenuVoice.INDEX?.ToString().PadLeft(2, '0')</td>
                                 <td>@subMenuVoice.DESCRIPTION</td>
                             </tr>
                         }
+                        <tr>
+                            @if (shownAddField == menuVoice.ID) {
+                                <td></td>
+                                <td></td>
+                                <td class="TD_TopLeftBottom_Bordered TD_PadSide_3">
+                                    <input class="BTN_Action" type="button" value="S" @onclick="SaveAddVoice" />
+                                    <input class="BTN_Action" type="button" value="C" @onclick="() => shownAddField = null" />
+                                </td>
+                                <td class="TD_No_Border"><input type="text" @bind=newRecord.SHORT_DESCRIPTION /></td>
+                                <td><input type="text" @bind=newRecord.NAME /></td>
+                                <td><input type="number" @bind=newRecord.INDEX /></td>
+                                <td><input type="text" @bind=newRecord.DESCRIPTION /></td>
+                            }
+                            else {
+                                <td></td>
+                                <td></td>
+                                <td class="TD_TopLeft_Bordered"><input type="button" value="+" @onclick="() => AddVoice(menuVoice.ID)" /></td>
+                            }
+                        </tr>
                     }
                 }
+                <tr>
+                    @if (shownAddField == mainMenuVoice.ID) {
+                        <td></td>
+                        <td class="TD_TopLeft_Bordered TD_PadSide_3" colspan="2">
+                            <input class="BTN_Action" type="button" value="S" @onclick="SaveAddVoice" />
+                            <input class="BTN_Action" type="button" value="C" @onclick="() => shownAddField = null" />
+                        </td>
+                        <td class="TD_No_Border"><input type="text" @bind=newRecord.SHORT_DESCRIPTION /></td>
+                        <td><input type="text" @bind=newRecord.NAME /></td>
+                        <td><input type="number" @bind=newRecord.INDEX /></td>
+                        <td><input type="text" @bind=newRecord.DESCRIPTION /></td>
+                    }
+                    else {
+                        <td></td>
+                        <td class="TD_TopLeft_Bordered"><input type="button" value="+" @onclick="() => AddVoice(mainMenuVoice.ID)" /></td>
+                        <td class="TD_Top_Bordered"></td>
+                    }
+                </tr>
             }
         }
+        <tr>
+            @if (shownAddField == 0) {
+                <td class="TD_TopLeft_Bordered TD_PadSide_3" colspan="3">
+                    <input class="BTN_Action" type="button" value="S" @onclick="SaveAddVoice" />
+                    <input class="BTN_Action" type="button" value="C" @onclick="() => shownAddField = null" />
+                </td>
+                <td class="TD_No_Border"><input type="text" @bind=newRecord.SHORT_DESCRIPTION /></td>
+                <td><input type="text" @bind=newRecord.NAME /></td>
+                <td><input type="number" @bind=newRecord.INDEX /></td>
+                <td><input type="text" @bind=newRecord.DESCRIPTION /></td>
+            }
+            else {
+                <td class="TD_TopLeft_Bordered"><input type="button" value="+" @onclick="() => AddVoice()" /></td>
+                <td class="TD_Top_Bordered"></td>
+                <td class="TD_Top_Bordered"></td>
+            }
+        </tr>
     </table>
 </div>
 
 @code {
     private List<SYST_MENU_Record> _SYST_MENU_Record_List = [];
-    Dictionary<string, bool> shownSections = [];
+    Dictionary<int, bool> shownSections = [];
+
+    int? shownAddField = null;
+    SYST_MENU_BaseRecord newRecord = new();
 
     protected override async Task OnInitializedAsync() {
         var response = await Http.GetAsync(@"https://localhost:7062/SYST_MENU/SelectAll");
         if (response.IsSuccessStatusCode) {
             _SYST_MENU_Record_List = await response.Content.ReadFromJsonAsync<List<SYST_MENU_Record>>() ?? [];
             foreach (SYST_MENU_Record menuVoice in _SYST_MENU_Record_List) {
-                shownSections.Add(menuVoice.NAME, false);
+                shownSections.Add(menuVoice.ID, false);
             }
         }
     }
 
-    private void MainVoice_OnClick(string name) {
-        shownSections[name] = !shownSections[name];
+    private void MainVoice_OnClick(int id) {
+        shownSections[id] = !shownSections[id];
     }
 
-    private void EditValue() {
-        Console.WriteLine("test");
+    private void AddVoice(int parent = 0) {
+        shownAddField = parent;
+    }
+
+    private async Task SaveAddVoice() {
+        newRecord.PARENT = shownAddField!.Value;
+        var response = await Http.PostAsJsonAsync(@"https://localhost:7062/SYST_MENU/Insert", newRecord);
+        if (response.IsSuccessStatusCode) {
+            await OnInitializedAsync();
+            shownAddField = null;
+            newRecord = new();
+        }
     }
 }

@@ -1,0 +1,100 @@
+﻿@page "/BANK_STATEMENT_PATTERN_Cust"
+@using EMMA.Commons
+@using EMMA_BE.Generated
+@using System.Reflection
+@using System.Text.Json
+@using System.Text
+
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<div>
+    <div style="display: flex">
+        <select value="@selectedField" @onchange=OnChangeSelectedField>
+            <option value="">---</option>
+            @foreach (string name in BANK_STATEMENT_FIELD_Combo.GetNames()) {
+                <option value="@name">@name</option>
+            }
+        </select>
+        <select value="@selectedPattern">
+            <option value="">---</option>
+            @foreach (BANK_STATEMENT_PATTERN_Record _BANK_STATEMENT_PATTERN_Record in _BANK_STATEMENT_PATTERN_Record_List) {
+                <option>@_BANK_STATEMENT_PATTERN_Record.PATTERN</option>
+            }
+        </select>
+        <input type="button" value="New" />
+    </div>
+    <div style="display: flex">
+        <label for="patternPosition">Position</label>
+        <select>
+            <option value="" id="PatternPosition">---</option>
+            @foreach (string name in PATTERN_POSITION_Combo.GetNames()) {
+                <option value="@name">@name</option>
+            }
+        </select>
+        <label for="patternPosition">Name</label>
+        <input type="text" id="PatternName"/>
+        <label for="patternPosition">Pattern</label>
+        <input type="text" id="PatternValue" />
+    </div>
+    <div>
+        <table>
+            @foreach (string value in values)
+            {
+                <tr>
+                    <td>@value</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+@code {
+    private string? selectedField { get; set; } = null;
+    private string? selectedPattern { get; set; } = null;
+
+    private List<BANK_STATEMENT_PATTERN_Record> _BANK_STATEMENT_PATTERN_Record_List = [];
+    private List<string> values = [];
+
+    private async Task OnChangeSelectedField(ChangeEventArgs changeEventArgs) {
+        selectedField = changeEventArgs.Value!.ToString();
+        BANK_STATEMENT_PATTERN_NullRecord _BANK_STATEMENT_PATTERN_NullRecord = new();
+        List<BANK_STATEMENT_Field> _BANK_STATEMENT_Field_List = [];
+
+        if (string.IsNullOrWhiteSpace(selectedField)) return;
+
+        switch (selectedField) {
+            case nameof(BANK_STATEMENT_FIELD_Combo.REASON):
+                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.REASON);
+                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.REASON];
+                break;
+            case nameof(BANK_STATEMENT_FIELD_Combo.DESCRIPTION):
+                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.DESCRIPTION);
+                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.DESCRIPTION];
+                break;
+            case nameof(BANK_STATEMENT_FIELD_Combo.TAG2):
+                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.TAG2);
+                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG2];
+                break;
+            case nameof(BANK_STATEMENT_FIELD_Combo.TAG3):
+                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.TAG3);
+                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG3];
+                break;
+            case nameof(BANK_STATEMENT_FIELD_Combo.TAG4):
+                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.TAG4);
+                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG4];
+                break;
+        }
+
+        HttpResponseMessage response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT_PATTERN/SelectWithSimpleCriteria", _BANK_STATEMENT_PATTERN_NullRecord);
+        if (response.IsSuccessStatusCode) {
+            _BANK_STATEMENT_PATTERN_Record_List = await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_PATTERN_Record>>() ?? [];
+        }
+
+        response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT/SelectAll_CustomRecord", _BANK_STATEMENT_Field_List);
+        if (response.IsSuccessStatusCode) {
+            PropertyInfo? propertyInfo = typeof(BANK_STATEMENT_NullRecord).GetProperty(_BANK_STATEMENT_Field_List.First().Value[1..^1]);
+            values = (await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_NullRecord>>() ?? []).Select(x => (string?)propertyInfo!.GetValue(x) ?? string.Empty).Distinct().ToList();
+        }
+    }
+}

@@ -1,0 +1,1 @@
+﻿		public static readonly %%TABLE_NAME%%_Field %%FIELD_VALUE_NAME%% = new("[%%FIELD_VALUE_NAME%%]");

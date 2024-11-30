@@ -1,0 +1,50 @@
+﻿@using System.IO.Compression;
+@using EMMA_BE.Generated
+
+@inject IJSRuntime JS
+
+<input type="button" value="Download" @onclick="DownloadFile" />
+
+<script>
+    function downloadFile(fileName, content, fileType) {
+        const blob = new Blob([content], { type: fileType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
+    }
+
+</script>
+
+@code {
+    [Parameter]
+    public required byte[] Content { get; set; }
+    [Parameter]
+    public required string FileName { get; set; }
+    [Parameter]
+    public required string FileType { get; set; }
+
+
+    private async void DownloadFile() {
+        MemoryStream compressedStream = new MemoryStream(Content);
+        GZipStream decompressionStream = new GZipStream(compressedStream, CompressionMode.Decompress);
+        MemoryStream decompressedStream = new MemoryStream();
+        decompressionStream.CopyTo(decompressedStream);
+
+        string fileContent = System.Text.Encoding.UTF8.GetString(decompressedStream.ToArray());
+
+        string jsFileType = FileType switch {
+            "CSV" => "text/csv",
+            _ => string.Empty
+        };
+
+        // Invia la stringa base64 al metodo JavaScript
+        await JS.InvokeVoidAsync("downloadFile", FileName, fileContent, jsFileType);
+    }
+}

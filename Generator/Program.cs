@@ -40,6 +40,7 @@ namespace Generator {
 			Combo.Generate();
 			Id.Generate();
             Field.Generate();
+            FieldValues.Generate();
         }
 
 		static void GetData(string query, Action<SqlDataReader> addToList) {

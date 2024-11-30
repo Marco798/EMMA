@@ -44,7 +44,7 @@ namespace %%NAME_SPACE%% {
 				connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = %%TABLE_NAME%%_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = %%TABLE_NAME%%_FieldValues.GetAllFields();
                 foreach (%%TABLE_NAME%%_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -109,7 +109,7 @@ namespace %%NAME_SPACE%% {
                 connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = %%TABLE_NAME%%_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = %%TABLE_NAME%%_FieldValues.GetAllFields();
                 foreach (%%TABLE_NAME%%_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }

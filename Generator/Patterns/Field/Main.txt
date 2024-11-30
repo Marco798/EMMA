@@ -1,15 +1,18 @@
 ﻿using EMMA.Commons;
+using System.Text.Json.Serialization;
 
 namespace %%NAME_SPACE%% {
     public class %%TABLE_NAME%%_Field : FieldBase, IField {
+        [JsonConstructor]
         internal %%TABLE_NAME%%_Field(string value) : base(value) { }
 
-%%VALUE_FIELD%%
+        public override bool Equals(object? obj) {
+            return obj is BANK_STATEMENT_Field field &&
+                   Value == field.Value;
+        }
 
-        public static List<%%TABLE_NAME%%_Field> GetAllFields() {
-            return [
-%%GET_VALUE_FIELD%%
-            ];
+        public override int GetHashCode() {
+            return HashCode.Combine(Value);
         }
     }
 }
