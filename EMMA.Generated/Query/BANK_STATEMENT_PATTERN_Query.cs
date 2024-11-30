@@ -44,7 +44,7 @@ namespace EMMA_BE.Generated {
 				connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_PATTERN_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_PATTERN_FieldValues.GetAllFields();
                 foreach (BANK_STATEMENT_PATTERN_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -109,7 +109,7 @@ namespace EMMA_BE.Generated {
                 connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_PATTERN_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_PATTERN_FieldValues.GetAllFields();
                 foreach (BANK_STATEMENT_PATTERN_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -284,11 +284,11 @@ namespace EMMA_BE.Generated {
 			BANK_STATEMENT_PATTERN_NullRecord record = new();
 			int i = 0;
 
-			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.ID)) { record.ID = reader.GetInt32(i++); }
-			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.FIELD)) { record.Set_FIELD(new BANK_STATEMENT_FIELD_Combo(reader.GetString(i++))); }
-			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.ORIGINAL_VALUE)) { record.ORIGINAL_VALUE = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.PATTERN)) { record.PATTERN = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_PATTERN_Field.POSITION)) { record.Set_POSITION(new PATTERN_POSITION_Combo(reader.GetString(i++))); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.FIELD)) { record.Set_FIELD(new BANK_STATEMENT_FIELD_Combo(reader.GetString(i++))); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.ORIGINAL_VALUE)) { record.ORIGINAL_VALUE = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.PATTERN)) { record.PATTERN = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.POSITION)) { record.Set_POSITION(new PATTERN_POSITION_Combo(reader.GetString(i++))); }
 
             return record;
         }

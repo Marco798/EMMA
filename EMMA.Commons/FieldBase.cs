@@ -1,10 +1,12 @@
-﻿namespace EMMA.Commons {
-	public class FieldBase {
+﻿using System.Text.Json.Serialization;
 
-		public readonly string Value;
+namespace EMMA.Commons {
+    public class FieldBase {
+        public string Value { get; private set; }
 
-		protected FieldBase(string value) {
-			Value = value;
-		}
-	}
+        [JsonConstructor]
+        protected FieldBase(string value) {
+            Value = value;
+        }
+    }
 }

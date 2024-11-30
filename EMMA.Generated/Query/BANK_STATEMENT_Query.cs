@@ -44,7 +44,7 @@ namespace EMMA_BE.Generated {
 				connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_FieldValues.GetAllFields();
                 foreach (BANK_STATEMENT_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -109,7 +109,7 @@ namespace EMMA_BE.Generated {
                 connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_FieldValues.GetAllFields();
                 foreach (BANK_STATEMENT_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -389,25 +389,25 @@ namespace EMMA_BE.Generated {
 			BANK_STATEMENT_NullRecord record = new();
 			int i = 0;
 
-			if (fields.Contains(BANK_STATEMENT_Field.ID)) { record.ID = reader.GetInt32(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.OPERATION_DATE)) { record.OPERATION_DATE = reader.GetDateTime(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.VALUE_DATE)) { record.VALUE_DATE = reader.GetDateTime(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.REASON)) { record.REASON = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.OUTCOME)) { record.OUTCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++; }
-			if (fields.Contains(BANK_STATEMENT_Field.INCOME)) { record.INCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++; }
-			if (fields.Contains(BANK_STATEMENT_Field.TAG1)) { record.Set_TAG1(new BALANCE_DIRECTION_Combo(reader.GetString(i++))); }
-			if (fields.Contains(BANK_STATEMENT_Field.TAG2)) { record.TAG2 = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.TAG3)) { record.TAG3 = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.TAG4)) { record.TAG4 = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.ID_FILE_INPUT)) { record.Set_ID_FILE_INPUT(new FILE_INPUT_Id(reader.GetInt32(i++))); }
-			if (fields.Contains(BANK_STATEMENT_Field.ID_BANK_STATEMENT_DESC_PATTERN)) { if (!reader.IsDBNull(i)) record.Set_ID_BANK_STATEMENT_DESC_PATTERN(new BANK_STATEMENT_DESC_PATTERN_Id(reader.GetInt32(i))); i++; }
-			if (fields.Contains(BANK_STATEMENT_Field.INS_DATE)) { record.INS_DATE = reader.GetDateTime(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.INS_TIME)) { record.INS_TIME = reader.GetTimeSpan(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.INS_INFO)) { record.INS_INFO = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.UPD_DATE)) { record.UPD_DATE = reader.GetDateTime(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.UPD_TIME)) { record.UPD_TIME = reader.GetTimeSpan(i++); }
-			if (fields.Contains(BANK_STATEMENT_Field.UPD_INFO)) { record.UPD_INFO = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.OPERATION_DATE)) { record.OPERATION_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.VALUE_DATE)) { record.VALUE_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.REASON)) { record.REASON = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.OUTCOME)) { record.OUTCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++; }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.INCOME)) { record.INCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++; }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.TAG1)) { record.Set_TAG1(new BALANCE_DIRECTION_Combo(reader.GetString(i++))); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.TAG2)) { record.TAG2 = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.TAG3)) { record.TAG3 = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.TAG4)) { record.TAG4 = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.ID_FILE_INPUT)) { record.Set_ID_FILE_INPUT(new FILE_INPUT_Id(reader.GetInt32(i++))); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.ID_BANK_STATEMENT_DESC_PATTERN)) { if (!reader.IsDBNull(i)) record.Set_ID_BANK_STATEMENT_DESC_PATTERN(new BANK_STATEMENT_DESC_PATTERN_Id(reader.GetInt32(i))); i++; }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.INS_DATE)) { record.INS_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.INS_TIME)) { record.INS_TIME = reader.GetTimeSpan(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.INS_INFO)) { record.INS_INFO = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.UPD_DATE)) { record.UPD_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.UPD_TIME)) { record.UPD_TIME = reader.GetTimeSpan(i++); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.UPD_INFO)) { record.UPD_INFO = reader.GetString(i++); }
 
             return record;
         }

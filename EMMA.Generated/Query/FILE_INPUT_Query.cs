@@ -44,7 +44,7 @@ namespace EMMA_BE.Generated {
 				connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = FILE_INPUT_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = FILE_INPUT_FieldValues.GetAllFields();
                 foreach (FILE_INPUT_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -109,7 +109,7 @@ namespace EMMA_BE.Generated {
                 connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = FILE_INPUT_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = FILE_INPUT_FieldValues.GetAllFields();
                 foreach (FILE_INPUT_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -297,17 +297,17 @@ namespace EMMA_BE.Generated {
 			FILE_INPUT_NullRecord record = new();
 			int i = 0;
 
-			if (fields.Contains(FILE_INPUT_Field.ID)) { record.ID = reader.GetInt32(i++); }
-			if (fields.Contains(FILE_INPUT_Field.FILE_NAME)) { record.FILE_NAME = reader.GetString(i++); }
-			if (fields.Contains(FILE_INPUT_Field.FILE_TYPE)) { record.Set_FILE_TYPE(new FILE_TYPE_Combo(reader.GetString(i++))); }
-			if (fields.Contains(FILE_INPUT_Field.FILE_CATEGORY)) { record.Set_FILE_CATEGORY(new FILE_CATEGORY_Combo(reader.GetString(i++))); }
-			if (fields.Contains(FILE_INPUT_Field.CONTENT)) { 
+			if (fields.Contains(FILE_INPUT_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(FILE_INPUT_FieldValues.FILE_NAME)) { record.FILE_NAME = reader.GetString(i++); }
+			if (fields.Contains(FILE_INPUT_FieldValues.FILE_TYPE)) { record.Set_FILE_TYPE(new FILE_TYPE_Combo(reader.GetString(i++))); }
+			if (fields.Contains(FILE_INPUT_FieldValues.FILE_CATEGORY)) { record.Set_FILE_CATEGORY(new FILE_CATEGORY_Combo(reader.GetString(i++))); }
+			if (fields.Contains(FILE_INPUT_FieldValues.CONTENT)) { 
 				record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
 				reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);
 			}
-			if (fields.Contains(FILE_INPUT_Field.INS_DATE)) { record.INS_DATE = reader.GetDateTime(i++); }
-			if (fields.Contains(FILE_INPUT_Field.INS_TIME)) { record.INS_TIME = reader.GetTimeSpan(i++); }
-			if (fields.Contains(FILE_INPUT_Field.INS_INFO)) { record.INS_INFO = reader.GetString(i++); }
+			if (fields.Contains(FILE_INPUT_FieldValues.INS_DATE)) { record.INS_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(FILE_INPUT_FieldValues.INS_TIME)) { record.INS_TIME = reader.GetTimeSpan(i++); }
+			if (fields.Contains(FILE_INPUT_FieldValues.INS_INFO)) { record.INS_INFO = reader.GetString(i++); }
 
             return record;
         }

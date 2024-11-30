@@ -44,7 +44,7 @@ namespace EMMA_BE.Generated {
 				connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_DESC_PATTERN_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_DESC_PATTERN_FieldValues.GetAllFields();
                 foreach (BANK_STATEMENT_DESC_PATTERN_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -109,7 +109,7 @@ namespace EMMA_BE.Generated {
                 connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_DESC_PATTERN_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = BANK_STATEMENT_DESC_PATTERN_FieldValues.GetAllFields();
                 foreach (BANK_STATEMENT_DESC_PATTERN_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -278,12 +278,12 @@ namespace EMMA_BE.Generated {
 			BANK_STATEMENT_DESC_PATTERN_NullRecord record = new();
 			int i = 0;
 
-			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_Field.ID)) { record.ID = reader.GetInt32(i++); }
-			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_Field.PATTERN)) { record.PATTERN = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_Field.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_Field.INS_DATE)) { record.INS_DATE = reader.GetDateTime(i++); }
-			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_Field.INS_TIME)) { record.INS_TIME = reader.GetTimeSpan(i++); }
-			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_Field.INS_INFO)) { record.INS_INFO = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_FieldValues.PATTERN)) { record.PATTERN = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_FieldValues.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_FieldValues.INS_DATE)) { record.INS_DATE = reader.GetDateTime(i++); }
+			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_FieldValues.INS_TIME)) { record.INS_TIME = reader.GetTimeSpan(i++); }
+			if (fields.Contains(BANK_STATEMENT_DESC_PATTERN_FieldValues.INS_INFO)) { record.INS_INFO = reader.GetString(i++); }
 
             return record;
         }

@@ -44,7 +44,7 @@ namespace EMMA_BE.Generated {
 				connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = SYST_COMBO_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = SYST_COMBO_FieldValues.GetAllFields();
                 foreach (SYST_COMBO_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -109,7 +109,7 @@ namespace EMMA_BE.Generated {
                 connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = SYST_COMBO_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = SYST_COMBO_FieldValues.GetAllFields();
                 foreach (SYST_COMBO_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -266,9 +266,9 @@ namespace EMMA_BE.Generated {
 			SYST_COMBO_NullRecord record = new();
 			int i = 0;
 
-			if (fields.Contains(SYST_COMBO_Field.ID)) { record.ID = reader.GetInt32(i++); }
-			if (fields.Contains(SYST_COMBO_Field.NAME)) { record.NAME = reader.GetString(i++); }
-			if (fields.Contains(SYST_COMBO_Field.TYPE)) { record.TYPE = reader.GetString(i++); }
+			if (fields.Contains(SYST_COMBO_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(SYST_COMBO_FieldValues.NAME)) { record.NAME = reader.GetString(i++); }
+			if (fields.Contains(SYST_COMBO_FieldValues.TYPE)) { record.TYPE = reader.GetString(i++); }
 
             return record;
         }

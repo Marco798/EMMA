@@ -44,7 +44,7 @@ namespace EMMA_BE.Generated {
 				connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = SYST_MENU_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = SYST_MENU_FieldValues.GetAllFields();
                 foreach (SYST_MENU_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -109,7 +109,7 @@ namespace EMMA_BE.Generated {
                 connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = SYST_MENU_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = SYST_MENU_FieldValues.GetAllFields();
                 foreach (SYST_MENU_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -293,12 +293,12 @@ namespace EMMA_BE.Generated {
 			SYST_MENU_NullRecord record = new();
 			int i = 0;
 
-			if (fields.Contains(SYST_MENU_Field.ID)) { record.ID = reader.GetInt32(i++); }
-			if (fields.Contains(SYST_MENU_Field.NAME)) { record.NAME = reader.GetString(i++); }
-			if (fields.Contains(SYST_MENU_Field.PARENT)) { record.PARENT = reader.GetInt32(i++); }
-			if (fields.Contains(SYST_MENU_Field.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
-			if (fields.Contains(SYST_MENU_Field.SHORT_DESCRIPTION)) { record.SHORT_DESCRIPTION = reader.GetString(i++); }
-			if (fields.Contains(SYST_MENU_Field.INDEX)) { record.INDEX = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++; }
+			if (fields.Contains(SYST_MENU_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(SYST_MENU_FieldValues.NAME)) { record.NAME = reader.GetString(i++); }
+			if (fields.Contains(SYST_MENU_FieldValues.PARENT)) { record.PARENT = reader.GetInt32(i++); }
+			if (fields.Contains(SYST_MENU_FieldValues.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(SYST_MENU_FieldValues.SHORT_DESCRIPTION)) { record.SHORT_DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(SYST_MENU_FieldValues.INDEX)) { record.INDEX = reader.IsDBNull(i) ? null : reader.GetInt32(i); i++; }
 
             return record;
         }

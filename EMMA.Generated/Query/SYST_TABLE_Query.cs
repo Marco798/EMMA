@@ -44,7 +44,7 @@ namespace EMMA_BE.Generated {
 				connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = SYST_TABLE_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = SYST_TABLE_FieldValues.GetAllFields();
                 foreach (SYST_TABLE_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -109,7 +109,7 @@ namespace EMMA_BE.Generated {
                 connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = SYST_TABLE_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = SYST_TABLE_FieldValues.GetAllFields();
                 foreach (SYST_TABLE_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -275,10 +275,10 @@ namespace EMMA_BE.Generated {
 			SYST_TABLE_NullRecord record = new();
 			int i = 0;
 
-			if (fields.Contains(SYST_TABLE_Field.ID)) { record.ID = reader.GetInt32(i++); }
-			if (fields.Contains(SYST_TABLE_Field.TABLE_NAME)) { record.TABLE_NAME = reader.GetString(i++); }
-			if (fields.Contains(SYST_TABLE_Field.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
-			if (fields.Contains(SYST_TABLE_Field.SHORT_DESCRIPTION)) { record.SHORT_DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(SYST_TABLE_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(SYST_TABLE_FieldValues.TABLE_NAME)) { record.TABLE_NAME = reader.GetString(i++); }
+			if (fields.Contains(SYST_TABLE_FieldValues.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(SYST_TABLE_FieldValues.SHORT_DESCRIPTION)) { record.SHORT_DESCRIPTION = reader.GetString(i++); }
 
             return record;
         }

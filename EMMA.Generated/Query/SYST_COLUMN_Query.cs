@@ -44,7 +44,7 @@ namespace EMMA_BE.Generated {
 				connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = SYST_COLUMN_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = SYST_COLUMN_FieldValues.GetAllFields();
                 foreach (SYST_COLUMN_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -109,7 +109,7 @@ namespace EMMA_BE.Generated {
                 connection.Open();
 
                 StringBuilder selectFields = new(string.Empty);
-                if (fields == null || fields.Count == 0) fields = SYST_COLUMN_Field.GetAllFields();
+                if (fields == null || fields.Count == 0) fields = SYST_COLUMN_FieldValues.GetAllFields();
                 foreach (SYST_COLUMN_Field field in fields) {
                     selectFields.Append($"{field.Value}, ");
                 }
@@ -302,13 +302,13 @@ namespace EMMA_BE.Generated {
 			SYST_COLUMN_NullRecord record = new();
 			int i = 0;
 
-			if (fields.Contains(SYST_COLUMN_Field.ID)) { record.ID = reader.GetInt32(i++); }
-			if (fields.Contains(SYST_COLUMN_Field.TABLE_NAME)) { record.TABLE_NAME = reader.GetString(i++); }
-			if (fields.Contains(SYST_COLUMN_Field.COLUMN_NAME)) { record.COLUMN_NAME = reader.GetString(i++); }
-			if (fields.Contains(SYST_COLUMN_Field.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
-			if (fields.Contains(SYST_COLUMN_Field.SHORT_DESCRIPTION)) { record.SHORT_DESCRIPTION = reader.GetString(i++); }
-			if (fields.Contains(SYST_COLUMN_Field.COMBO)) { record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++; }
-			if (fields.Contains(SYST_COLUMN_Field.EXTERNAL_TABLE_ID)) { record.EXTERNAL_TABLE_ID = reader.IsDBNull(i) ? null : reader.GetString(i); i++; }
+			if (fields.Contains(SYST_COLUMN_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
+			if (fields.Contains(SYST_COLUMN_FieldValues.TABLE_NAME)) { record.TABLE_NAME = reader.GetString(i++); }
+			if (fields.Contains(SYST_COLUMN_FieldValues.COLUMN_NAME)) { record.COLUMN_NAME = reader.GetString(i++); }
+			if (fields.Contains(SYST_COLUMN_FieldValues.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(SYST_COLUMN_FieldValues.SHORT_DESCRIPTION)) { record.SHORT_DESCRIPTION = reader.GetString(i++); }
+			if (fields.Contains(SYST_COLUMN_FieldValues.COMBO)) { record.COMBO = reader.IsDBNull(i) ? null : reader.GetString(i); i++; }
+			if (fields.Contains(SYST_COLUMN_FieldValues.EXTERNAL_TABLE_ID)) { record.EXTERNAL_TABLE_ID = reader.IsDBNull(i) ? null : reader.GetString(i); i++; }
 
             return record;
         }
