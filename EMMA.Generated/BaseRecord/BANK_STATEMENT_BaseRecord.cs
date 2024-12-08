@@ -1,19 +1,34 @@
+using System.Text.Json.Serialization;
+
 namespace EMMA_BE.Generated {
 	public class BANK_STATEMENT_BaseRecord {
+		[JsonInclude]
 		public DateTime OPERATION_DATE { get; set; }
+		[JsonInclude]
 		public DateTime VALUE_DATE { get; set; }
+		[JsonInclude]
 		public string REASON { get; set; }
+		[JsonInclude]
 		public string DESCRIPTION { get; set; }
+		[JsonInclude]
 		public decimal? OUTCOME { get; set; }
+		[JsonInclude]
 		public decimal? INCOME { get; set; }
+		[JsonInclude]
 		public string TAG1 { get; private set; }
+		[JsonInclude]
 		public string TAG2 { get; set; }
+		[JsonInclude]
 		public string TAG3 { get; set; }
+		[JsonInclude]
 		public string TAG4 { get; set; }
+		[JsonInclude]
 		public int ID_FILE_INPUT { get; private set; }
+		[JsonInclude]
 		public int? ID_BANK_STATEMENT_DESC_PATTERN { get; private set; }
 
 		public void Set_TAG1(BALANCE_DIRECTION_Combo value) { TAG1 = value.Value; }
+		public void Set_TAG1(string value) { if (BALANCE_DIRECTION_Combo.GetValues().Contains(value)) TAG1 = value; else throw new Exception(); }
 
 		public void Set_ID_FILE_INPUT(FILE_INPUT_Id value) { ID_FILE_INPUT = value.Value; }
 		public void Set_ID_BANK_STATEMENT_DESC_PATTERN(BANK_STATEMENT_DESC_PATTERN_Id value) { ID_BANK_STATEMENT_DESC_PATTERN = value.Value; }

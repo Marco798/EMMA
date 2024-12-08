@@ -23,7 +23,7 @@ namespace EMMA_BE.Generated {
             return typeof(DAY_OF_WEEK_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
         }
 
-        public static List<DAY_OF_WEEK_Combo> GetValues() {
+        public static List<DAY_OF_WEEK_Combo> GetItems() {
             return [
                 LUNEDI,
                 MARTEDI,
@@ -33,6 +33,31 @@ namespace EMMA_BE.Generated {
                 SABATO,
                 DOMENICA
             ];
+        }
+
+        public static HashSet<string> GetValues() {
+            return [
+                LUNEDI.Value,
+                MARTEDI.Value,
+                MERCOLEDI.Value,
+                GIOVEDI.Value,
+                VENERDI.Value,
+                SABATO.Value,
+                DOMENICA.Value
+            ];
+        }
+
+        public static string GetNames(string value) {
+            return value switch {
+                "Lunedi" => nameof(LUNEDI),
+                "Martedi" => nameof(MARTEDI),
+                "Mercoledi" => nameof(MERCOLEDI),
+                "Giovedi" => nameof(GIOVEDI),
+                "Venerdi" => nameof(VENERDI),
+                "Sabato" => nameof(SABATO),
+                "Domenica" => nameof(DOMENICA),
+                _ => throw new Exception(),
+            };
         }
 	}
 

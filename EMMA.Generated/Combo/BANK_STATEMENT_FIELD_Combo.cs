@@ -19,7 +19,7 @@ namespace EMMA_BE.Generated {
             return typeof(BANK_STATEMENT_FIELD_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
         }
 
-        public static List<BANK_STATEMENT_FIELD_Combo> GetValues() {
+        public static List<BANK_STATEMENT_FIELD_Combo> GetItems() {
             return [
                 REASON,
                 DESCRIPTION,
@@ -27,6 +27,27 @@ namespace EMMA_BE.Generated {
                 TAG3,
                 TAG4
             ];
+        }
+
+        public static HashSet<string> GetValues() {
+            return [
+                REASON.Value,
+                DESCRIPTION.Value,
+                TAG2.Value,
+                TAG3.Value,
+                TAG4.Value
+            ];
+        }
+
+        public static string GetNames(string value) {
+            return value switch {
+                "REAS" => nameof(REASON),
+                "DESC" => nameof(DESCRIPTION),
+                "TAG2" => nameof(TAG2),
+                "TAG3" => nameof(TAG3),
+                "TAG4" => nameof(TAG4),
+                _ => throw new Exception(),
+            };
         }
 	}
 

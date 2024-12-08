@@ -15,12 +15,29 @@ namespace EMMA_BE.Generated {
             return typeof(FILE_TYPE_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
         }
 
-        public static List<FILE_TYPE_Combo> GetValues() {
+        public static List<FILE_TYPE_Combo> GetItems() {
             return [
                 CSV,
                 TEXT,
                 EXCEL
             ];
+        }
+
+        public static HashSet<string> GetValues() {
+            return [
+                CSV.Value,
+                TEXT.Value,
+                EXCEL.Value
+            ];
+        }
+
+        public static string GetNames(string value) {
+            return value switch {
+                "CSV" => nameof(CSV),
+                "TEXT" => nameof(TEXT),
+                "EXCEL" => nameof(EXCEL),
+                _ => throw new Exception(),
+            };
         }
 	}
 

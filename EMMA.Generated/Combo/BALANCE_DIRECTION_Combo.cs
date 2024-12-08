@@ -13,11 +13,26 @@ namespace EMMA_BE.Generated {
             return typeof(BALANCE_DIRECTION_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
         }
 
-        public static List<BALANCE_DIRECTION_Combo> GetValues() {
+        public static List<BALANCE_DIRECTION_Combo> GetItems() {
             return [
                 INCOME,
                 OUTCOME
             ];
+        }
+
+        public static HashSet<string> GetValues() {
+            return [
+                INCOME.Value,
+                OUTCOME.Value
+            ];
+        }
+
+        public static string GetNames(string value) {
+            return value switch {
+                "I" => nameof(INCOME),
+                "O" => nameof(OUTCOME),
+                _ => throw new Exception(),
+            };
         }
 	}
 

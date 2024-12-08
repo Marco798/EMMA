@@ -11,10 +11,23 @@ namespace %%NAME_SPACE%% {
             return typeof(%%COMBO_NAME%%_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
         }
 
-        public static List<%%COMBO_NAME%%_Combo> GetValues() {
+        public static List<%%COMBO_NAME%%_Combo> GetItems() {
+            return [
+%%GET_ITEM_FIELD%%
+            ];
+        }
+
+        public static HashSet<string> GetValues() {
             return [
 %%GET_VALUE_FIELD%%
             ];
+        }
+
+        public static string GetNames(string value) {
+            return value switch {
+%%GET_NAME_FIELD%%
+                _ => throw new Exception(),
+            };
         }
 	}
 

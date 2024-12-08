@@ -33,7 +33,7 @@ namespace EMMA_BE.Generated {
             return typeof(MONTH_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
         }
 
-        public static List<MONTH_Combo> GetValues() {
+        public static List<MONTH_Combo> GetItems() {
             return [
                 GENNAIO,
                 FEBBRAIO,
@@ -48,6 +48,41 @@ namespace EMMA_BE.Generated {
                 NOVEMBRE,
                 DICEMBRE
             ];
+        }
+
+        public static HashSet<string> GetValues() {
+            return [
+                GENNAIO.Value,
+                FEBBRAIO.Value,
+                MARZO.Value,
+                APRILE.Value,
+                MAGGIO.Value,
+                GIUGNO.Value,
+                LUGLIO.Value,
+                AGOSTO.Value,
+                SETTEMBRE.Value,
+                OTTOBRE.Value,
+                NOVEMBRE.Value,
+                DICEMBRE.Value
+            ];
+        }
+
+        public static string GetNames(string value) {
+            return value switch {
+                "Gennaio" => nameof(GENNAIO),
+                "Febbraio" => nameof(FEBBRAIO),
+                "Marzo" => nameof(MARZO),
+                "Aprile" => nameof(APRILE),
+                "Maggio" => nameof(MAGGIO),
+                "Giugno" => nameof(GIUGNO),
+                "Luglio" => nameof(LUGLIO),
+                "Agosto" => nameof(AGOSTO),
+                "Settembre" => nameof(SETTEMBRE),
+                "Ottobre" => nameof(OTTOBRE),
+                "Novembre" => nameof(NOVEMBRE),
+                "Dicembre" => nameof(DICEMBRE),
+                _ => throw new Exception(),
+            };
         }
 	}
 

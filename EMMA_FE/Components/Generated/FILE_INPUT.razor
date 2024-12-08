@@ -7,118 +7,118 @@
 @rendermode InteractiveServer
 
 <head>
-    <link href="css/Generated/Inquiry.css" rel="stylesheet" />
+	<link href="css/Generated/Inquiry.css" rel="stylesheet" />
 </head>
 
 @if (!showNew && !showEdit) {
-    <div>
-        <table>
-            <tr>
-                <th></th>
-                @foreach (string field in FILE_INPUT_Table.GetFieldList()) {
-                    <th>@field</th>
-                }
-            </tr>
-            @foreach (FILE_INPUT_Record record in _FILE_INPUT_Record_List) {
-                <tr>
-                    <td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
-                    <td>@record.ID</td>
-                    <td>@record.FILE_NAME</td>
-                    <td>@record.FILE_TYPE</td>
-                    <td>@record.FILE_CATEGORY</td>
+	<div>
+		<table>
+			<tr>
+				<th></th>
+				@foreach (string field in FILE_INPUT_Table.GetFieldList()) {
+					<th>@field</th>
+				}
+			</tr>
+			@foreach (FILE_INPUT_Record record in _FILE_INPUT_Record_List) {
+				<tr>
+					<td><input type="button" value="E" @onclick="(x => { Edit(record);})" /></td>
+					<td>@record.ID</td>
+					<td>@record.FILE_NAME</td>
+					<td>@record.FILE_TYPE</td>
+					<td>@record.FILE_CATEGORY</td>
                     <td><DownloadButton Content="record.CONTENT" FileName="record.FILE_NAME" FileType="@record.FILE_TYPE"></DownloadButton></td>
-                    <td>@record.INS_DATE</td>
-                    <td>@record.INS_TIME</td>
-                    <td>@record.INS_INFO</td>
-                </tr>
-            }
-        </table>
-        <input type="button" value="Insert" @onclick="New" />
-    </div>
+					<td>@record.INS_DATE</td>
+					<td>@record.INS_TIME</td>
+					<td>@record.INS_INFO</td>
+				</tr>
+			}
+		</table>
+		<input type="button" value="Insert" @onclick="New" />
+	</div>
 }
 
 @if (showNew) {
-    <div>
-        <table>
-            <tr><TextBox Id="New_FILE_INPUT" IsTable=true @bind-Value="@_FILE_INPUT_InsertRecord!.FILE_NAME" Description="FILE_NAME" Length="200" Width="200" /></tr>
-            <tr><td Id="New_FILE_INPUT" style="border: none; text-align: right; display: block;">CONTENT</td></tr>
-        </table>
-        <input type="button" value="Back" @onclick="BackFromNew" />
-        <input type="button" value="Clean" @onclick="CleanNew" />
-        <input type="button" value="Insert" @onclick="Insert" />
-    </div>
+	<div>
+		<table>
+			<tr><TextBox Id="New_FILE_INPUT" IsTable=true @bind-Value="@_FILE_INPUT_InsertRecord!.FILE_NAME" Description="FILE_NAME" Length="200" Width="200" /></tr>
+			<tr><td Id="New_FILE_INPUT" style="border: none; text-align: right; display: block;">CONTENT</td></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromNew" />
+		<input type="button" value="Clean" @onclick="CleanNew" />
+		<input type="button" value="Insert" @onclick="Insert" />
+	</div>
 }
 
 @if (showEdit) {
-    <div>
-        <table>
-            <tr><TextBox Id="Edit_FILE_INPUT" IsTable=true @bind-Value="@_FILE_INPUT_UpdateRecord!.FILE_NAME" Description="FILE_NAME" Length="200" Width="200" /></tr>
-            <tr><td Id="Edit_FILE_INPUT" style="border: none; text-align: right; display: block;">CONTENT</td></tr>
-        </table>
-        <input type="button" value="Back" @onclick="BackFromEdit" />
-        <input type="button" value="Reset" @onclick="ResetUpdate" />
-        <input type="button" value="Update" @onclick="Update" />
-    </div>
+	<div>
+		<table>
+			<tr><TextBox Id="Edit_FILE_INPUT" IsTable=true @bind-Value="@_FILE_INPUT_UpdateRecord!.FILE_NAME" Description="FILE_NAME" Length="200" Width="200" /></tr>
+			<tr><td Id="Edit_FILE_INPUT" style="border: none; text-align: right; display: block;">CONTENT</td></tr>
+		</table>
+		<input type="button" value="Back" @onclick="BackFromEdit" />
+		<input type="button" value="Reset" @onclick="ResetUpdate" />
+		<input type="button" value="Update" @onclick="Update" />
+	</div>
 }
 
 @code {
-    private List<FILE_INPUT_Record> _FILE_INPUT_Record_List = [];
-    bool showEdit = false;
-    bool showNew = false;
+	private List<FILE_INPUT_Record> _FILE_INPUT_Record_List = [];
+	bool showEdit = false;
+	bool showNew = false;
 
-    private FILE_INPUT_BaseRecord? _FILE_INPUT_InsertRecord = null;
+	private FILE_INPUT_BaseRecord? _FILE_INPUT_InsertRecord = null;
 
-    private FILE_INPUT_IdRecord? _FILE_INPUT_UpdateRecord_Orig = null;
-    private FILE_INPUT_IdRecord? _FILE_INPUT_UpdateRecord = null;
+	private FILE_INPUT_IdRecord? _FILE_INPUT_UpdateRecord_Orig = null;
+	private FILE_INPUT_IdRecord? _FILE_INPUT_UpdateRecord = null;
 
-    protected override async Task OnInitializedAsync() {
-        var response = await Http.GetAsync(@"https://localhost:7062/FILE_INPUT/SelectAll");
-        if (response.IsSuccessStatusCode) {
-            _FILE_INPUT_Record_List = await response.Content.ReadFromJsonAsync<List<FILE_INPUT_Record>>() ?? [];
-        }
-    }
+	protected override async Task OnInitializedAsync() {
+		var response = await Http.GetAsync(@"https://localhost:7062/FILE_INPUT/SelectAll");
+		if (response.IsSuccessStatusCode) {
+			_FILE_INPUT_Record_List = await response.Content.ReadFromJsonAsync<List<FILE_INPUT_Record>>() ?? [];
+		}
+	}
 
-    private void New() {
-        showNew = true;
-        _FILE_INPUT_InsertRecord = new();
-    }
+	private void New() {
+		showNew = true;
+		_FILE_INPUT_InsertRecord = new();
+	}
 
-    private void BackFromNew() {
-        showNew = false;
-        _FILE_INPUT_InsertRecord = null;
-    }
+	private void BackFromNew() {
+		showNew = false;
+		_FILE_INPUT_InsertRecord = null;
+	}
 
-    private void CleanNew() {
-        _FILE_INPUT_InsertRecord = new();
-    }
+	private void CleanNew() {
+		_FILE_INPUT_InsertRecord = new();
+	}
 
-    protected async void Insert() {
-        var response = await Http.PostAsJsonAsync(@"https://localhost:7062/FILE_INPUT/Insert", _FILE_INPUT_InsertRecord);
-        if (response.IsSuccessStatusCode) {
-            showNew = false;
-        }
-    }
+	protected async void Insert() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/FILE_INPUT/Insert", _FILE_INPUT_InsertRecord);
+		if (response.IsSuccessStatusCode) {
+			showNew = false;
+		}
+	}
 
-    private void Edit(FILE_INPUT_Record record) {
-        showEdit = true;
-        _FILE_INPUT_UpdateRecord_Orig = new(record);
-        _FILE_INPUT_UpdateRecord = new(record);
-    }
+	private void Edit(FILE_INPUT_Record record) {
+		showEdit = true;
+		_FILE_INPUT_UpdateRecord_Orig = new(record);
+		_FILE_INPUT_UpdateRecord = new(record);
+	}
 
-    private void BackFromEdit() {
-        showEdit = false;
-        _FILE_INPUT_UpdateRecord_Orig = null;
-        _FILE_INPUT_UpdateRecord = null;
-    }
+	private void BackFromEdit() {
+		showEdit = false;
+		_FILE_INPUT_UpdateRecord_Orig = null;
+		_FILE_INPUT_UpdateRecord = null;
+	}
 
-    private void ResetUpdate() {
-        _FILE_INPUT_UpdateRecord = _FILE_INPUT_UpdateRecord_Orig!.Clone();
-    }
+	private void ResetUpdate() {
+		_FILE_INPUT_UpdateRecord = _FILE_INPUT_UpdateRecord_Orig!.Clone();
+	}
 
-    protected async void Update() {
-        var response = await Http.PostAsJsonAsync(@"https://localhost:7062/FILE_INPUT/UpdateByKey", _FILE_INPUT_UpdateRecord);
-        if (response.IsSuccessStatusCode) {
-            showEdit = false;
-        }
-    }
+	protected async void Update() {
+		var response = await Http.PostAsJsonAsync(@"https://localhost:7062/FILE_INPUT/UpdateByKey", _FILE_INPUT_UpdateRecord);
+		if (response.IsSuccessStatusCode) {
+			showEdit = false;
+		}
+	}
 }

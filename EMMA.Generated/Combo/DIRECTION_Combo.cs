@@ -13,11 +13,26 @@ namespace EMMA_BE.Generated {
             return typeof(DIRECTION_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
         }
 
-        public static List<DIRECTION_Combo> GetValues() {
+        public static List<DIRECTION_Combo> GetItems() {
             return [
                 INPUT,
                 OUTPUT
             ];
+        }
+
+        public static HashSet<string> GetValues() {
+            return [
+                INPUT.Value,
+                OUTPUT.Value
+            ];
+        }
+
+        public static string GetNames(string value) {
+            return value switch {
+                "I" => nameof(INPUT),
+                "O" => nameof(OUTPUT),
+                _ => throw new Exception(),
+            };
         }
 	}
 

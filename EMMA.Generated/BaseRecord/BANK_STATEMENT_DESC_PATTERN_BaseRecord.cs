@@ -1,6 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace EMMA_BE.Generated {
 	public class BANK_STATEMENT_DESC_PATTERN_BaseRecord {
+		[JsonInclude]
 		public string PATTERN { get; set; }
+		[JsonInclude]
 		public string DESCRIPTION { get; set; }
 
 		public BANK_STATEMENT_DESC_PATTERN_BaseRecord() {

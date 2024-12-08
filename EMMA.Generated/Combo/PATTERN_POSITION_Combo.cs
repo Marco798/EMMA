@@ -17,13 +17,32 @@ namespace EMMA_BE.Generated {
             return typeof(PATTERN_POSITION_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
         }
 
-        public static List<PATTERN_POSITION_Combo> GetValues() {
+        public static List<PATTERN_POSITION_Combo> GetItems() {
             return [
                 START,
                 END,
                 MIDDLE,
                 ALL
             ];
+        }
+
+        public static HashSet<string> GetValues() {
+            return [
+                START.Value,
+                END.Value,
+                MIDDLE.Value,
+                ALL.Value
+            ];
+        }
+
+        public static string GetNames(string value) {
+            return value switch {
+                "S" => nameof(START),
+                "E" => nameof(END),
+                "M" => nameof(MIDDLE),
+                "A" => nameof(ALL),
+                _ => throw new Exception(),
+            };
         }
 	}
 
