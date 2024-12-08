@@ -4,6 +4,7 @@
 @using System.Reflection
 @using System.Text.Json
 @using System.Text
+@using System.Text.RegularExpressions
 
 @inject HttpClient Http
 @rendermode InteractiveServer
@@ -12,8 +13,8 @@
     <div style="display: flex">
         <select value="@selectedField" @onchange=OnChangeSelectedField>
             <option value="">---</option>
-            @foreach (string name in BANK_STATEMENT_FIELD_Combo.GetNames()) {
-                <option value="@name">@name</option>
+            @foreach (BANK_STATEMENT_FIELD_Combo name in BANK_STATEMENT_FIELD_Combo.GetItems()) {
+                <option value="@name.Value">@BANK_STATEMENT_FIELD_Combo.GetNames(@name.Value)</option>
             }
         </select>
         <select value="@selectedPattern">
@@ -26,24 +27,37 @@
     </div>
     <div style="display: flex">
         <label for="patternPosition">Position</label>
-        <select>
-            <option value="" id="PatternPosition">---</option>
-            @foreach (string name in PATTERN_POSITION_Combo.GetNames()) {
-                <option value="@name">@name</option>
-            }
-        </select>
+        @if (_BANK_STATEMENT_PATTERN_BaseRecord.FIELD == nameof(BANK_STATEMENT_FIELD_Combo.DESCRIPTION)) {
+            <select value="@_BANK_STATEMENT_PATTERN_BaseRecord.PATTERN" @onchange=OnChangePatternPosition>
+                <option value="" id="PatternPosition">---</option>
+                @foreach (string name in PATTERN_POSITION_Combo.GetNames()) {
+                    <option value="@name">@name</option>
+                }
+            </select>
+        }
+        else {
+            _BANK_STATEMENT_PATTERN_BaseRecord.Set_POSITION(PATTERN_POSITION_Combo.ALL);
+            <span style="padding: 0px 3px 0px 3px">ALL</span>
+        }
         <label for="patternPosition">Name</label>
-        <input type="text" id="PatternName"/>
+        <input type="text" id="PatternName" @bind=_BANK_STATEMENT_PATTERN_BaseRecord.PATTERN style="width: 300px" />
         <label for="patternPosition">Pattern</label>
-        <input type="text" id="PatternValue" />
+        <input type="text" id="PatternValue" @bind=_BANK_STATEMENT_PATTERN_BaseRecord.ORIGINAL_VALUE style="width: 500px" />
+        <input type="button" value="Save" @onclick=SavePattern />
+    </div>
+    <div>
+        <input id="showMatched" type="checkbox" @bind=hideMatched />
+        <label for="showMatched">Show matched values</label>
     </div>
     <div>
         <table>
-            @foreach (string value in values)
-            {
-                <tr>
-                    <td>@value</td>
-                </tr>
+            @foreach (KeyValuePair<string, string> value in values) {
+                @if (!hideMatched || string.IsNullOrWhiteSpace(@value.Value)) {
+                    <tr>
+                        <td>@value.Key</td>
+                        <td>@value.Value</td>
+                    </tr>
+                }
             }
         </table>
     </div>
@@ -52,49 +66,80 @@
 @code {
     private string? selectedField { get; set; } = null;
     private string? selectedPattern { get; set; } = null;
+    private bool hideMatched = false;
 
     private List<BANK_STATEMENT_PATTERN_Record> _BANK_STATEMENT_PATTERN_Record_List = [];
-    private List<string> values = [];
+    private Dictionary<string, string> values = [];
 
-    private async Task OnChangeSelectedField(ChangeEventArgs changeEventArgs) {
-        selectedField = changeEventArgs.Value!.ToString();
-        BANK_STATEMENT_PATTERN_NullRecord _BANK_STATEMENT_PATTERN_NullRecord = new();
-        List<BANK_STATEMENT_Field> _BANK_STATEMENT_Field_List = [];
+    private BANK_STATEMENT_PATTERN_BaseRecord _BANK_STATEMENT_PATTERN_BaseRecord = new();
 
-        if (string.IsNullOrWhiteSpace(selectedField)) return;
+    private async Task OnChangeSelectedField(ChangeEventArgs? changeEventArgs) {
+        try {
+            if (changeEventArgs != null)
+                selectedField = changeEventArgs.Value?.ToString();
 
-        switch (selectedField) {
-            case nameof(BANK_STATEMENT_FIELD_Combo.REASON):
-                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.REASON);
-                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.REASON];
-                break;
-            case nameof(BANK_STATEMENT_FIELD_Combo.DESCRIPTION):
-                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.DESCRIPTION);
-                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.DESCRIPTION];
-                break;
-            case nameof(BANK_STATEMENT_FIELD_Combo.TAG2):
-                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.TAG2);
-                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG2];
-                break;
-            case nameof(BANK_STATEMENT_FIELD_Combo.TAG3):
-                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.TAG3);
-                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG3];
-                break;
-            case nameof(BANK_STATEMENT_FIELD_Combo.TAG4):
-                _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.TAG4);
-                _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG4];
-                break;
+            BANK_STATEMENT_PATTERN_NullRecord _BANK_STATEMENT_PATTERN_NullRecord = new();
+            List<BANK_STATEMENT_Field> _BANK_STATEMENT_Field_List = [];
+
+            if (string.IsNullOrWhiteSpace(selectedField!)) return;
+            _BANK_STATEMENT_PATTERN_BaseRecord.Set_FIELD(selectedField!);
+
+            switch (BANK_STATEMENT_FIELD_Combo.GetNames(_BANK_STATEMENT_PATTERN_BaseRecord.FIELD)) {
+                case nameof(BANK_STATEMENT_FIELD_Combo.REASON):
+                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.REASON);
+                    _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.REASON];
+                    break;
+                case nameof(BANK_STATEMENT_FIELD_Combo.DESCRIPTION):
+                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.DESCRIPTION);
+                    _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.DESCRIPTION];
+                    break;
+                case nameof(BANK_STATEMENT_FIELD_Combo.TAG2):
+                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.TAG2);
+                    _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG2];
+                    break;
+                case nameof(BANK_STATEMENT_FIELD_Combo.TAG3):
+                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.TAG3);
+                    _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG3];
+                    break;
+                case nameof(BANK_STATEMENT_FIELD_Combo.TAG4):
+                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_Combo.TAG4);
+                    _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG4];
+                    break;
+            }
+
+            HttpResponseMessage response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT_PATTERN/SelectWithSimpleCriteria", _BANK_STATEMENT_PATTERN_NullRecord);
+            if (response.IsSuccessStatusCode) {
+                _BANK_STATEMENT_PATTERN_Record_List = await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_PATTERN_Record>>() ?? [];
+            }
+
+            response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT/SelectAll_CustomRecord", _BANK_STATEMENT_Field_List);
+            if (response.IsSuccessStatusCode) {
+                PropertyInfo? propertyInfo = typeof(BANK_STATEMENT_NullRecord).GetProperty(_BANK_STATEMENT_Field_List.First().Value[1..^1]);
+                values = (await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_NullRecord>>() ?? []).Select(x => (string?)propertyInfo!.GetValue(x) ?? string.Empty).Distinct().ToDictionary(x => x, x => string.Empty);
+
+                Dictionary<Regex, string> patterns = _BANK_STATEMENT_PATTERN_Record_List.ToDictionary(x => new Regex(x.ORIGINAL_VALUE), x => x.PATTERN);
+                foreach (string value in values.Keys) {
+                    values[value] = patterns.Where(x => x.Key.IsMatch(value)).Select(x => x.Value).SingleOrDefault() ?? string.Empty;
+                }
+            }
+        } catch (Exception ex) {
+            Console.WriteLine(ex);
         }
+    }
 
-        HttpResponseMessage response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT_PATTERN/SelectWithSimpleCriteria", _BANK_STATEMENT_PATTERN_NullRecord);
-        if (response.IsSuccessStatusCode) {
-            _BANK_STATEMENT_PATTERN_Record_List = await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_PATTERN_Record>>() ?? [];
-        }
+    private void OnChangePatternPosition(ChangeEventArgs changeEventArgs) {
+        _BANK_STATEMENT_PATTERN_BaseRecord.PATTERN = changeEventArgs.Value?.ToString() ?? string.Empty;
+    }
 
-        response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT/SelectAll_CustomRecord", _BANK_STATEMENT_Field_List);
+    private async Task SavePattern() {
+        BANK_STATEMENT_PATTERN_BaseRecord recordWithRegex = _BANK_STATEMENT_PATTERN_BaseRecord.Clone();
+        string pattern = @"[^a-zA-Z0-9\s]";
+        recordWithRegex.ORIGINAL_VALUE = Regex.Replace(recordWithRegex.ORIGINAL_VALUE, pattern, @"\$&");
+        recordWithRegex.ORIGINAL_VALUE = $"^{recordWithRegex.ORIGINAL_VALUE}$";
+
+        HttpResponseMessage response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT_PATTERN/Insert", recordWithRegex);
         if (response.IsSuccessStatusCode) {
-            PropertyInfo? propertyInfo = typeof(BANK_STATEMENT_NullRecord).GetProperty(_BANK_STATEMENT_Field_List.First().Value[1..^1]);
-            values = (await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_NullRecord>>() ?? []).Select(x => (string?)propertyInfo!.GetValue(x) ?? string.Empty).Distinct().ToList();
+            await OnChangeSelectedField(null);
         }
     }
 }
