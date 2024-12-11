@@ -8,5 +8,14 @@ namespace EMMA.Commons {
         protected ComboBase(string value) {
             Value = value;
         }
+
+        public override bool Equals(object? obj) {
+            return obj is ComboBase comboBase &&
+                   Value == comboBase.Value;
+        }
+
+        public override int GetHashCode() {
+            return HashCode.Combine(Value);
+        }
     }
 }
