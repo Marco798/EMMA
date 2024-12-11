@@ -1,4 +1,6 @@
-﻿namespace %%NAME_SPACE%% {
+﻿using System.Text.Json.Serialization;
+
+namespace %%NAME_SPACE%% {
 	public class %%TABLE_NAME%%_Record {
 %%FIELD%%%%SET_FIELD_COMBO%%%%SET_FIELD_ID%%
 

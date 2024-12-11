@@ -99,8 +99,8 @@ namespace EMMA.Tasks {
 				FILE_NAME = fileName,
 				CONTENT = compressedBytes
 			};
-			_FILE_INPUT_BaseRecord.Set_FILE_TYPE(FILE_TYPE_Combo.CSV);
-			_FILE_INPUT_BaseRecord.Set_FILE_CATEGORY(FILE_CATEGORY_Combo.BANK_STATEMENT);
+			_FILE_INPUT_BaseRecord.Set_FILE_TYPE(FILE_TYPE_ComboValues.CSV);
+			_FILE_INPUT_BaseRecord.Set_FILE_CATEGORY(FILE_CATEGORY_ComboValues.BANK_STATEMENT);
 
 			FILE_INPUT_Id _ID_FILE_INPUT = _FILE_INPUT_Query.Insert(_FILE_INPUT_BaseRecord);
 			#endregion
@@ -130,8 +130,8 @@ namespace EMMA.Tasks {
 
 		private static BALANCE_DIRECTION_Combo Get_BALANCE_DIRECTION(string tag1) {
 			return tag1 switch {
-				"Entrata" => BALANCE_DIRECTION_Combo.INCOME,
-				"Uscita" => BALANCE_DIRECTION_Combo.OUTCOME,
+				"Entrata" => BALANCE_DIRECTION_ComboValues.INCOME,
+				"Uscita" => BALANCE_DIRECTION_ComboValues.OUTCOME,
 				_ => throw new Exception(),
 			};
 		}

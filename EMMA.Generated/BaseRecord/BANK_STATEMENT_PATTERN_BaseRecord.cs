@@ -12,9 +12,9 @@ namespace EMMA_BE.Generated {
 		public string POSITION { get; private set; }
 
 		public void Set_FIELD(BANK_STATEMENT_FIELD_Combo value) { FIELD = value.Value; }
-		public void Set_FIELD(string value) { if (BANK_STATEMENT_FIELD_Combo.GetValues().Contains(value)) FIELD = value; else throw new Exception(); }
+		public void Set_FIELD(string value) { if (BANK_STATEMENT_FIELD_ComboValues.GetValues().Contains(value)) FIELD = value; else throw new Exception(); }
 		public void Set_POSITION(PATTERN_POSITION_Combo value) { POSITION = value.Value; }
-		public void Set_POSITION(string value) { if (PATTERN_POSITION_Combo.GetValues().Contains(value)) POSITION = value; else throw new Exception(); }
+		public void Set_POSITION(string value) { if (PATTERN_POSITION_ComboValues.GetValues().Contains(value)) POSITION = value; else throw new Exception(); }
 
 		public BANK_STATEMENT_PATTERN_BaseRecord() {
 			FIELD = string.Empty;

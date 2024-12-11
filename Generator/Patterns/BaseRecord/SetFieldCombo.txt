@@ -1,2 +1,2 @@
 ﻿		public void Set_%%COLUMN_NAME%%(%%COMBO_NAME%%_Combo value) { %%COLUMN_NAME%% = value.Value; }
-		public void Set_%%COLUMN_NAME%%(string value) { if (%%COMBO_NAME%%_Combo.GetValues().Contains(value)) %%COLUMN_NAME%% = value; else throw new Exception(); }
+		public void Set_%%COLUMN_NAME%%(string value) { if (%%COMBO_NAME%%_ComboValues.GetValues().Contains(value)) %%COLUMN_NAME%% = value; else throw new Exception(); }

@@ -28,7 +28,7 @@ namespace EMMA_BE.Generated {
 		public int? ID_BANK_STATEMENT_DESC_PATTERN { get; private set; }
 
 		public void Set_TAG1(BALANCE_DIRECTION_Combo value) { TAG1 = value.Value; }
-		public void Set_TAG1(string value) { if (BALANCE_DIRECTION_Combo.GetValues().Contains(value)) TAG1 = value; else throw new Exception(); }
+		public void Set_TAG1(string value) { if (BALANCE_DIRECTION_ComboValues.GetValues().Contains(value)) TAG1 = value; else throw new Exception(); }
 
 		public void Set_ID_FILE_INPUT(FILE_INPUT_Id value) { ID_FILE_INPUT = value.Value; }
 		public void Set_ID_BANK_STATEMENT_DESC_PATTERN(BANK_STATEMENT_DESC_PATTERN_Id value) { ID_BANK_STATEMENT_DESC_PATTERN = value.Value; }

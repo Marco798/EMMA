@@ -37,7 +37,8 @@ namespace Generator {
 			Query.Generate();
 			Table.Generate();
 
-			Combo.Generate();
+            Combo.Generate();
+            ComboValues.Generate();
 			Id.Generate();
             Field.Generate();
             FieldValues.Generate();
@@ -137,7 +138,7 @@ namespace Generator {
 		}
 
 		private static ComboValues_Record GetComboValuesRecord(SqlDataReader reader) {
-			ComboValues_Record comboValue_Record = new();
+            ComboValues_Record comboValue_Record = new();
 			int i = 1;
 
 			comboValue_Record.NAME = reader.GetString(i++);
