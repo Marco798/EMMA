@@ -15,7 +15,7 @@ namespace EMMA_BE.Generated {
 		[JsonInclude]
 		public decimal? INCOME { get; set; }
 		[JsonInclude]
-		public string TAG1 { get; private set; }
+		public BALANCE_DIRECTION_Combo TAG1 { get; set; }
 		[JsonInclude]
 		public string TAG2 { get; set; }
 		[JsonInclude]
@@ -23,12 +23,9 @@ namespace EMMA_BE.Generated {
 		[JsonInclude]
 		public string TAG4 { get; set; }
 		[JsonInclude]
-		public int ID_FILE_INPUT { get; private set; }
+		public int ID_FILE_INPUT { get; set; }
 		[JsonInclude]
-		public int? ID_BANK_STATEMENT_DESC_PATTERN { get; private set; }
-
-		public void Set_TAG1(BALANCE_DIRECTION_Combo value) { TAG1 = value.Value; }
-		public void Set_TAG1(string value) { if (BALANCE_DIRECTION_ComboValues.GetValues().Contains(value)) TAG1 = value; else throw new Exception(); }
+		public int? ID_BANK_STATEMENT_DESC_PATTERN { get; set; }
 
 		public void Set_ID_FILE_INPUT(FILE_INPUT_Id value) { ID_FILE_INPUT = value.Value; }
 		public void Set_ID_BANK_STATEMENT_DESC_PATTERN(BANK_STATEMENT_DESC_PATTERN_Id value) { ID_BANK_STATEMENT_DESC_PATTERN = value.Value; }
@@ -36,7 +33,7 @@ namespace EMMA_BE.Generated {
 		public BANK_STATEMENT_BaseRecord() {
 			REASON = string.Empty;
 			DESCRIPTION = string.Empty;
-			TAG1 = string.Empty;
+			TAG1 = new(string.Empty);
 			TAG2 = string.Empty;
 			TAG3 = string.Empty;
 			TAG4 = string.Empty;

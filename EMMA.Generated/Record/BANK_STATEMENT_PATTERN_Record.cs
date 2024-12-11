@@ -5,16 +5,13 @@ namespace EMMA_BE.Generated {
 		[JsonInclude]
 		public int ID { get; set; }
 		[JsonInclude]
-		public string FIELD { get; private set; }
+		public BANK_STATEMENT_FIELD_Combo FIELD { get; set; }
 		[JsonInclude]
 		public string ORIGINAL_VALUE { get; set; }
 		[JsonInclude]
 		public string PATTERN { get; set; }
 		[JsonInclude]
-		public string POSITION { get; private set; }
-
-		public void Set_FIELD(BANK_STATEMENT_FIELD_Combo value) { FIELD = value.Value; }
-		public void Set_POSITION(PATTERN_POSITION_Combo value) { POSITION = value.Value; }
+		public PATTERN_POSITION_Combo POSITION { get; set; }
 
 		public BANK_STATEMENT_PATTERN_Id GetId() { return new BANK_STATEMENT_PATTERN_Id(ID); }
 

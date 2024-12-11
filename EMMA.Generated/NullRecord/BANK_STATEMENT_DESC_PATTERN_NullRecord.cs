@@ -2,12 +2,12 @@ using System.Text.Json.Serialization;
 
 namespace EMMA_BE.Generated {
 	public class BANK_STATEMENT_DESC_PATTERN_NullRecord {
-		public int? ID { get { return _ID; } internal set { _ID = value; IsSet_ID = true; } }
+		public int? ID { get { return _ID; } set { _ID = value; IsSet_ID = true; } }
 		public string? PATTERN { get { return _PATTERN; } set { _PATTERN = value; IsSet_PATTERN = true; } }
 		public string? DESCRIPTION { get { return _DESCRIPTION; } set { _DESCRIPTION = value; IsSet_DESCRIPTION = true; } }
-		public DateTime? INS_DATE { get { return _INS_DATE; } internal set { _INS_DATE = value; IsSet_INS_DATE = true; } }
-		public TimeSpan? INS_TIME { get { return _INS_TIME; } internal set { _INS_TIME = value; IsSet_INS_TIME = true; } }
-		public string? INS_INFO { get { return _INS_INFO; } internal set { _INS_INFO = value; IsSet_INS_INFO = true; } }
+		public DateTime? INS_DATE { get { return _INS_DATE; } set { _INS_DATE = value; IsSet_INS_DATE = true; } }
+		public TimeSpan? INS_TIME { get { return _INS_TIME; } set { _INS_TIME = value; IsSet_INS_TIME = true; } }
+		public string? INS_INFO { get { return _INS_INFO; } set { _INS_INFO = value; IsSet_INS_INFO = true; } }
 
 		private int? _ID;
 		private string? _PATTERN;

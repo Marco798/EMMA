@@ -2,7 +2,7 @@
 
 namespace %%NAME_SPACE%% {
 	public class %%TABLE_NAME%%_Record {
-%%FIELD%%%%SET_FIELD_COMBO%%%%SET_FIELD_ID%%
+%%FIELD%%%%SET_FIELD_ID%%
 
 		public %%TABLE_NAME%%_Id GetId() { return new %%TABLE_NAME%%_Id(ID); }
 

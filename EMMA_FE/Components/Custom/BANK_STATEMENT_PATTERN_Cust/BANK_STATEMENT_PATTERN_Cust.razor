@@ -27,7 +27,7 @@
     </div>
     <div style="display: flex">
         <label for="patternPosition">Position</label>
-        @if (_BANK_STATEMENT_PATTERN_BaseRecord.FIELD == BANK_STATEMENT_FIELD_ComboValues.DESCRIPTION.Value) {
+        @if (_BANK_STATEMENT_PATTERN_BaseRecord.FIELD == BANK_STATEMENT_FIELD_ComboValues.DESCRIPTION) {
             <select value="@_BANK_STATEMENT_PATTERN_BaseRecord.POSITION" @onchange=OnChangePatternPosition>
                 @foreach (PATTERN_POSITION_Combo name in PATTERN_POSITION_ComboValues.GetItems()) {
                     <option value="@name.Value">@PATTERN_POSITION_ComboValues.GetName(name.Value)</option>
@@ -35,7 +35,7 @@
             </select>
         }
         else {
-            _BANK_STATEMENT_PATTERN_BaseRecord.Set_POSITION(PATTERN_POSITION_ComboValues.ALL);
+            _BANK_STATEMENT_PATTERN_BaseRecord.POSITION = PATTERN_POSITION_ComboValues.ALL;
             <span style="padding: 0px 3px 0px 3px">ALL</span>
         }
         <label for="patternPosition">Name</label>
@@ -74,34 +74,33 @@
 
     private async Task OnChangeSelectedField(ChangeEventArgs? changeEventArgs) {
         try {
-            if (changeEventArgs != null)
-                selectedField = changeEventArgs.Value?.ToString();
+            selectedField = changeEventArgs?.Value?.ToString() ?? string.Empty;
 
             BANK_STATEMENT_PATTERN_NullRecord _BANK_STATEMENT_PATTERN_NullRecord = new();
             List<BANK_STATEMENT_Field> _BANK_STATEMENT_Field_List = [];
 
             if (string.IsNullOrWhiteSpace(selectedField!)) return;
-            _BANK_STATEMENT_PATTERN_BaseRecord.Set_FIELD(selectedField!);
+            _BANK_STATEMENT_PATTERN_BaseRecord.FIELD = new(selectedField!);
 
-            switch (BANK_STATEMENT_FIELD_ComboValues.GetName(_BANK_STATEMENT_PATTERN_BaseRecord.FIELD)) {
-                case nameof(BANK_STATEMENT_FIELD_ComboValues.REASON):
-                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_ComboValues.REASON);
+            switch (_BANK_STATEMENT_PATTERN_BaseRecord.FIELD.Value) {
+                case BANK_STATEMENT_FIELD_ComboValues._REASON:
+                    _BANK_STATEMENT_PATTERN_NullRecord.FIELD = BANK_STATEMENT_FIELD_ComboValues.REASON;
                     _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.REASON];
                     break;
-                case nameof(BANK_STATEMENT_FIELD_ComboValues.DESCRIPTION):
-                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_ComboValues.DESCRIPTION);
+                case BANK_STATEMENT_FIELD_ComboValues._DESCRIPTION:
+                    _BANK_STATEMENT_PATTERN_NullRecord.FIELD = BANK_STATEMENT_FIELD_ComboValues.DESCRIPTION;
                     _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.DESCRIPTION];
                     break;
-                case nameof(BANK_STATEMENT_FIELD_ComboValues.TAG2):
-                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_ComboValues.TAG2);
+                case BANK_STATEMENT_FIELD_ComboValues._TAG2:
+                    _BANK_STATEMENT_PATTERN_NullRecord.FIELD = BANK_STATEMENT_FIELD_ComboValues.TAG2;
                     _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG2];
                     break;
-                case nameof(BANK_STATEMENT_FIELD_ComboValues.TAG3):
-                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_ComboValues.TAG3);
+                case BANK_STATEMENT_FIELD_ComboValues._TAG3:
+                    _BANK_STATEMENT_PATTERN_NullRecord.FIELD = BANK_STATEMENT_FIELD_ComboValues.TAG3;
                     _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG3];
                     break;
-                case nameof(BANK_STATEMENT_FIELD_ComboValues.TAG4):
-                    _BANK_STATEMENT_PATTERN_NullRecord.Set_FIELD(BANK_STATEMENT_FIELD_ComboValues.TAG4);
+                case BANK_STATEMENT_FIELD_ComboValues._TAG4:
+                    _BANK_STATEMENT_PATTERN_NullRecord.FIELD = BANK_STATEMENT_FIELD_ComboValues.TAG4;
                     _BANK_STATEMENT_Field_List = [BANK_STATEMENT_FieldValues.TAG4];
                     break;
             }
@@ -114,17 +113,17 @@
             response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT/SelectAll_CustomRecord", _BANK_STATEMENT_Field_List);
             if (response.IsSuccessStatusCode) {
                 PropertyInfo? propertyInfo = typeof(BANK_STATEMENT_NullRecord).GetProperty(_BANK_STATEMENT_Field_List.First().Value[1..^1]);
-                values = (await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_NullRecord>>() ?? []).Select(x => (string?)propertyInfo!.GetValue(x) ?? string.Empty).Distinct().ToDictionary(x => x, x => _BANK_STATEMENT_PATTERN_BaseRecord.FIELD == BANK_STATEMENT_FIELD_ComboValues.DESCRIPTION.Value ? x : string.Empty);
+                values = (await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_NullRecord>>() ?? []).Select(x => (string?)propertyInfo!.GetValue(x) ?? string.Empty).Distinct().ToDictionary(x => x, x => _BANK_STATEMENT_PATTERN_BaseRecord.FIELD.Value == BANK_STATEMENT_FIELD_ComboValues.DESCRIPTION.Value ? x : string.Empty);
 
-                if (!string.IsNullOrWhiteSpace(_BANK_STATEMENT_PATTERN_BaseRecord.FIELD)) {
+                if (!string.IsNullOrWhiteSpace(_BANK_STATEMENT_PATTERN_BaseRecord.FIELD.Value)) {
                     Dictionary<Regex, BANK_STATEMENT_PATTERN_Record> patterns = _BANK_STATEMENT_PATTERN_Record_List.ToDictionary(x => new Regex(x.ORIGINAL_VALUE), x => x);
-                    if (_BANK_STATEMENT_PATTERN_BaseRecord.FIELD == BANK_STATEMENT_FIELD_ComboValues.DESCRIPTION.Value) {
+                    if (_BANK_STATEMENT_PATTERN_BaseRecord.FIELD.Value == BANK_STATEMENT_FIELD_ComboValues.DESCRIPTION.Value) {
                         foreach (string value in values.Keys) {
                             List<BANK_STATEMENT_PATTERN_Record> matchedPatterns = patterns.Where(x => x.Key.IsMatch(value)).Select(x => x.Value).ToList();
 
                             if (matchedPatterns.Count == 0) continue;
 
-                            if (matchedPatterns.Where(x => x.POSITION == PATTERN_POSITION_ComboValues.ALL.Value).Count() > 0) {
+                            if (matchedPatterns.Where(x => x.POSITION == PATTERN_POSITION_ComboValues.ALL).Count() > 0) {
                                 if (matchedPatterns.Count == 1) {
                                     values[value] = matchedPatterns.First().PATTERN;
                                     continue;
@@ -134,19 +133,19 @@
                                 }
                             }
 
-                            int startCount = matchedPatterns.Where(x => x.POSITION == PATTERN_POSITION_ComboValues.START.Value).Count();
+                            int startCount = matchedPatterns.Where(x => x.POSITION == PATTERN_POSITION_ComboValues.START).Count();
                             if (startCount > 1) throw new Exception();
                             if (startCount == 1) {
-                                BANK_STATEMENT_PATTERN_Record start = matchedPatterns.First(x => x.POSITION == PATTERN_POSITION_ComboValues.START.Value);
+                                BANK_STATEMENT_PATTERN_Record start = matchedPatterns.First(x => x.POSITION == PATTERN_POSITION_ComboValues.START);
                                 values[value] = Regex.Replace(value, start.ORIGINAL_VALUE, string.Empty);
                             }
 
 
 
-                            int endCount = matchedPatterns.Where(x => x.POSITION == PATTERN_POSITION_ComboValues.END.Value).Count();
+                            int endCount = matchedPatterns.Where(x => x.POSITION == PATTERN_POSITION_ComboValues.END).Count();
                             if (endCount > 1) throw new Exception();
                             if (endCount == 1) {
-                                BANK_STATEMENT_PATTERN_Record end = matchedPatterns.First(x => x.POSITION == PATTERN_POSITION_ComboValues.END.Value);
+                                BANK_STATEMENT_PATTERN_Record end = matchedPatterns.First(x => x.POSITION == PATTERN_POSITION_ComboValues.END);
                                 values[value] = Regex.Replace(values[value], end.ORIGINAL_VALUE, string.Empty);
                             }
                         }
@@ -165,7 +164,7 @@
     }
 
     private void OnChangePatternPosition(ChangeEventArgs changeEventArgs) {
-        _BANK_STATEMENT_PATTERN_BaseRecord.Set_POSITION(changeEventArgs.Value?.ToString() ?? string.Empty);
+        _BANK_STATEMENT_PATTERN_BaseRecord.POSITION = new(changeEventArgs.Value?.ToString() ?? string.Empty);
     }
 
     private async Task SavePattern() {
@@ -173,16 +172,16 @@
         // string pattern = @"[^a-zA-Z0-9\s]";
         // recordWithRegex.ORIGINAL_VALUE = Regex.Replace(recordWithRegex.ORIGINAL_VALUE, pattern, @"\$&");
 
-        switch (PATTERN_POSITION_ComboValues.GetName(_BANK_STATEMENT_PATTERN_BaseRecord.POSITION)) {
-            case nameof(PATTERN_POSITION_ComboValues.ALL):
+        switch (_BANK_STATEMENT_PATTERN_BaseRecord.POSITION.Value) {
+            case PATTERN_POSITION_ComboValues._ALL:
                 recordWithRegex.ORIGINAL_VALUE = $"^{recordWithRegex.ORIGINAL_VALUE}$";
                 break;
-            case nameof(PATTERN_POSITION_ComboValues.START):
+            case PATTERN_POSITION_ComboValues._START:
                 recordWithRegex.ORIGINAL_VALUE = $"^{recordWithRegex.ORIGINAL_VALUE}";
                 break;
-            case nameof(PATTERN_POSITION_ComboValues.MIDDLE):
+            case PATTERN_POSITION_ComboValues._MIDDLE:
                 break;
-            case nameof(PATTERN_POSITION_ComboValues.END):
+            case PATTERN_POSITION_ComboValues._END:
                 recordWithRegex.ORIGINAL_VALUE = $"{recordWithRegex.ORIGINAL_VALUE}$";
                 break;
         }

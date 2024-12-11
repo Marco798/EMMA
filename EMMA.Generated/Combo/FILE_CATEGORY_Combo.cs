@@ -1,7 +1,12 @@
 using EMMA.Commons;
+using System.Text.Json.Serialization;
 
 namespace EMMA_BE.Generated {
 	public class FILE_CATEGORY_Combo : ComboBase {
-		internal FILE_CATEGORY_Combo(string value) : base(value) { }
+        [JsonConstructor]
+		public FILE_CATEGORY_Combo(string value) : base(value) {
+            if (value != string.Empty && !FILE_CATEGORY_ComboValues.GetValues().Contains(value))
+                throw new Exception();
+		}
 	}
 }

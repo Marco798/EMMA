@@ -1,21 +1,28 @@
 using System.Reflection;
 
 namespace EMMA_BE.Generated {
-	public class DAY_OF_WEEK_ComboValues {
+	public static class DAY_OF_WEEK_ComboValues {
 
 		public static readonly DAY_OF_WEEK_Combo LUNEDI = new("Lunedi");
+		public const string _LUNEDI = "Lunedi";
 
 		public static readonly DAY_OF_WEEK_Combo MARTEDI = new("Martedi");
+		public const string _MARTEDI = "Martedi";
 
 		public static readonly DAY_OF_WEEK_Combo MERCOLEDI = new("Mercoledi");
+		public const string _MERCOLEDI = "Mercoledi";
 
 		public static readonly DAY_OF_WEEK_Combo GIOVEDI = new("Giovedi");
+		public const string _GIOVEDI = "Giovedi";
 
 		public static readonly DAY_OF_WEEK_Combo VENERDI = new("Venerdi");
+		public const string _VENERDI = "Venerdi";
 
 		public static readonly DAY_OF_WEEK_Combo SABATO = new("Sabato");
+		public const string _SABATO = "Sabato";
 
 		public static readonly DAY_OF_WEEK_Combo DOMENICA = new("Domenica");
+		public const string _DOMENICA = "Domenica";
 
         public static string[] GetNames() {
             return typeof(DAY_OF_WEEK_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
@@ -35,13 +42,13 @@ namespace EMMA_BE.Generated {
 
         public static HashSet<string> GetValues() {
             return [
-                LUNEDI.Value,
-                MARTEDI.Value,
-                MERCOLEDI.Value,
-                GIOVEDI.Value,
-                VENERDI.Value,
-                SABATO.Value,
-                DOMENICA.Value
+                _LUNEDI,
+                _MARTEDI,
+                _MERCOLEDI,
+                _GIOVEDI,
+                _VENERDI,
+                _SABATO,
+                _DOMENICA
             ];
         }
 

@@ -200,6 +200,7 @@ namespace Generator {
                     break;
                 default:
                     checkNullRecordField = pattern_CheckNullRecord_CheckNullRecord;
+                    checkNullRecordField = checkNullRecordField.Replace("%%IS_COMBO%%", columns_Record.COMBO != null ? ".Value" : string.Empty);
                     checkNullRecordField_List += checkNullRecordField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
                     break;
             }

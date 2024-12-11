@@ -1,9 +1,12 @@
-﻿namespace EMMA.Commons {
-	public class ComboBase {
-		public readonly string Value;
+﻿using System.Text.Json.Serialization;
 
-		protected ComboBase(string value) {
-			Value = value;
-		}
-	}
+namespace EMMA.Commons {
+    public class ComboBase {
+        [JsonInclude]
+        public readonly string Value;
+
+        protected ComboBase(string value) {
+            Value = value;
+        }
+    }
 }

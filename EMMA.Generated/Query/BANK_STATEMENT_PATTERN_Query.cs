@@ -246,7 +246,7 @@ namespace EMMA_BE.Generated {
         private static void CheckNullRecord(BANK_STATEMENT_PATTERN_NullRecord nullRecord, StringBuilder query, List<SqlParameter> parameters) {
 			if (nullRecord.IsSet_FIELD) {
 				query.Append("FIELD = @FIELD, ");
-				parameters.Add(new SqlParameter("@FIELD", nullRecord.FIELD));
+				parameters.Add(new SqlParameter("@FIELD", nullRecord.FIELD.Value));
 			}
 
 			if (nullRecord.IsSet_ORIGINAL_VALUE) {
@@ -261,7 +261,7 @@ namespace EMMA_BE.Generated {
 
 			if (nullRecord.IsSet_POSITION) {
 				query.Append("POSITION = @POSITION, ");
-				parameters.Add(new SqlParameter("@POSITION", nullRecord.POSITION));
+				parameters.Add(new SqlParameter("@POSITION", nullRecord.POSITION.Value));
 			}
 
             query.Length -= 2;
@@ -272,10 +272,10 @@ namespace EMMA_BE.Generated {
 			int i = 0;
 
 			record.ID = reader.GetInt32(i++);
-			record.Set_FIELD(new BANK_STATEMENT_FIELD_Combo(reader.GetString(i++)));
+			record.FIELD = new(reader.GetString(i++));
 			record.ORIGINAL_VALUE = reader.GetString(i++);
 			record.PATTERN = reader.GetString(i++);
-			record.Set_POSITION(new PATTERN_POSITION_Combo(reader.GetString(i++)));
+			record.POSITION = new(reader.GetString(i++));
 
             return record;
         }
@@ -285,10 +285,10 @@ namespace EMMA_BE.Generated {
 			int i = 0;
 
 			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
-			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.FIELD)) { record.Set_FIELD(new BANK_STATEMENT_FIELD_Combo(reader.GetString(i++))); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.FIELD)) { record.FIELD = new(reader.GetString(i++)); }
 			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.ORIGINAL_VALUE)) { record.ORIGINAL_VALUE = reader.GetString(i++); }
 			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.PATTERN)) { record.PATTERN = reader.GetString(i++); }
-			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.POSITION)) { record.Set_POSITION(new PATTERN_POSITION_Combo(reader.GetString(i++))); }
+			if (fields.Contains(BANK_STATEMENT_PATTERN_FieldValues.POSITION)) { record.POSITION = new(reader.GetString(i++)); }
 
             return record;
         }

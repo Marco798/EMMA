@@ -89,7 +89,7 @@
         }
 
         private static void ColumnElaboration(Columns_Record columns_Record) {
-            string dataType = GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
+            string dataType = columns_Record.COMBO != null ? columns_Record.COMBO + "_Combo" : GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
             string isDefaultValue = IsDefaultField(columns_Record.COLUMN_NAME) ? "internal " : "";
             string accessLevel = columns_Record.COMBO != null || columns_Record.EXTERNAL_TABLE_ID != null ? "private " : isDefaultValue;
             string lowerColumnName = columns_Record.COLUMN_NAME.ToLower();

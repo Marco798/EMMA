@@ -2,27 +2,25 @@ using System.Text.Json.Serialization;
 
 namespace EMMA_BE.Generated {
 	public class BANK_STATEMENT_NullRecord {
-		public int? ID { get { return _ID; } internal set { _ID = value; IsSet_ID = true; } }
+		public int? ID { get { return _ID; } set { _ID = value; IsSet_ID = true; } }
 		public DateTime? OPERATION_DATE { get { return _OPERATION_DATE; } set { _OPERATION_DATE = value; IsSet_OPERATION_DATE = true; } }
 		public DateTime? VALUE_DATE { get { return _VALUE_DATE; } set { _VALUE_DATE = value; IsSet_VALUE_DATE = true; } }
 		public string? REASON { get { return _REASON; } set { _REASON = value; IsSet_REASON = true; } }
 		public string? DESCRIPTION { get { return _DESCRIPTION; } set { _DESCRIPTION = value; IsSet_DESCRIPTION = true; } }
 		public decimal? OUTCOME { get { return _OUTCOME; } set { _OUTCOME = value; IsSet_OUTCOME = true; } }
 		public decimal? INCOME { get { return _INCOME; } set { _INCOME = value; IsSet_INCOME = true; } }
-		public string? TAG1 { get { return _TAG1; } private set { _TAG1 = value; IsSet_TAG1 = true; } }
+		public BALANCE_DIRECTION_Combo? TAG1 { get { return _TAG1; } set { _TAG1 = value; IsSet_TAG1 = true; } }
 		public string? TAG2 { get { return _TAG2; } set { _TAG2 = value; IsSet_TAG2 = true; } }
 		public string? TAG3 { get { return _TAG3; } set { _TAG3 = value; IsSet_TAG3 = true; } }
 		public string? TAG4 { get { return _TAG4; } set { _TAG4 = value; IsSet_TAG4 = true; } }
-		public int? ID_FILE_INPUT { get { return _ID_FILE_INPUT; } private set { _ID_FILE_INPUT = value; IsSet_ID_FILE_INPUT = true; } }
-		public int? ID_BANK_STATEMENT_DESC_PATTERN { get { return _ID_BANK_STATEMENT_DESC_PATTERN; } private set { _ID_BANK_STATEMENT_DESC_PATTERN = value; IsSet_ID_BANK_STATEMENT_DESC_PATTERN = true; } }
-		public DateTime? INS_DATE { get { return _INS_DATE; } internal set { _INS_DATE = value; IsSet_INS_DATE = true; } }
-		public TimeSpan? INS_TIME { get { return _INS_TIME; } internal set { _INS_TIME = value; IsSet_INS_TIME = true; } }
-		public string? INS_INFO { get { return _INS_INFO; } internal set { _INS_INFO = value; IsSet_INS_INFO = true; } }
-		public DateTime? UPD_DATE { get { return _UPD_DATE; } internal set { _UPD_DATE = value; IsSet_UPD_DATE = true; } }
-		public TimeSpan? UPD_TIME { get { return _UPD_TIME; } internal set { _UPD_TIME = value; IsSet_UPD_TIME = true; } }
-		public string? UPD_INFO { get { return _UPD_INFO; } internal set { _UPD_INFO = value; IsSet_UPD_INFO = true; } }
-
-		public void Set_TAG1(BALANCE_DIRECTION_Combo value) { TAG1 = value.Value; }
+		public int? ID_FILE_INPUT { get { return _ID_FILE_INPUT; } set { _ID_FILE_INPUT = value; IsSet_ID_FILE_INPUT = true; } }
+		public int? ID_BANK_STATEMENT_DESC_PATTERN { get { return _ID_BANK_STATEMENT_DESC_PATTERN; } set { _ID_BANK_STATEMENT_DESC_PATTERN = value; IsSet_ID_BANK_STATEMENT_DESC_PATTERN = true; } }
+		public DateTime? INS_DATE { get { return _INS_DATE; } set { _INS_DATE = value; IsSet_INS_DATE = true; } }
+		public TimeSpan? INS_TIME { get { return _INS_TIME; } set { _INS_TIME = value; IsSet_INS_TIME = true; } }
+		public string? INS_INFO { get { return _INS_INFO; } set { _INS_INFO = value; IsSet_INS_INFO = true; } }
+		public DateTime? UPD_DATE { get { return _UPD_DATE; } set { _UPD_DATE = value; IsSet_UPD_DATE = true; } }
+		public TimeSpan? UPD_TIME { get { return _UPD_TIME; } set { _UPD_TIME = value; IsSet_UPD_TIME = true; } }
+		public string? UPD_INFO { get { return _UPD_INFO; } set { _UPD_INFO = value; IsSet_UPD_INFO = true; } }
 
 		public void Set_ID_FILE_INPUT(FILE_INPUT_Id value) { ID_FILE_INPUT = value.Value; }
 		public void Set_ID_BANK_STATEMENT_DESC_PATTERN(BANK_STATEMENT_DESC_PATTERN_Id value) { ID_BANK_STATEMENT_DESC_PATTERN = value.Value; }
@@ -34,7 +32,7 @@ namespace EMMA_BE.Generated {
 		private string? _DESCRIPTION;
 		private decimal? _OUTCOME;
 		private decimal? _INCOME;
-		private string? _TAG1;
+		private BALANCE_DIRECTION_Combo? _TAG1;
 		private string? _TAG2;
 		private string? _TAG3;
 		private string? _TAG4;
@@ -78,7 +76,7 @@ namespace EMMA_BE.Generated {
 			string? description, bool isSet_description,
 			decimal? outcome, bool isSet_outcome,
 			decimal? income, bool isSet_income,
-			string? tag1, bool isSet_tag1,
+			BALANCE_DIRECTION_Combo? tag1, bool isSet_tag1,
 			string? tag2, bool isSet_tag2,
 			string? tag3, bool isSet_tag3,
 			string? tag4, bool isSet_tag4,

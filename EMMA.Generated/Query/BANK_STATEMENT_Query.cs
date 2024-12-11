@@ -318,7 +318,7 @@ namespace EMMA_BE.Generated {
 
 			if (nullRecord.IsSet_TAG1) {
 				query.Append("TAG1 = @TAG1, ");
-				parameters.Add(new SqlParameter("@TAG1", nullRecord.TAG1));
+				parameters.Add(new SqlParameter("@TAG1", nullRecord.TAG1.Value));
 			}
 
 			if (nullRecord.IsSet_TAG2) {
@@ -369,7 +369,7 @@ namespace EMMA_BE.Generated {
 			record.DESCRIPTION = reader.GetString(i++);
 			record.OUTCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++;
 			record.INCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++;
-			record.Set_TAG1(new BALANCE_DIRECTION_Combo(reader.GetString(i++)));
+			record.TAG1 = new(reader.GetString(i++));
 			record.TAG2 = reader.GetString(i++);
 			record.TAG3 = reader.GetString(i++);
 			record.TAG4 = reader.GetString(i++);
@@ -396,7 +396,7 @@ namespace EMMA_BE.Generated {
 			if (fields.Contains(BANK_STATEMENT_FieldValues.DESCRIPTION)) { record.DESCRIPTION = reader.GetString(i++); }
 			if (fields.Contains(BANK_STATEMENT_FieldValues.OUTCOME)) { record.OUTCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++; }
 			if (fields.Contains(BANK_STATEMENT_FieldValues.INCOME)) { record.INCOME = reader.IsDBNull(i) ? null : reader.GetDecimal(i); i++; }
-			if (fields.Contains(BANK_STATEMENT_FieldValues.TAG1)) { record.Set_TAG1(new BALANCE_DIRECTION_Combo(reader.GetString(i++))); }
+			if (fields.Contains(BANK_STATEMENT_FieldValues.TAG1)) { record.TAG1 = new(reader.GetString(i++)); }
 			if (fields.Contains(BANK_STATEMENT_FieldValues.TAG2)) { record.TAG2 = reader.GetString(i++); }
 			if (fields.Contains(BANK_STATEMENT_FieldValues.TAG3)) { record.TAG3 = reader.GetString(i++); }
 			if (fields.Contains(BANK_STATEMENT_FieldValues.TAG4)) { record.TAG4 = reader.GetString(i++); }

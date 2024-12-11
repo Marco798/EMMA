@@ -42,5 +42,6 @@
 
 		public const string _Default_DataType_stringEmpty = "string.Empty";
 		public const string _Default_DataType_emptyArray = "[]";
-	}
+        public const string _Default_DataType_combo = "new(string.Empty)";
+    }
 }

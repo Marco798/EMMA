@@ -1,4 +1,4 @@
 ﻿			if (nullRecord.IsSet_%%COLUMN_NAME%%) {
 				query.Append("%%COLUMN_NAME%% = @%%COLUMN_NAME%%, ");
-				parameters.Add(new SqlParameter("@%%COLUMN_NAME%%", nullRecord.%%COLUMN_NAME%%));
+				parameters.Add(new SqlParameter("@%%COLUMN_NAME%%", nullRecord.%%COLUMN_NAME%%%%IS_COMBO%%));
 			}

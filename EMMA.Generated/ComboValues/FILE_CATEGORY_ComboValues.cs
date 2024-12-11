@@ -1,9 +1,10 @@
 using System.Reflection;
 
 namespace EMMA_BE.Generated {
-	public class FILE_CATEGORY_ComboValues {
+	public static class FILE_CATEGORY_ComboValues {
 
 		public static readonly FILE_CATEGORY_Combo BANK_STATEMENT = new("BANKSTAT");
+		public const string _BANK_STATEMENT = "BANKSTAT";
 
         public static string[] GetNames() {
             return typeof(FILE_CATEGORY_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
@@ -17,7 +18,7 @@ namespace EMMA_BE.Generated {
 
         public static HashSet<string> GetValues() {
             return [
-                BANK_STATEMENT.Value
+                _BANK_STATEMENT
             ];
         }
 

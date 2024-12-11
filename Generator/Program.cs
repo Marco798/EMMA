@@ -209,8 +209,12 @@ namespace Generator {
 			};
 		}
 
-		protected static string GetDefaultValue(string dataType) {
-			return dataType switch {
+		protected static string GetDefaultValue(Columns_Record columns_Record) {
+            if (columns_Record.COMBO != null)
+                return Consts._Default_DataType_combo;
+
+
+            return columns_Record.DATA_TYPE switch {
 				Consts._DB_DataType_varchar => Consts._Default_DataType_stringEmpty,
 				Consts._DB_DataType_char => Consts._Default_DataType_stringEmpty,
 				Consts._DB_DataType_varbinary => Consts._Default_DataType_emptyArray,

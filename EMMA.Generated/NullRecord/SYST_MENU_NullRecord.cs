@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace EMMA_BE.Generated {
 	public class SYST_MENU_NullRecord {
-		public int? ID { get { return _ID; } internal set { _ID = value; IsSet_ID = true; } }
+		public int? ID { get { return _ID; } set { _ID = value; IsSet_ID = true; } }
 		public string? NAME { get { return _NAME; } set { _NAME = value; IsSet_NAME = true; } }
 		public int? PARENT { get { return _PARENT; } set { _PARENT = value; IsSet_PARENT = true; } }
 		public string? DESCRIPTION { get { return _DESCRIPTION; } set { _DESCRIPTION = value; IsSet_DESCRIPTION = true; } }

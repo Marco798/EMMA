@@ -1,1 +1,1 @@
-﻿		public %%DATA_TYPE%%%%IS_NULLABLE%% %%COLUMN_NAME%% { get; %%ACCESS_LEVEL%%set; }
+﻿		public %%DATA_TYPE%%%%IS_NULLABLE%% %%COLUMN_NAME%% { get; set; }

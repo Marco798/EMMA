@@ -1,6 +1,6 @@
 ﻿namespace Generator
 {
-    internal class Columns_Record
+    public class Columns_Record
     {
         public string TABLE_CATALOG { get; set; }
         public string TABLE_SCHEMA { get; set; }

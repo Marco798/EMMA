@@ -1,11 +1,13 @@
 using System.Reflection;
 
 namespace EMMA_BE.Generated {
-	public class BALANCE_DIRECTION_ComboValues {
+	public static class BALANCE_DIRECTION_ComboValues {
 
 		public static readonly BALANCE_DIRECTION_Combo INCOME = new("I");
+		public const string _INCOME = "I";
 
 		public static readonly BALANCE_DIRECTION_Combo OUTCOME = new("O");
+		public const string _OUTCOME = "O";
 
         public static string[] GetNames() {
             return typeof(BALANCE_DIRECTION_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
@@ -20,8 +22,8 @@ namespace EMMA_BE.Generated {
 
         public static HashSet<string> GetValues() {
             return [
-                INCOME.Value,
-                OUTCOME.Value
+                _INCOME,
+                _OUTCOME
             ];
         }
 

@@ -72,8 +72,8 @@
 			if (Consts.defaultFields.Contains(columns_Record.COLUMN_NAME))
 				return;
 
-			string dataType = GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
-			string isNullable = GetIsNullable(columns_Record.IS_NULLABLE);
+			string dataType = columns_Record.COMBO != null ? columns_Record.COMBO + "_Combo" : GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
+            string isNullable = GetIsNullable(columns_Record.IS_NULLABLE);
 			string accessLevel = columns_Record.COMBO != null || columns_Record.EXTERNAL_TABLE_ID != null ? "private " : "";
 
 			#region Field
@@ -103,7 +103,7 @@
 			#region ConstructorField
 			if (Consts.fieldsToBeInitialized.Contains(columns_Record.DATA_TYPE)) {
 				string constructorField = pattern_ConstructorField;
-				constructorField = constructorField.Replace("%%DEFAULT_VALUE%%", GetDefaultValue(columns_Record.DATA_TYPE));
+				constructorField = constructorField.Replace("%%DEFAULT_VALUE%%", GetDefaultValue(columns_Record));
 				constructorField_List += constructorField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
 			}
 			#endregion

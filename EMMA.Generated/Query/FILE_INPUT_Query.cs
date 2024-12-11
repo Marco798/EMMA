@@ -260,12 +260,12 @@ namespace EMMA_BE.Generated {
 
 			if (nullRecord.IsSet_FILE_TYPE) {
 				query.Append("FILE_TYPE = @FILE_TYPE, ");
-				parameters.Add(new SqlParameter("@FILE_TYPE", nullRecord.FILE_TYPE));
+				parameters.Add(new SqlParameter("@FILE_TYPE", nullRecord.FILE_TYPE.Value));
 			}
 
 			if (nullRecord.IsSet_FILE_CATEGORY) {
 				query.Append("FILE_CATEGORY = @FILE_CATEGORY, ");
-				parameters.Add(new SqlParameter("@FILE_CATEGORY", nullRecord.FILE_CATEGORY));
+				parameters.Add(new SqlParameter("@FILE_CATEGORY", nullRecord.FILE_CATEGORY.Value));
 			}
 
 			if (nullRecord.IsSet_CONTENT) {
@@ -282,8 +282,8 @@ namespace EMMA_BE.Generated {
 
 			record.ID = reader.GetInt32(i++);
 			record.FILE_NAME = reader.GetString(i++);
-			record.Set_FILE_TYPE(new FILE_TYPE_Combo(reader.GetString(i++)));
-			record.Set_FILE_CATEGORY(new FILE_CATEGORY_Combo(reader.GetString(i++)));
+			record.FILE_TYPE = new(reader.GetString(i++));
+			record.FILE_CATEGORY = new(reader.GetString(i++));
 			record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
 			reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);
 			record.INS_DATE = reader.GetDateTime(i++);
@@ -299,8 +299,8 @@ namespace EMMA_BE.Generated {
 
 			if (fields.Contains(FILE_INPUT_FieldValues.ID)) { record.ID = reader.GetInt32(i++); }
 			if (fields.Contains(FILE_INPUT_FieldValues.FILE_NAME)) { record.FILE_NAME = reader.GetString(i++); }
-			if (fields.Contains(FILE_INPUT_FieldValues.FILE_TYPE)) { record.Set_FILE_TYPE(new FILE_TYPE_Combo(reader.GetString(i++))); }
-			if (fields.Contains(FILE_INPUT_FieldValues.FILE_CATEGORY)) { record.Set_FILE_CATEGORY(new FILE_CATEGORY_Combo(reader.GetString(i++))); }
+			if (fields.Contains(FILE_INPUT_FieldValues.FILE_TYPE)) { record.FILE_TYPE = new(reader.GetString(i++)); }
+			if (fields.Contains(FILE_INPUT_FieldValues.FILE_CATEGORY)) { record.FILE_CATEGORY = new(reader.GetString(i++)); }
 			if (fields.Contains(FILE_INPUT_FieldValues.CONTENT)) { 
 				record.CONTENT = new byte[reader.GetBytes(i, 0, null, 0, 0)];
 				reader.GetBytes(i++, 0, record.CONTENT, 0, record.CONTENT.Length);

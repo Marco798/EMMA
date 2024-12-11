@@ -1,13 +1,16 @@
 using System.Reflection;
 
 namespace EMMA_BE.Generated {
-	public class FILE_TYPE_ComboValues {
+	public static class FILE_TYPE_ComboValues {
 
 		public static readonly FILE_TYPE_Combo CSV = new("CSV");
+		public const string _CSV = "CSV";
 
 		public static readonly FILE_TYPE_Combo TEXT = new("TEXT");
+		public const string _TEXT = "TEXT";
 
 		public static readonly FILE_TYPE_Combo EXCEL = new("EXCEL");
+		public const string _EXCEL = "EXCEL";
 
         public static string[] GetNames() {
             return typeof(FILE_TYPE_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
@@ -23,9 +26,9 @@ namespace EMMA_BE.Generated {
 
         public static HashSet<string> GetValues() {
             return [
-                CSV.Value,
-                TEXT.Value,
-                EXCEL.Value
+                _CSV,
+                _TEXT,
+                _EXCEL
             ];
         }
 

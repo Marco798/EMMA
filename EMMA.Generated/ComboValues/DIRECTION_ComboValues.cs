@@ -1,11 +1,13 @@
 using System.Reflection;
 
 namespace EMMA_BE.Generated {
-	public class DIRECTION_ComboValues {
+	public static class DIRECTION_ComboValues {
 
 		public static readonly DIRECTION_Combo INPUT = new("I");
+		public const string _INPUT = "I";
 
 		public static readonly DIRECTION_Combo OUTPUT = new("O");
+		public const string _OUTPUT = "O";
 
         public static string[] GetNames() {
             return typeof(DIRECTION_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
@@ -20,8 +22,8 @@ namespace EMMA_BE.Generated {
 
         public static HashSet<string> GetValues() {
             return [
-                INPUT.Value,
-                OUTPUT.Value
+                _INPUT,
+                _OUTPUT
             ];
         }
 

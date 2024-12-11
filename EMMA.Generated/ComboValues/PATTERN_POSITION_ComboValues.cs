@@ -1,15 +1,19 @@
 using System.Reflection;
 
 namespace EMMA_BE.Generated {
-	public class PATTERN_POSITION_ComboValues {
+	public static class PATTERN_POSITION_ComboValues {
 
 		public static readonly PATTERN_POSITION_Combo START = new("S");
+		public const string _START = "S";
 
 		public static readonly PATTERN_POSITION_Combo END = new("E");
+		public const string _END = "E";
 
 		public static readonly PATTERN_POSITION_Combo MIDDLE = new("M");
+		public const string _MIDDLE = "M";
 
 		public static readonly PATTERN_POSITION_Combo ALL = new("A");
+		public const string _ALL = "A";
 
         public static string[] GetNames() {
             return typeof(PATTERN_POSITION_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();
@@ -26,10 +30,10 @@ namespace EMMA_BE.Generated {
 
         public static HashSet<string> GetValues() {
             return [
-                START.Value,
-                END.Value,
-                MIDDLE.Value,
-                ALL.Value
+                _START,
+                _END,
+                _MIDDLE,
+                _ALL
             ];
         }
 

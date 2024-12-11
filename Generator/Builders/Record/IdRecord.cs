@@ -72,8 +72,8 @@
 			if (Consts.auditFields.Contains(columns_Record.COLUMN_NAME))
 				return;
 
-			string dataType = GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
-			string isNullable = GetIsNullable(columns_Record.IS_NULLABLE);
+			string dataType = columns_Record.COMBO != null ? columns_Record.COMBO + "_Combo" : GetDataType_FromDB_ToCS(columns_Record.DATA_TYPE);
+            string isNullable = GetIsNullable(columns_Record.IS_NULLABLE);
 			string accessLevel = columns_Record.COMBO != null || columns_Record.EXTERNAL_TABLE_ID != null ? "private " : "";
 
 			#region Field

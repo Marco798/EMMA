@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 
 namespace %%NAME_SPACE%% {
-	public class %%COMBO_NAME%%_ComboValues {
+	public static class %%COMBO_NAME%%_ComboValues {
 
 %%VALUE_FIELD%%
 

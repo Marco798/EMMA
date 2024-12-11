@@ -1,1 +1,1 @@
-﻿		public %%DATA_TYPE%%? %%COLUMN_NAME%% { get { return _%%COLUMN_NAME%%; } %%ACCESS_LEVEL%%set { _%%COLUMN_NAME%% = value; IsSet_%%COLUMN_NAME%% = true; } }
+﻿		public %%DATA_TYPE%%? %%COLUMN_NAME%% { get { return _%%COLUMN_NAME%%; } set { _%%COLUMN_NAME%% = value; IsSet_%%COLUMN_NAME%% = true; } }

@@ -2,7 +2,7 @@
 
 namespace %%NAME_SPACE%% {
 	public class %%TABLE_NAME%%_BaseRecord {
-%%FIELD%%%%SET_FIELD_COMBO%%%%SET_FIELD_ID%%
+%%FIELD%%%%SET_FIELD_ID%%
 
 		public %%TABLE_NAME%%_BaseRecord() {
 %%CONSTRUCTOR_FIELD%%
