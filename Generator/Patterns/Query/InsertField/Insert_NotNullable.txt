@@ -1,2 +1,2 @@
 ﻿				query.Append("@%%COLUMN_NAME%%, ");
-				parameters.Add(new SqlParameter("@%%COLUMN_NAME%%", record.%%COLUMN_NAME%%));
+				parameters.Add(new SqlParameter("@%%COLUMN_NAME%%", record.%%COLUMN_NAME%%%%IS_COMBO%%));

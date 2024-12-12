@@ -240,6 +240,7 @@ namespace Generator {
                             break;
                         default: break;
                     }
+                    insertField = insertField.Replace("%%IS_COMBO%%", columns_Record.COMBO != null ? ".Value" : string.Empty);
                     insertField_List += insertField.Replace("%%COLUMN_NAME%%", columns_Record.COLUMN_NAME) + $"\r\n";
                     break;
             }

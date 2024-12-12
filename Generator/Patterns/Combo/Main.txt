@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace %%NAME_SPACE%% {
 	public class %%COMBO_NAME%%_Combo : ComboBase {
         [JsonConstructor]
-		public %%COMBO_NAME%%_Combo(string value) : base(value) {
+		internal %%COMBO_NAME%%_Combo(string value) : base(value) {
             if (value != string.Empty && !%%COMBO_NAME%%_ComboValues.GetValues().Contains(value))
                 throw new Exception();
 		}

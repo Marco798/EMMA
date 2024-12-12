@@ -1,9 +1,21 @@
-﻿using System.Reflection;
+﻿using Microsoft.AspNetCore.Components;
+using System.Reflection;
 
 namespace %%NAME_SPACE%% {
 	public static class %%COMBO_NAME%%_ComboValues {
 
 %%VALUE_FIELD%%
+
+        public static %%COMBO_NAME%%_Combo GetCombo(ChangeEventArgs? changeEventArgs) {
+            string value = changeEventArgs?.Value?.ToString() ?? string.Empty;
+            CheckInputValue(value);
+            return new(value);
+        }
+
+        private static void CheckInputValue(string value) {
+            if (value != string.Empty && !GetValues().Contains(value))
+                throw new Exception();
+        }
 
         public static string[] GetNames() {
             return typeof(%%COMBO_NAME%%_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();

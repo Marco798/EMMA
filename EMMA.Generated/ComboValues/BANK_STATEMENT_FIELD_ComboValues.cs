@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components;
 using System.Reflection;
 
 namespace EMMA_BE.Generated {
@@ -17,6 +18,17 @@ namespace EMMA_BE.Generated {
 
 		public static readonly BANK_STATEMENT_FIELD_Combo TAG4 = new("TAG4");
 		public const string _TAG4 = "TAG4";
+
+        public static BANK_STATEMENT_FIELD_Combo GetCombo(ChangeEventArgs? changeEventArgs) {
+            string value = changeEventArgs?.Value?.ToString() ?? string.Empty;
+            CheckInputValue(value);
+            return new(value);
+        }
+
+        private static void CheckInputValue(string value) {
+            if (value != string.Empty && !GetValues().Contains(value))
+                throw new Exception();
+        }
 
         public static string[] GetNames() {
             return typeof(BANK_STATEMENT_FIELD_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();

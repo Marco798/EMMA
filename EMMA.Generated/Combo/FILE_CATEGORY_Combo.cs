@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace EMMA_BE.Generated {
 	public class FILE_CATEGORY_Combo : ComboBase {
         [JsonConstructor]
-		public FILE_CATEGORY_Combo(string value) : base(value) {
+		internal FILE_CATEGORY_Combo(string value) : base(value) {
             if (value != string.Empty && !FILE_CATEGORY_ComboValues.GetValues().Contains(value))
                 throw new Exception();
 		}

@@ -222,7 +222,7 @@ namespace EMMA_BE.Generated {
 				parameters.Add(new SqlParameter("@INCOME", record.INCOME.HasValue ? record.INCOME : DBNull.Value));
 
 				query.Append("@TAG1, ");
-				parameters.Add(new SqlParameter("@TAG1", record.TAG1));
+				parameters.Add(new SqlParameter("@TAG1", record.TAG1.Value));
 
 				query.Append("@TAG2, ");
 				parameters.Add(new SqlParameter("@TAG2", record.TAG2));

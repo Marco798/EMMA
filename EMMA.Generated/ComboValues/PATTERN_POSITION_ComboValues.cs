@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components;
 using System.Reflection;
 
 namespace EMMA_BE.Generated {
@@ -14,6 +15,17 @@ namespace EMMA_BE.Generated {
 
 		public static readonly PATTERN_POSITION_Combo ALL = new("A");
 		public const string _ALL = "A";
+
+        public static PATTERN_POSITION_Combo GetCombo(ChangeEventArgs? changeEventArgs) {
+            string value = changeEventArgs?.Value?.ToString() ?? string.Empty;
+            CheckInputValue(value);
+            return new(value);
+        }
+
+        private static void CheckInputValue(string value) {
+            if (value != string.Empty && !GetValues().Contains(value))
+                throw new Exception();
+        }
 
         public static string[] GetNames() {
             return typeof(PATTERN_POSITION_Combo).GetFields(BindingFlags.Public | BindingFlags.Static).Select(f => f.Name).ToArray();

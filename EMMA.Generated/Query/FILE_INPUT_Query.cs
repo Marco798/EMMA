@@ -207,10 +207,10 @@ namespace EMMA_BE.Generated {
 				parameters.Add(new SqlParameter("@FILE_NAME", record.FILE_NAME));
 
 				query.Append("@FILE_TYPE, ");
-				parameters.Add(new SqlParameter("@FILE_TYPE", record.FILE_TYPE));
+				parameters.Add(new SqlParameter("@FILE_TYPE", record.FILE_TYPE.Value));
 
 				query.Append("@FILE_CATEGORY, ");
-				parameters.Add(new SqlParameter("@FILE_CATEGORY", record.FILE_CATEGORY));
+				parameters.Add(new SqlParameter("@FILE_CATEGORY", record.FILE_CATEGORY.Value));
 
 				query.Append("@CONTENT, ");
 				parameters.Add(new SqlParameter("@CONTENT", record.CONTENT));

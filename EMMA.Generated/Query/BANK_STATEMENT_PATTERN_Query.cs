@@ -204,7 +204,7 @@ namespace EMMA_BE.Generated {
 				List<SqlParameter> parameters = [];
 
 				query.Append("@FIELD, ");
-				parameters.Add(new SqlParameter("@FIELD", record.FIELD));
+				parameters.Add(new SqlParameter("@FIELD", record.FIELD.Value));
 
 				query.Append("@ORIGINAL_VALUE, ");
 				parameters.Add(new SqlParameter("@ORIGINAL_VALUE", record.ORIGINAL_VALUE));
@@ -213,7 +213,7 @@ namespace EMMA_BE.Generated {
 				parameters.Add(new SqlParameter("@PATTERN", record.PATTERN));
 
 				query.Append("@POSITION, ");
-				parameters.Add(new SqlParameter("@POSITION", record.POSITION));
+				parameters.Add(new SqlParameter("@POSITION", record.POSITION.Value));
 
 				query.Length -= 2;
 
