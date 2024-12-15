@@ -1,0 +1,35 @@
+﻿@using EMMA_FE.Components.Common.Modal
+@rendermode InteractiveServer
+
+<input type="button" id="button" value="@Value" @onclick=OnClickEvent disabled="@disabled" />
+
+@code {
+    [Inject] private ModalService ModalService { get; set; } = default!;
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    private bool disabled = false;
+
+    private async Task OnClickEvent() {
+        disabled = true;
+        try {
+            await OnClick.InvokeAsync();
+        }
+        catch (Exception ex) {
+            ShowErrorModal(ex.Message);
+        }
+        finally {
+            disabled = false;
+        }
+    }
+
+    private void ShowErrorModal(string errorMessage) {
+        Dictionary<string, object> parameters = [];
+        parameters.Add("ErrorMessage", errorMessage);
+        ModalService.ShowModal<ButtonOnClickError>(parameters);
+    }
+}

@@ -1,0 +1,45 @@
+﻿@inject ModalService ModalService
+@rendermode InteractiveServer
+
+@if (IsVisible) {
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" @onclick="Close">Chiudi</button>
+            @if (ModalContent is not null) {
+                <DynamicComponent Type="ModalContent" Parameters="Parameters" />
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private Type? ModalContent;
+    private Dictionary<string, object>? Parameters;
+    private bool IsVisible = false;
+
+    protected override void OnInitialized() {
+        ModalService.OnShow += ShowModal;
+        ModalService.OnClose += CloseModal;
+    }
+
+    private async void ShowModal(Type content, Dictionary<string, object> parameters) {
+        ModalContent = content;
+        Parameters = parameters;
+        IsVisible = true;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async void CloseModal() {
+        IsVisible = false;
+        ModalContent = null;
+        Parameters = null;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void Close() => ModalService.CloseModal();
+
+    public void Dispose() {
+        ModalService.OnShow -= ShowModal;
+        ModalService.OnClose -= CloseModal;
+    }
+}

@@ -11,9 +11,9 @@ namespace EMMA_FE {
 
 			builder.Services.AddHttpClient();
 
-			//builder.Services.AddSingleton<DbService>();
+            builder.Services.AddSingleton<ModalService>();
 
-			var app = builder.Build();
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment()) {

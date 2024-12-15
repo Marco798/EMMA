@@ -5,6 +5,7 @@
 @using System.Text.Json
 @using System.Text
 @using System.Text.RegularExpressions
+@using EMMA_FE.Components.Common.Input
 
 @inject HttpClient Http
 @rendermode InteractiveServer
@@ -23,7 +24,6 @@
                 <option>@_BANK_STATEMENT_PATTERN_Record.PATTERN</option>
             }
         </select>
-        <input type="button" value="New" />
     </div>
     <div style="display: flex">
         <label for="patternPosition">Position</label>
@@ -42,7 +42,7 @@
         <input type="text" id="PatternName" @bind=_BANK_STATEMENT_PATTERN_BaseRecord.PATTERN style="width: 300px" />
         <label for="patternPosition">Pattern</label>
         <input type="text" id="PatternValue" @bind=_BANK_STATEMENT_PATTERN_BaseRecord.ORIGINAL_VALUE style="width: 500px" />
-        <input type="button" value="Save" @onclick=SavePattern />
+        <Button Value="Save" OnClick="SavePattern"></Button>
     </div>
     <div>
         <input id="showMatched" type="checkbox" @bind=hideMatched />
@@ -118,6 +118,9 @@
             if (response.IsSuccessStatusCode) {
                 _BANK_STATEMENT_PATTERN_Record_List = await response.Content.ReadFromJsonAsync<List<BANK_STATEMENT_PATTERN_Record>>() ?? [];
             }
+            else {
+                throw new Exception();
+            }
 
             response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT/SelectAll_CustomRecord", _BANK_STATEMENT_Field_List);
             if (response.IsSuccessStatusCode) {
@@ -169,6 +172,9 @@
                     }
                 }
             }
+            else {
+                throw new Exception();
+            }
         }
         catch (Exception ex) {
             Console.WriteLine(ex);
@@ -201,6 +207,9 @@
         HttpResponseMessage response = await Http.PostAsJsonAsync(@"https://localhost:7062/BANK_STATEMENT_PATTERN/Insert", recordWithRegex);
         if (response.IsSuccessStatusCode) {
             await OnChangeSelectedField(null);
+        }
+        else {
+            throw new Exception();
         }
     }
 }
